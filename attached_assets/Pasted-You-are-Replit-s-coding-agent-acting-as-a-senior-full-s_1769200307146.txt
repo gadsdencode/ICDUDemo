@@ -1,0 +1,174 @@
+You are Replit’s coding agent acting as a senior full-stack engineer + product designer. Upgrade the existing ICDUDemo app (repo already scaffolded) with targeted improvements to make the story sharper and the demos more “aha”-driven, WITHOUT rewriting the whole app.
+
+## High-level goal
+Make the app convincingly answer:
+- What is ICDU?
+- Why does it matter now?
+- How does it create auditability + repeatability?
+- What do I do differently (per persona)?
+And make the demos feel like they connect to real decisions (PROMOTE / ESCALATE / BLOCK) with actionable reasons.
+
+## Constraints
+- Keep the current architecture: data-driven personas/journeys from JSON.
+- Do not introduce a real backend dependency. If a server folder exists, don’t require it to run.
+- All demo outputs can remain deterministic mock logic, but must be *explainable* and tied to ICDU fields.
+- Avoid proprietary claim language. Keep it educational.
+
+---
+
+# TASK 1 — Add “Before vs With ICDU” contrast across the app
+## Requirements
+1) On the Overview/Home page: add a prominent hero section with the line:
+   “ICDU turns best-effort prompting into measurable, auditable execution.”
+2) Add a reusable component (e.g., `<BeforeAfter />`) that shows two columns:
+   - Before ICDU: “best-effort prompting”, inconsistent outcomes, no audit trail, unclear constraints, hard to evaluate changes
+   - With ICDU: defined intent, enforceable constraints/principles, traceable governance IDs, repeatable evaluations, gated release decisions
+3) Render this component:
+   - On Overview
+   - On Journey pages (either under the stepper or in the right-side panel)
+   - On Demos page above the demo widgets (compact version)
+
+Acceptance:
+- Consistent message appears early and reinforces the narrative everywhere.
+
+---
+
+# TASK 2 — Upgrade ICDU Builder to include governance identifiers + versioning/traceability
+## Requirements
+Enhance the “Build an ICDU” demo form and JSON output to include governance fields:
+
+Add to the form (with sensible defaults):
+- icdu_id: auto-generated UUID (generate on “New ICDU” or on first load)
+- version: default “1.0.0”
+- created_at: ISO string now()
+- owner_team: default “Platform” (editable)
+- policy_set_id: default “baseline-v1” (dropdown or text)
+- evaluation_profile_id: default “standard-gates-v1”
+- trace:
+  - parent_icdu_id (optional)
+  - change_note (text)
+
+Also add a “Regenerate ID” button and a “Copy JSON” button (if not already).
+
+Acceptance:
+- Output JSON clearly looks like a “contract record” with traceability.
+
+---
+
+# TASK 3 — Make AI Judge outputs explainable and actionable (not just scores)
+## Requirements
+Currently the AI Judge returns IAS/PAS/AS + decision. Upgrade it to also return:
+- rationale: bullet list explaining WHY the decision happened
+- drivers: list of “score drivers” with references to ICDU fields (e.g., “PAS -20 because principle ‘No PII’ conflicts with input containing email-like string”)
+- to_promote: checklist of edits that would move outcome from ESCALATE/BLOCK → PROMOTE
+
+### Deterministic mock scoring (simple heuristics)
+Keep it deterministic and local. Suggested heuristics:
+- IAS (Intent Alignment):
+  - + if intent is specific (contains measurable keywords like “reduce”, “increase”, “by”, “within”, “deliver”)
+  - - if intent too vague (short length, generic like “help”, “improve” without target)
+- PAS (Principle Adherence):
+  - - if input contains “email”, “ssn”, “password”, or looks like PII (basic regex)
+  - - if principles include “no legal advice” but intent asks for legal counsel
+  - - if principles include “no medical advice” but intent asks for diagnosis
+- AS (Application Score):
+  - + if persona/tone is specified and consistent
+  - - if context/constraints missing or empty
+  - - if channel requires brevity (SMS) but tone is “long-form detailed” (if your data model includes channel)
+
+### Gates and decisions
+- Show thresholds clearly (e.g., PROMOTE if IAS>=80 AND PAS>=85 AND AS>=75)
+- Enforce “principles are non-negotiable”: if PAS < threshold, decision should be BLOCK even if IAS is high.
+- Decisions: PROMOTE / ESCALATE / BLOCK
+
+### UI upgrades
+- Present scores + thresholds + decision
+- Add an “Explain this decision” expandable section:
+  - Rationale bullets
+  - Drivers list
+  - “To promote” checklist
+- Add a “View as report JSON” toggle
+
+Acceptance:
+- A user can understand *why* the gate blocked and what to change next.
+
+---
+
+# TASK 4 — Upgrade Persona Journeys: KPI-driven proofMetrics and stronger step framing
+## Requirements
+Journeys are config-driven. Update the journeys JSON content (or add fields) so each step includes:
+- persona_kpi: a short KPI label (e.g., “audit readiness time”, “time-to-ship”, “policy violations caught pre-prod”)
+- proofMetrics: MUST include at least one metric that sounds measurable (even if illustrative)
+- decision_moment: “What do you do next?” (e.g., “Adopt ICDU templates for all high-risk workflows”)
+
+Update the UI rendering so that each step shows:
+- Problem (pain without ICDU)
+- What changes with ICDU
+- Proof (metrics + KPI label)
+- Where in pipeline
+- Decision moment (callout)
+
+Acceptance:
+- Journeys feel tailored, not generic, and culminate in an action.
+
+---
+
+# TASK 5 — Stress Engine: presets + insight per run
+## Requirements
+Turn the Stress Engine from “generate perturbations table” into:
+1) Preset suites (buttons):
+   - “Executive Comms Safety”
+   - “Regulated Domain Hard Mode”
+   - “Tone Drift Test”
+2) Each preset generates at least 4 perturbations (role/tone/constraint/channel variations).
+3) For each run, compute:
+   - stability indicator (PASS/WARN/FAIL)
+   - and an “insight” string (one sentence) such as:
+     - “Refusal consistency dropped under channel=SMS”
+     - “Tone compliance failed when persona=Executive”
+     - “Higher hallucination risk when constraints removed”
+
+Keep the logic mock/deterministic: infer “insight” from which perturbation was applied and basic scoring rules.
+
+UI:
+- Show the preset selector
+- Table columns: perturbation, stability, key metric(s), insight
+
+Acceptance:
+- Stress testing tells a story: “robustness across controlled changes.”
+
+---
+
+# TASK 6 — UX polish: persistent right-side “Key Takeaways” panel
+## Requirements
+Add a right-side panel on Journey + Demos that updates based on:
+- selected persona
+- current step (journey) or current demo state (demos)
+
+Panel content:
+- 2–4 bullets: “Key takeaway”
+- 1 line: “Where this fits in the pipeline”
+- 1 line: “Next best action”
+
+Ensure it collapses nicely on mobile (accordion).
+
+Acceptance:
+- The app feels guided and cohesive.
+
+---
+
+# Deliverables
+- Code changes implementing Tasks 1–6
+- Update README with:
+  - what changed
+  - how to add new presets
+  - how to extend judge heuristics
+- Ensure the app runs on Replit with a single command and doesn’t require a backend.
+
+Start by:
+1) Implementing governance fields in ICDU Builder + JSON
+2) Upgrading AI Judge output (rationale/drivers/to_promote)
+3) Adding Before/After component + Takeaways panel
+4) Updating journeys JSON + UI rendering
+5) Adding stress presets + insights
+Then do UI spacing/polish passes.

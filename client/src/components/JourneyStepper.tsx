@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Circle, ChevronRight, AlertTriangle, Sparkles, BarChart3, FileText, ArrowRight } from "lucide-react";
+import { Check, Circle, ChevronRight, AlertTriangle, Sparkles, BarChart3, FileText, ArrowRight, Target, Zap } from "lucide-react";
 import { trackJourneyStepViewed } from "@/lib/analytics";
 import { useEffect } from "react";
 
@@ -14,6 +14,8 @@ type JourneyStep = {
   example: string;
   whereInPipeline: string;
   keyTakeaways: string[];
+  persona_kpi: string;
+  decision_moment: string;
 };
 
 type JourneyStepperProps = {
@@ -123,6 +125,31 @@ export function JourneyStepper({
               <div className="min-w-0">
                 <h3 className="font-semibold text-[10px] sm:text-sm mb-0.5 sm:mb-2">With ICDU</h3>
                 <p className="text-[10px] sm:text-sm text-muted-foreground leading-relaxed">{step.withIcdu}</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4">
+          <Card className="p-2.5 sm:p-4">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-md bg-primary/20 text-primary flex-shrink-0">
+                <Target className="h-3 w-3 sm:h-4 sm:w-4" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-[10px] sm:text-sm mb-0.5 sm:mb-2">Your KPI</h3>
+                <p className="text-[10px] sm:text-sm text-primary font-medium leading-relaxed">{step.persona_kpi}</p>
+              </div>
+            </div>
+          </Card>
+          <Card className="p-2.5 sm:p-4">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-md bg-amber-500/20 text-amber-600 dark:text-amber-400 flex-shrink-0">
+                <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-[10px] sm:text-sm mb-0.5 sm:mb-2">Decision Moment</h3>
+                <p className="text-[10px] sm:text-sm text-muted-foreground leading-relaxed">{step.decision_moment}</p>
               </div>
             </div>
           </Card>

@@ -5,12 +5,14 @@ An interactive web application that explains ICDU (Intent-Conscious Data Unit) a
 
 ## Project Structure
 - `client/src/components/` - Reusable UI components
-  - `ICDUBuilder.tsx` - Interactive ICDU form with live JSON preview
-  - `JudgePanel.tsx` - AI Judge mock evaluation demo
+  - `BeforeAfter.tsx` - Before/After comparison showing ICDU transformation (compact and full modes)
+  - `ICDUBuilder.tsx` - Interactive ICDU form with governance fields (ID, version, owner, policy set, trace) and live JSON preview
+  - `JudgePanel.tsx` - Explainable AI Judge with rationale, score drivers, and to_promote checklist
   - `RubricPanel.tsx` - HITL Nuance Grader with 5 rubric dimensions
-  - `StressPanel.tsx` - Stress Engine perturbation testing
+  - `StressPanel.tsx` - Stress Engine with 3 preset suites and per-run insights
+  - `KeyTakeaways.tsx` - Persistent takeaways panel with pipeline location and next action
   - `PersonaSelector.tsx` - Persona card/tab selector
-  - `JourneyStepper.tsx` - Step-by-step journey navigation
+  - `JourneyStepper.tsx` - Step-by-step journey navigation with KPI and decision moment display
   - `PipelineDiagram.tsx` - Visual pipeline representation
   - `Navigation.tsx` - Top navigation bar
   - `ThemeProvider.tsx` - Dark/light theme context
@@ -45,6 +47,14 @@ All content is rendered from configuration files:
 - Glossary and FAQ in `examples.ts`
 
 ## Recent Changes
+- 2026-01-23: Major 6-task upgrade with enhanced features
+  - **BeforeAfter component**: Shows transformation contrast between unstructured AI and ICDU-based governance
+  - **ICDU Builder governance fields**: Added icdu_id, version, owner_team, policy_set_id, evaluation_profile_id, trace (parent_icdu_id, change_note)
+  - **Explainable AI Judge**: Added rationale array, score drivers with impact per ICDU field, and to_promote action checklist with expected improvements
+  - **KPI-driven journeys**: Added persona_kpi and decision_moment fields to all journey steps in journeys.json
+  - **Stress Engine presets**: 3 preset suites (Executive Comms Safety, Regulated Domain Hard Mode, Tone Drift Test) plus per-run insights for each perturbation
+  - **KeyTakeaways component**: Reusable panel for displaying key takeaways with pipeline location and next action
+  - BeforeAfter added to Overview and Demos pages
 - 2026-01-23: Eliminated all horizontal scrolling on mobile
   - Removed overflow-x-auto patterns from all components
   - Changed step buttons and persona selectors to use flex-wrap

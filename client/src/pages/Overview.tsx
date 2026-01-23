@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PipelineDiagram } from "@/components/PipelineDiagram";
+import { BeforeAfter } from "@/components/BeforeAfter";
 import { 
   ArrowRight, 
   Target, 
@@ -108,6 +109,18 @@ export default function Overview() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-6 sm:py-12">
+        <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
+          <div className="text-center mb-4 sm:mb-8">
+            <h2 className="text-base sm:text-2xl font-bold mb-1 sm:mb-2">The Transformation</h2>
+            <p className="text-[10px] sm:text-base text-muted-foreground">
+              ICDU turns best-effort prompting into measurable, auditable execution
+            </p>
+          </div>
+          <BeforeAfter />
         </div>
       </section>
 

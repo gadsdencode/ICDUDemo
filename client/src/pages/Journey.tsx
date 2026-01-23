@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { PersonaSelector } from "@/components/PersonaSelector";
 import { JourneyStepper, KeyTakeawaysPanel } from "@/components/JourneyStepper";
+import { BeforeAfter } from "@/components/BeforeAfter";
+import { KeyTakeaways } from "@/components/KeyTakeaways";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Map } from "lucide-react";
@@ -19,6 +21,8 @@ type JourneyStep = {
   example: string;
   whereInPipeline: string;
   keyTakeaways: string[];
+  persona_kpi: string;
+  decision_moment: string;
 };
 
 type JourneysData = Record<string, JourneyStep[]>;
@@ -125,6 +129,10 @@ export default function Journey() {
           />
         </div>
 
+        <div className="mb-3 sm:mb-6">
+          <BeforeAfter compact />
+        </div>
+
         <div className="grid lg:grid-cols-[1fr,300px] gap-3 sm:gap-6">
           <div>
             <JourneyStepper
@@ -137,14 +145,25 @@ export default function Journey() {
 
           <div className="hidden lg:block">
             {currentStepData && (
-              <KeyTakeawaysPanel takeaways={currentStepData.keyTakeaways} />
+              <KeyTakeaways
+                title={currentStepData.title}
+                takeaways={currentStepData.keyTakeaways}
+                pipelineLocation={currentStepData.whereInPipeline}
+                nextAction={currentStepData.decision_moment}
+              />
             )}
           </div>
         </div>
 
         <div className="lg:hidden mt-2 sm:mt-6">
           {currentStepData && (
-            <KeyTakeawaysPanel takeaways={currentStepData.keyTakeaways} />
+            <KeyTakeaways
+              title={currentStepData.title}
+              takeaways={currentStepData.keyTakeaways}
+              pipelineLocation={currentStepData.whereInPipeline}
+              nextAction={currentStepData.decision_moment}
+              compact
+            />
           )}
         </div>
       </div>

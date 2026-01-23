@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { ICDUBuilder } from "@/components/ICDUBuilder";
 import { JudgePanel } from "@/components/JudgePanel";
 import { RubricPanel } from "@/components/RubricPanel";
 import { StressPanel } from "@/components/StressPanel";
 import { PipelineDiagram } from "@/components/PipelineDiagram";
-import { FileText, Scale, Users, FlaskConical, Lightbulb } from "lucide-react";
+import { BeforeAfter } from "@/components/BeforeAfter";
+import { KeyTakeaways } from "@/components/KeyTakeaways";
+import { FileText, Scale, Users, FlaskConical } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 
@@ -18,7 +19,7 @@ const demoTabs = [
   { id: "stress", label: "Stress Engine", icon: FlaskConical },
 ];
 
-const demoTakeaways: Record<string, { title: string; points: string[] }> = {
+const demoTakeaways: Record<string, { title: string; points: string[]; pipelineLocation: string; nextAction: string }> = {
   icdu: {
     title: "ICDU Builder",
     points: [
@@ -27,7 +28,9 @@ const demoTakeaways: Record<string, { title: string; points: string[] }> = {
       "Specify persona and tone requirements",
       "Set context constraints and boundaries",
       "Generate structured, versioned JSON"
-    ]
+    ],
+    pipelineLocation: "ICDU Creation",
+    nextAction: "Submit ICDU for AI Judge evaluation"
   },
   judge: {
     title: "AI Judge",
@@ -37,7 +40,9 @@ const demoTakeaways: Record<string, { title: string; points: string[] }> = {
       "PAS: Principle Adherence Score",
       "AS: Application Score",
       "Automatic gate decisions: PROMOTE, ESCALATE, BLOCK"
-    ]
+    ],
+    pipelineLocation: "AI Judge Gate",
+    nextAction: "Review score drivers and to_promote checklist"
   },
   hitl: {
     title: "HITL Nuance Grader",
@@ -47,7 +52,9 @@ const demoTakeaways: Record<string, { title: string; points: string[] }> = {
       "Evaluate trustworthiness and safety judgment",
       "Aggregate scores across dimensions",
       "Document reviewer notes for governance"
-    ]
+    ],
+    pipelineLocation: "HITL Nuance Grading",
+    nextAction: "Aggregate scores and provide feedback"
   },
   stress: {
     title: "Stress Engine",
@@ -57,7 +64,9 @@ const demoTakeaways: Record<string, { title: string; points: string[] }> = {
       "Measure stability and fairness",
       "Track refusal consistency",
       "Detect hallucination patterns"
-    ]
+    ],
+    pipelineLocation: "Stress Testing",
+    nextAction: "Review insights and address warnings"
   }
 };
 
@@ -87,6 +96,10 @@ export default function Demos() {
             Build an ICDU record, run mock evaluations, grade with the HITL rubric, 
             and stress test with scenario perturbations.
           </p>
+        </div>
+
+        <div className="mb-4 sm:mb-6">
+          <BeforeAfter compact />
         </div>
 
         <div className="mb-6 sm:mb-8">
@@ -133,38 +146,23 @@ export default function Demos() {
           </div>
 
           <div className="hidden lg:block">
-            <Card className="p-4 sm:p-5 sticky top-20">
-              <h3 className="font-semibold text-xs sm:text-sm mb-2 sm:mb-3 flex items-center gap-2">
-                <Lightbulb className="h-4 w-4 text-primary" />
-                {currentTakeaways.title}
-              </h3>
-              <ul className="space-y-1.5 sm:space-y-2">
-                {currentTakeaways.points.map((point, index) => (
-                  <li key={index} className="flex items-start gap-2 text-xs sm:text-sm">
-                    <span className="text-primary mt-0.5 font-bold">•</span>
-                    <span className="text-muted-foreground">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+            <KeyTakeaways
+              title={currentTakeaways.title}
+              takeaways={currentTakeaways.points}
+              pipelineLocation={currentTakeaways.pipelineLocation}
+              nextAction={currentTakeaways.nextAction}
+            />
           </div>
         </div>
 
         <div className="lg:hidden mt-4 sm:mt-6">
-          <Card className="p-4 sm:p-5">
-            <h3 className="font-semibold text-xs sm:text-sm mb-2 sm:mb-3 flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-primary" />
-              {currentTakeaways.title}
-            </h3>
-            <ul className="space-y-1.5 sm:space-y-2">
-              {currentTakeaways.points.map((point, index) => (
-                <li key={index} className="flex items-start gap-2 text-xs sm:text-sm">
-                  <span className="text-primary mt-0.5 font-bold">•</span>
-                  <span className="text-muted-foreground">{point}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <KeyTakeaways
+            title={currentTakeaways.title}
+            takeaways={currentTakeaways.points}
+            pipelineLocation={currentTakeaways.pipelineLocation}
+            nextAction={currentTakeaways.nextAction}
+            compact
+          />
         </div>
       </div>
     </div>

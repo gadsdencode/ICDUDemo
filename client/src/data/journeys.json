@@ -8,7 +8,9 @@
       "proofMetrics": "100% traceability on AI decisions, governance IDs link every output to its intent and constraints",
       "example": "When a regulator asks how your AI determined a recommendation, you can show the exact ICDU: the stated intent, the safety principles applied, and the complete decision chain.",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Complete audit trail for every AI decision", "Board-ready documentation automatically generated", "Clear accountability chains established"]
+      "keyTakeaways": ["Complete audit trail for every AI decision", "Board-ready documentation automatically generated", "Clear accountability chains established"],
+      "persona_kpi": "Reduce audit response time from 5 days to <4 hours",
+      "decision_moment": "Present traceable AI governance at board meeting"
     },
     {
       "stepId": "pain",
@@ -18,7 +20,9 @@
       "proofMetrics": "Intent Alignment Score (IAS), Principle Adherence Score (PAS), Application Score (AS) - all measured and logged",
       "example": "Before launch, you can show stakeholders that your AI achieved 92% PAS and 87% IAS, exceeding your 85% thresholds, with automatic blocks for scores below 70%.",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Quantifiable risk metrics for every AI output", "Automatic escalation prevents costly mistakes", "Demonstrable due diligence for regulators"]
+      "keyTakeaways": ["Quantifiable risk metrics for every AI output", "Automatic escalation prevents costly mistakes", "Demonstrable due diligence for regulators"],
+      "persona_kpi": "Reduce AI-related liability exposure by 60%",
+      "decision_moment": "Approve/reject regulated contract bid based on governance maturity"
     },
     {
       "stepId": "change",
@@ -28,7 +32,9 @@
       "proofMetrics": "Rubric scores aggregated across reviewers, inter-rater reliability metrics, trend analysis over time",
       "example": "Your compliance team's nuanced assessments of AI outputs are now quantified and tracked, showing a 34% improvement in trust scores over 6 months.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Structured human oversight with consistent rubrics", "Institutional knowledge captured systematically", "Measurable improvement in qualitative metrics"]
+      "keyTakeaways": ["Structured human oversight with consistent rubrics", "Institutional knowledge captured systematically", "Measurable improvement in qualitative metrics"],
+      "persona_kpi": "Achieve 95%+ inter-rater reliability across review teams",
+      "decision_moment": "Report consistent oversight metrics to audit committee"
     },
     {
       "stepId": "measurement",
@@ -38,7 +44,9 @@
       "proofMetrics": "Stability scores, fairness metrics, refusal consistency rates, hallucination patterns across perturbations",
       "example": "Before launching a customer service AI, you've verified it maintains 94% stability across 16 scenario variations, with consistent refusal behavior for unsafe requests.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Proactive failure mode discovery", "Systematic edge case testing", "Confidence metrics before deployment"]
+      "keyTakeaways": ["Proactive failure mode discovery", "Systematic edge case testing", "Confidence metrics before deployment"],
+      "persona_kpi": "Zero production incidents from untested edge cases",
+      "decision_moment": "Sign off on AI deployment with documented stress test results"
     },
     {
       "stepId": "governance",
@@ -48,7 +56,9 @@
       "proofMetrics": "Repeatability scores, version-controlled ICDUs, improvement trends across iterations",
       "example": "When your healthcare AI achieves exceptional patient satisfaction, you can extract the exact ICDU configuration and replicate it across other departments.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Reproducible AI success patterns", "Version-controlled configurations", "Continuous improvement through iteration"]
+      "keyTakeaways": ["Reproducible AI success patterns", "Version-controlled configurations", "Continuous improvement through iteration"],
+      "persona_kpi": "Scale proven AI patterns to 10+ use cases with consistent quality",
+      "decision_moment": "Authorize AI expansion based on reproducible success metrics"
     }
   ],
   "director": [
@@ -60,7 +70,9 @@
       "proofMetrics": "Standardized ICDU adoption rate, cross-team consistency metrics, shared vocabulary metrics",
       "example": "Marketing, sales, and support teams all use the same ICDU structure, enabling you to compare AI performance and share successful patterns across departments.",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Universal language for AI requirements", "Cross-team visibility and comparison", "Shared success patterns"]
+      "keyTakeaways": ["Universal language for AI requirements", "Cross-team visibility and comparison", "Shared success patterns"],
+      "persona_kpi": "100% ICDU adoption across all AI-enabled teams within 6 months",
+      "decision_moment": "Allocate budget for cross-team AI standardization initiative"
     },
     {
       "stepId": "pain",
@@ -70,7 +82,9 @@
       "proofMetrics": "Gate pass rates by team, escalation volumes, quality trends over time",
       "example": "Your dashboard shows that Team A has a 94% gate pass rate while Team B is at 76%, indicating where training or process improvements are needed.",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Automatic quality gates at scale", "Team performance visibility", "Data-driven improvement priorities"]
+      "keyTakeaways": ["Automatic quality gates at scale", "Team performance visibility", "Data-driven improvement priorities"],
+      "persona_kpi": "Raise lowest-performing team's gate pass rate to 90%+",
+      "decision_moment": "Identify underperforming teams and assign resources for improvement"
     },
     {
       "stepId": "change",
@@ -80,7 +94,9 @@
       "proofMetrics": "Rubric calibration scores, reviewer alignment metrics, knowledge transfer effectiveness",
       "example": "New hires reach expert-level review consistency 40% faster because they can study documented rubric assessments from senior reviewers.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Expert knowledge captured systematically", "Faster onboarding for new reviewers", "Consistent quality regardless of staffing"]
+      "keyTakeaways": ["Expert knowledge captured systematically", "Faster onboarding for new reviewers", "Consistent quality regardless of staffing"],
+      "persona_kpi": "Reduce new reviewer ramp-up time from 3 months to 5 weeks",
+      "decision_moment": "Approve hiring plan with improved onboarding timeline"
     },
     {
       "stepId": "measurement",
@@ -90,7 +106,9 @@
       "proofMetrics": "Pre-launch issue detection rate, production incident reduction, edge case coverage",
       "example": "Stress testing revealed that your AI responded inappropriately when users expressed urgency. You fixed it before launch, avoiding customer escalations.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Issues found before users find them", "Systematic edge case coverage", "Reduced production incidents"]
+      "keyTakeaways": ["Issues found before users find them", "Systematic edge case coverage", "Reduced production incidents"],
+      "persona_kpi": "Reduce production AI incidents by 70%",
+      "decision_moment": "Mandate stress testing in release criteria for all AI features"
     },
     {
       "stepId": "governance",
@@ -100,7 +118,9 @@
       "proofMetrics": "Time to production, first-time-right rates, process compliance scores",
       "example": "Teams now go from concept to validated AI feature 35% faster because the ICDU pipeline provides clear checkpoints and reduces iteration cycles.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Shared methodology across teams", "Faster time to production", "Reduced rework through clear process"]
+      "keyTakeaways": ["Shared methodology across teams", "Faster time to production", "Reduced rework through clear process"],
+      "persona_kpi": "Reduce AI feature time-to-production by 40%",
+      "decision_moment": "Commit to organization-wide ICDU pipeline rollout"
     }
   ],
   "manager": [
@@ -112,7 +132,9 @@
       "proofMetrics": "Estimation accuracy, scope change frequency, definition-of-done clarity scores",
       "example": "Instead of 'make the AI helpful,' the ICDU specifies: intent = 'explain concept to non-expert,' success criteria = 'accurate, actionable, low jargon.'",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Clear success criteria before development starts", "More accurate sprint estimation", "Reduced scope creep through explicit intent"]
+      "keyTakeaways": ["Clear success criteria before development starts", "More accurate sprint estimation", "Reduced scope creep through explicit intent"],
+      "persona_kpi": "Improve sprint estimation accuracy from 60% to 85%",
+      "decision_moment": "Accept sprint commitment based on clear ICDU definitions"
     },
     {
       "stepId": "pain",
@@ -122,7 +144,9 @@
       "proofMetrics": "Review cycle time, threshold attainment rates, release confidence scores",
       "example": "Review meetings now focus on 'we need to improve IAS from 78% to 85%' rather than arguing about whether the AI 'feels right.'",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Objective quality metrics end debates", "Faster review cycles", "Clear improvement targets"]
+      "keyTakeaways": ["Objective quality metrics end debates", "Faster review cycles", "Clear improvement targets"],
+      "persona_kpi": "Cut review cycle time by 50%",
+      "decision_moment": "Approve release when objective quality scores meet thresholds"
     },
     {
       "stepId": "change",
@@ -132,7 +156,9 @@
       "proofMetrics": "Feedback capture rate, recurring issue identification, learning application rate",
       "example": "Rubric data showed recurring 'clarity' issues. You added a checklist item, and clarity scores improved 28% over two sprints.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Team feedback captured systematically", "Pattern recognition from aggregated data", "Concrete improvement actions from insights"]
+      "keyTakeaways": ["Team feedback captured systematically", "Pattern recognition from aggregated data", "Concrete improvement actions from insights"],
+      "persona_kpi": "Reduce recurring issues by 40% through feedback loop",
+      "decision_moment": "Prioritize backlog based on aggregated rubric insights"
     },
     {
       "stepId": "measurement",
@@ -142,7 +168,9 @@
       "proofMetrics": "Test coverage, QA cycle time, post-release bug rates",
       "example": "Automated stress testing covers 16 scenario variations in minutes, replacing hours of manual testing while catching more edge cases.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Automated test scenario generation", "Increased coverage with less effort", "Fewer post-release issues"]
+      "keyTakeaways": ["Automated test scenario generation", "Increased coverage with less effort", "Fewer post-release issues"],
+      "persona_kpi": "Achieve 95%+ scenario coverage with 60% less QA time",
+      "decision_moment": "Sign off on release after automated stress test completion"
     },
     {
       "stepId": "governance",
@@ -152,7 +180,9 @@
       "proofMetrics": "Process compliance, documentation reuse, team satisfaction scores",
       "example": "ICDUs created during development automatically generate the documentation compliance needs, eliminating separate documentation sprints.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Documentation generated automatically", "Process aligned with development work", "Reduced overhead, increased compliance"]
+      "keyTakeaways": ["Documentation generated automatically", "Process aligned with development work", "Reduced overhead, increased compliance"],
+      "persona_kpi": "Eliminate dedicated documentation sprints (2 sprints/quarter saved)",
+      "decision_moment": "Adopt ICDU pipeline as standard team process"
     }
   ],
   "developer": [
@@ -164,7 +194,9 @@
       "proofMetrics": "Requirement clarity scores, implementation accuracy, rework rates",
       "example": "ICDU specifies: intent='explain to non-expert', principles=['cite uncertainty', 'avoid unsafe instructions'], persona='calm, direct'. Clear implementation target.",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Structured specs replace vague requirements", "Clear intent guides implementation", "Reduced guesswork and rework"]
+      "keyTakeaways": ["Structured specs replace vague requirements", "Clear intent guides implementation", "Reduced guesswork and rework"],
+      "persona_kpi": "Reduce implementation rework by 50%",
+      "decision_moment": "Start coding when ICDU is complete and approved"
     },
     {
       "stepId": "pain",
@@ -174,7 +206,9 @@
       "proofMetrics": "Debug cycle time, root cause identification accuracy, fix success rate",
       "example": "IAS is 92% but PAS is 68%. The AI understands intent but violates principles. You know to focus on principle enforcement, not intent clarification.",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Component-level performance visibility", "Targeted debugging of specific dimensions", "Faster root cause identification"]
+      "keyTakeaways": ["Component-level performance visibility", "Targeted debugging of specific dimensions", "Faster root cause identification"],
+      "persona_kpi": "Cut debugging time by 60% with component scores",
+      "decision_moment": "Focus fix effort on lowest-scoring dimension"
     },
     {
       "stepId": "change",
@@ -184,7 +218,9 @@
       "proofMetrics": "Feedback consistency, actionability scores, improvement implementation rate",
       "example": "Rubric data shows consistently low 'coaching quality' scores. You update the prompt to include action steps, and scores improve 35%.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Structured feedback across consistent dimensions", "Clear improvement priorities from aggregated data", "Actionable signals for iteration"]
+      "keyTakeaways": ["Structured feedback across consistent dimensions", "Clear improvement priorities from aggregated data", "Actionable signals for iteration"],
+      "persona_kpi": "Improve lowest rubric dimension by 30% per iteration",
+      "decision_moment": "Iterate on prompt based on rubric score patterns"
     },
     {
       "stepId": "measurement",
@@ -194,7 +230,9 @@
       "proofMetrics": "Edge case coverage, stability scores, production bug reduction",
       "example": "Stress testing reveals the AI hallucinates when given 'rushed' tone. You add a constraint check, and hallucination rate drops to <2%.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Systematic edge case generation", "Full variation space coverage", "Issues found before production"]
+      "keyTakeaways": ["Systematic edge case generation", "Full variation space coverage", "Issues found before production"],
+      "persona_kpi": "Catch 90% of edge case issues before production",
+      "decision_moment": "Mark feature complete when stress tests pass"
     },
     {
       "stepId": "governance",
@@ -204,7 +242,9 @@
       "proofMetrics": "Version tracking completeness, rollback success rate, change impact visibility",
       "example": "When behavior regresses, you compare ICDU v1.3 to v1.4, see the principle change that caused it, and roll back confidently.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Version control for AI configurations", "Easy comparison and rollback", "Change impact visibility"]
+      "keyTakeaways": ["Version control for AI configurations", "Easy comparison and rollback", "Change impact visibility"],
+      "persona_kpi": "100% version tracking with instant rollback capability",
+      "decision_moment": "Bump ICDU version on any behavioral change"
     }
   ],
   "risk-compliance": [
@@ -216,7 +256,9 @@
       "proofMetrics": "Audit trail completeness, principle documentation rate, regulatory inquiry response time",
       "example": "When auditors ask 'how do you ensure your AI doesn't give unsafe advice?', you show the explicit safety principles in every ICDU and the PAS scores enforcing them.",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Explicit safety principles documented", "Complete audit trail for every decision", "Rapid response to regulatory inquiries"]
+      "keyTakeaways": ["Explicit safety principles documented", "Complete audit trail for every decision", "Rapid response to regulatory inquiries"],
+      "persona_kpi": "Answer regulatory inquiries in <24 hours with documentation",
+      "decision_moment": "Certify AI system for regulatory submission"
     },
     {
       "stepId": "pain",
@@ -226,7 +268,9 @@
       "proofMetrics": "Gate coverage, threshold documentation, decision logging completeness",
       "example": "Records show every AI output was scored, outputs below 70% were blocked, and escalated items were human-reviewed. Clear evidence of due diligence.",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Systematic evaluation of every output", "Documented thresholds and decisions", "Evidence of reasonable care"]
+      "keyTakeaways": ["Systematic evaluation of every output", "Documented thresholds and decisions", "Evidence of reasonable care"],
+      "persona_kpi": "100% documented gate decisions with rationale",
+      "decision_moment": "Sign attestation of AI governance completeness"
     },
     {
       "stepId": "change",
@@ -236,7 +280,9 @@
       "proofMetrics": "Review coverage, reviewer identification, assessment completeness",
       "example": "Audit shows 100% of high-risk outputs received human review with documented empathy, clarity, and safety assessments by identified reviewers.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Complete documentation of human oversight", "Identified reviewers and timestamps", "Structured assessment records"]
+      "keyTakeaways": ["Complete documentation of human oversight", "Identified reviewers and timestamps", "Structured assessment records"],
+      "persona_kpi": "100% high-risk output review documentation",
+      "decision_moment": "Validate human oversight coverage meets policy requirements"
     },
     {
       "stepId": "measurement",
@@ -246,7 +292,9 @@
       "proofMetrics": "Fairness scores, cross-group consistency, bias detection rates",
       "example": "Stress testing shows the AI responds consistently across 'customer' vs 'employee' roles, with 96% fairness score across demographic variations.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Systematic bias testing", "Quantified fairness metrics", "Proactive discrimination detection"]
+      "keyTakeaways": ["Systematic bias testing", "Quantified fairness metrics", "Proactive discrimination detection"],
+      "persona_kpi": "Achieve 95%+ fairness score across all tested groups",
+      "decision_moment": "Approve AI deployment based on fairness test results"
     },
     {
       "stepId": "governance",
@@ -256,7 +304,9 @@
       "proofMetrics": "Policy encoding rate, adherence scores, violation blocking rate",
       "example": "Your 'no medical advice' policy is encoded as a principle. Any output with PAS <85% on that principle is automatically escalated for human review.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Policies encoded as machine-readable principles", "Automatic adherence measurement", "Enforcement through gates and escalation"]
+      "keyTakeaways": ["Policies encoded as machine-readable principles", "Automatic adherence measurement", "Enforcement through gates and escalation"],
+      "persona_kpi": "100% policy encoding with automated enforcement",
+      "decision_moment": "Certify policy compliance for regulatory filing"
     }
   ],
   "evaluator": [
@@ -268,7 +318,9 @@
       "proofMetrics": "Inter-evaluator reliability, assessment consistency, comparison validity",
       "example": "Two evaluators assessing the same AI now use the same ICDU framework, resulting in 91% agreement vs. 63% without the structured criteria.",
       "whereInPipeline": "ICDU Creation",
-      "keyTakeaways": ["Shared framework for assessment", "Consistent criteria across evaluators", "Meaningful cross-system comparisons"]
+      "keyTakeaways": ["Shared framework for assessment", "Consistent criteria across evaluators", "Meaningful cross-system comparisons"],
+      "persona_kpi": "Achieve 90%+ inter-evaluator agreement",
+      "decision_moment": "Finalize evaluation criteria before assessment begins"
     },
     {
       "stepId": "pain",
@@ -278,7 +330,9 @@
       "proofMetrics": "Reproduction success rate, version tracking, verification pass rates",
       "example": "Vendor claims 95% intent alignment. You run their ICDU against their model, get 87%, and have documented evidence of the discrepancy.",
       "whereInPipeline": "AI Judge Gate",
-      "keyTakeaways": ["Reproducible evaluation methodology", "Version-controlled test configurations", "Independent verification of claims"]
+      "keyTakeaways": ["Reproducible evaluation methodology", "Version-controlled test configurations", "Independent verification of claims"],
+      "persona_kpi": "100% reproducibility of evaluation results",
+      "decision_moment": "Accept or challenge vendor claims based on reproducible tests"
     },
     {
       "stepId": "change",
@@ -288,7 +342,9 @@
       "proofMetrics": "Assessment throughput, coverage rates, quality per reviewer hour",
       "example": "Structured rubrics enable 3x more assessments per hour while maintaining inter-rater reliability above 85%.",
       "whereInPipeline": "HITL Nuance Grading",
-      "keyTakeaways": ["Efficient structured assessment", "Scalable qualitative evaluation", "Maintained quality at higher volume"]
+      "keyTakeaways": ["Efficient structured assessment", "Scalable qualitative evaluation", "Maintained quality at higher volume"],
+      "persona_kpi": "3x assessment throughput with maintained reliability",
+      "decision_moment": "Scale evaluation coverage based on efficiency gains"
     },
     {
       "stepId": "measurement",
@@ -298,7 +354,9 @@
       "proofMetrics": "Scenario coverage, variation completeness, deployment-evaluation match",
       "example": "Standard benchmark: 92% accuracy. Stress-tested with role/tone variations: 78% stability. The comprehensive evaluation reveals hidden weaknesses.",
       "whereInPipeline": "Stress Testing",
-      "keyTakeaways": ["Comprehensive scenario coverage", "Real-world condition testing", "Hidden weakness detection"]
+      "keyTakeaways": ["Comprehensive scenario coverage", "Real-world condition testing", "Hidden weakness detection"],
+      "persona_kpi": "100% variation coverage matching deployment scenarios",
+      "decision_moment": "Report comprehensive evaluation vs narrow benchmark results"
     },
     {
       "stepId": "governance",
@@ -308,7 +366,9 @@
       "proofMetrics": "Comparison validity, benchmark standardization, vendor claim verification rate",
       "example": "Evaluate three vendors using identical ICDUs, judge gates, and stress tests. Make data-driven selection based on fair, reproducible comparisons.",
       "whereInPipeline": "Full Pipeline",
-      "keyTakeaways": ["Fair cross-system comparisons", "Standardized benchmark methodology", "Data-driven vendor selection"]
+      "keyTakeaways": ["Fair cross-system comparisons", "Standardized benchmark methodology", "Data-driven vendor selection"],
+      "persona_kpi": "Standardized comparison across 100% of evaluated systems",
+      "decision_moment": "Make vendor selection based on fair benchmark data"
     }
   ]
 }
