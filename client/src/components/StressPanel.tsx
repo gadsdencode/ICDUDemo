@@ -232,8 +232,8 @@ export function StressPanel() {
               </Card>
             </div>
 
-            <div className="border rounded-md overflow-x-auto -mx-4 sm:mx-0">
-              <Table className="min-w-[500px]">
+            <div className="border rounded-md overflow-hidden">
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-xs sm:text-sm">Perturbation</TableHead>

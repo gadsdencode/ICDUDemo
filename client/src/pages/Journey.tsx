@@ -116,7 +116,7 @@ export default function Journey() {
           </div>
         </div>
 
-        <div className="mb-2 sm:mb-8 overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+        <div className="mb-2 sm:mb-8">
           <PersonaSelector
             personas={personasData}
             selectedPersona={personaId}

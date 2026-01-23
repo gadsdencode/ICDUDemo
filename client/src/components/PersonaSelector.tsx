@@ -42,7 +42,7 @@ export function PersonaSelector({
 
   if (compact) {
     return (
-      <div className="flex flex-nowrap sm:flex-wrap gap-1 sm:gap-2 overflow-x-auto pb-1">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-1 sm:gap-2">
         {personas.map((persona) => {
           const Icon = iconMap[persona.icon] || Building2;
           const isSelected = selectedPersona === persona.id;
@@ -52,7 +52,7 @@ export function PersonaSelector({
               key={persona.id}
               onClick={() => handleSelect(persona)}
               className={cn(
-                "flex items-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-1 sm:py-2 rounded-md border transition-all flex-shrink-0",
+                "flex items-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-1 sm:py-2 rounded-md border transition-all",
                 isSelected
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card border-border hover-elevate"
@@ -60,7 +60,7 @@ export function PersonaSelector({
               data-testid={`persona-compact-${persona.id}`}
             >
               <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="text-[10px] sm:text-sm font-medium whitespace-nowrap">{persona.name.split(' ')[0]}</span>
+              <span className="text-[10px] sm:text-sm font-medium">{persona.name.split(' ')[0]}</span>
             </button>
           );
         })}

@@ -89,7 +89,7 @@ export default function Demos() {
           </p>
         </div>
 
-        <div className="mb-6 sm:mb-8 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="mb-6 sm:mb-8">
           <PipelineDiagram compact />
         </div>
 

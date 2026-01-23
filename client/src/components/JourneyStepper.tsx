@@ -49,7 +49,7 @@ export function JourneyStepper({
 
   return (
     <div className="space-y-3 sm:space-y-6">
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2 pb-1 sm:pb-2">
         {steps.map((s, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
@@ -59,7 +59,7 @@ export function JourneyStepper({
               key={s.stepId}
               onClick={() => onStepChange(index)}
               className={cn(
-                "flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 rounded-md border transition-all whitespace-nowrap flex-shrink-0",
+                "flex items-center justify-center gap-1 sm:gap-2 min-w-[36px] sm:min-w-0 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md border transition-all",
                 isActive
                   ? "bg-primary text-primary-foreground border-primary"
                   : isCompleted
@@ -79,7 +79,6 @@ export function JourneyStepper({
                 {isCompleted ? <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : index + 1}
               </div>
               <span className="text-xs sm:text-sm font-medium hidden sm:inline">{s.title}</span>
-              <span className="text-[10px] font-medium sm:hidden">{index + 1}</span>
             </button>
           );
         })}

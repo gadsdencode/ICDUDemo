@@ -45,6 +45,10 @@ All content is rendered from configuration files:
 - Glossary and FAQ in `examples.ts`
 
 ## Recent Changes
+- 2026-01-23: Eliminated all horizontal scrolling on mobile
+  - Removed overflow-x-auto patterns from all components
+  - Changed step buttons and persona selectors to use flex-wrap
+  - All content now wraps within viewport width (320px tested)
 - 2026-01-23: Aggressive mobile optimization for 320-375px screens
   - Further reduced text sizes (text-[10px], text-[9px], text-[11px])
   - Ultra-compact padding (p-2, p-2.5) and spacing (gap-1, gap-1.5)
