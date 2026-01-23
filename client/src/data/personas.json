@@ -1,0 +1,110 @@
+[
+  {
+    "id": "executive",
+    "name": "Executive",
+    "tagline": "Strategic oversight and risk management",
+    "icon": "Building2",
+    "primaryConcerns": [
+      "Regulatory compliance and liability",
+      "Brand reputation risk",
+      "ROI on AI investments",
+      "Board-level accountability"
+    ],
+    "successMetrics": [
+      "Audit trail completeness",
+      "Incident reduction rate",
+      "Compliance score improvements"
+    ],
+    "recommendedStartingSection": "governance"
+  },
+  {
+    "id": "director",
+    "name": "Director",
+    "tagline": "Operational excellence and team alignment",
+    "icon": "Users",
+    "primaryConcerns": [
+      "Cross-team consistency",
+      "Quality assurance at scale",
+      "Resource allocation",
+      "Stakeholder communication"
+    ],
+    "successMetrics": [
+      "Team velocity metrics",
+      "Quality gate pass rates",
+      "Escalation frequency"
+    ],
+    "recommendedStartingSection": "pipeline"
+  },
+  {
+    "id": "manager",
+    "name": "Manager",
+    "tagline": "Day-to-day execution and process improvement",
+    "icon": "ClipboardList",
+    "primaryConcerns": [
+      "Sprint deliverables",
+      "Team productivity",
+      "Process documentation",
+      "Performance tracking"
+    ],
+    "successMetrics": [
+      "Task completion rates",
+      "Rework reduction",
+      "Process cycle time"
+    ],
+    "recommendedStartingSection": "workflow"
+  },
+  {
+    "id": "developer",
+    "name": "Developer",
+    "tagline": "Building reliable AI-powered features",
+    "icon": "Code2",
+    "primaryConcerns": [
+      "Clear implementation specs",
+      "Debugging AI outputs",
+      "Testing and validation",
+      "Version control for prompts"
+    ],
+    "successMetrics": [
+      "Test coverage",
+      "Bug reduction",
+      "Deployment confidence"
+    ],
+    "recommendedStartingSection": "implementation"
+  },
+  {
+    "id": "risk-compliance",
+    "name": "Risk & Compliance",
+    "tagline": "Ensuring safety and regulatory adherence",
+    "icon": "Shield",
+    "primaryConcerns": [
+      "Regulatory requirements",
+      "Audit readiness",
+      "Risk assessment documentation",
+      "Policy enforcement"
+    ],
+    "successMetrics": [
+      "Compliance violations prevented",
+      "Audit success rate",
+      "Policy adherence scores"
+    ],
+    "recommendedStartingSection": "safety"
+  },
+  {
+    "id": "evaluator",
+    "name": "Evaluator",
+    "tagline": "Assessing AI systems for quality and safety",
+    "icon": "Search",
+    "primaryConcerns": [
+      "Objective assessment criteria",
+      "Reproducible evaluations",
+      "Comprehensive test coverage",
+      "Benchmark comparisons"
+    ],
+    "successMetrics": [
+      "Evaluation consistency",
+      "Coverage completeness",
+      "Detection accuracy"
+    ],
+    "recommendedStartingSection": "evaluation"
+  }
+]

@@ -3,14 +3,22 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Navigation } from "@/components/Navigation";
 import NotFound from "@/pages/not-found";
+import Overview from "@/pages/Overview";
+import Journey from "@/pages/Journey";
+import Demos from "@/pages/Demos";
+import FAQ from "@/pages/FAQ";
 
 function Router() {
   return (
     <Switch>
-      {/* Add pages below */}
-      {/* <Route path="/" component={Home}/> */}
-      {/* Fallback to 404 */}
+      <Route path="/" component={Overview} />
+      <Route path="/journey" component={Journey} />
+      <Route path="/journey/:personaId" component={Journey} />
+      <Route path="/demos" component={Demos} />
+      <Route path="/faq" component={FAQ} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -19,10 +27,17 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="system" storageKey="icdu-theme">
+        <TooltipProvider>
+          <div className="min-h-screen bg-background">
+            <Navigation />
+            <main>
+              <Router />
+            </main>
+          </div>
+          <Toaster />
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

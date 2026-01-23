@@ -1,0 +1,314 @@
+{
+  "executive": [
+    {
+      "stepId": "context",
+      "title": "Your Reality Today",
+      "problem": "AI systems are deployed with minimal oversight. When something goes wrong, there's no clear audit trail, making it nearly impossible to determine what happened or why. Board members and regulators are asking questions you can't answer.",
+      "withIcdu": "Every AI interaction is captured in a structured ICDU record with explicit intent, governing principles, and traceability. You can demonstrate exactly how decisions were made and what safeguards were in place.",
+      "proofMetrics": "100% traceability on AI decisions, governance IDs link every output to its intent and constraints",
+      "example": "When a regulator asks how your AI determined a recommendation, you can show the exact ICDU: the stated intent, the safety principles applied, and the complete decision chain.",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Complete audit trail for every AI decision", "Board-ready documentation automatically generated", "Clear accountability chains established"]
+    },
+    {
+      "stepId": "pain",
+      "title": "The Risk You're Carrying",
+      "problem": "Without structured evaluation, you're essentially hoping your AI behaves correctly. Each deployment is a liability exposure with no quantifiable risk assessment. Competitors with better governance will win regulated contracts.",
+      "withIcdu": "AI Judge gates provide quantitative scores before any output reaches production. You have clear thresholds and automatic escalation paths that demonstrate due diligence.",
+      "proofMetrics": "Intent Alignment Score (IAS), Principle Adherence Score (PAS), Application Score (AS) - all measured and logged",
+      "example": "Before launch, you can show stakeholders that your AI achieved 92% PAS and 87% IAS, exceeding your 85% thresholds, with automatic blocks for scores below 70%.",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Quantifiable risk metrics for every AI output", "Automatic escalation prevents costly mistakes", "Demonstrable due diligence for regulators"]
+    },
+    {
+      "stepId": "change",
+      "title": "Human Oversight at Scale",
+      "problem": "Human review is inconsistent and undocumented. Different reviewers apply different standards, and there's no systematic way to capture expert judgment for continuous improvement.",
+      "withIcdu": "HITL Nuance Graders provide structured rubrics for empathy, clarity, coaching quality, and trust. Every human assessment is logged and aggregated, creating institutional knowledge.",
+      "proofMetrics": "Rubric scores aggregated across reviewers, inter-rater reliability metrics, trend analysis over time",
+      "example": "Your compliance team's nuanced assessments of AI outputs are now quantified and tracked, showing a 34% improvement in trust scores over 6 months.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Structured human oversight with consistent rubrics", "Institutional knowledge captured systematically", "Measurable improvement in qualitative metrics"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Stress-Tested Confidence",
+      "problem": "AI systems often fail in unexpected ways under edge cases. You only discover problems after they've affected users or created liabilities.",
+      "withIcdu": "The Scenario-Perturbation Stress Engine systematically tests your AI under controlled variations: different roles, tones, constraints, and channels. You discover failure modes before deployment.",
+      "proofMetrics": "Stability scores, fairness metrics, refusal consistency rates, hallucination patterns across perturbations",
+      "example": "Before launching a customer service AI, you've verified it maintains 94% stability across 16 scenario variations, with consistent refusal behavior for unsafe requests.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Proactive failure mode discovery", "Systematic edge case testing", "Confidence metrics before deployment"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Repeatable Excellence",
+      "problem": "Success with AI feels random. Good outcomes can't be replicated because you don't understand what made them work.",
+      "withIcdu": "Same ICDU + same model = comparable results. Every successful pattern is documented in structured format, enabling replication and continuous improvement.",
+      "proofMetrics": "Repeatability scores, version-controlled ICDUs, improvement trends across iterations",
+      "example": "When your healthcare AI achieves exceptional patient satisfaction, you can extract the exact ICDU configuration and replicate it across other departments.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Reproducible AI success patterns", "Version-controlled configurations", "Continuous improvement through iteration"]
+    }
+  ],
+  "director": [
+    {
+      "stepId": "context",
+      "title": "Managing AI Across Teams",
+      "problem": "Different teams build AI features with different approaches. There's no shared language for defining requirements, no consistent way to evaluate outputs, and no visibility into what's working across the organization.",
+      "withIcdu": "ICDU provides a universal format for encoding AI requirements. Every team uses the same structure: intent, principles, persona, context. Cross-team comparisons become possible.",
+      "proofMetrics": "Standardized ICDU adoption rate, cross-team consistency metrics, shared vocabulary metrics",
+      "example": "Marketing, sales, and support teams all use the same ICDU structure, enabling you to compare AI performance and share successful patterns across departments.",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Universal language for AI requirements", "Cross-team visibility and comparison", "Shared success patterns"]
+    },
+    {
+      "stepId": "pain",
+      "title": "Quality at Scale",
+      "problem": "As AI usage grows, quality becomes inconsistent. Teams ship features without proper validation, leading to customer complaints and rework. You can't scale review processes fast enough.",
+      "withIcdu": "AI Judge gates provide automatic quality checkpoints. Outputs are scored against clear thresholds before reaching users. Low-quality outputs are automatically escalated or blocked.",
+      "proofMetrics": "Gate pass rates by team, escalation volumes, quality trends over time",
+      "example": "Your dashboard shows that Team A has a 94% gate pass rate while Team B is at 76%, indicating where training or process improvements are needed.",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Automatic quality gates at scale", "Team performance visibility", "Data-driven improvement priorities"]
+    },
+    {
+      "stepId": "change",
+      "title": "Codifying Expert Judgment",
+      "problem": "Your best reviewers' insights exist only in their heads. When they leave or are unavailable, quality suffers. There's no systematic way to transfer expertise.",
+      "withIcdu": "HITL Nuance Graders capture expert assessments in structured rubrics. These accumulate into training data and benchmarks. New team members learn from documented expert judgment.",
+      "proofMetrics": "Rubric calibration scores, reviewer alignment metrics, knowledge transfer effectiveness",
+      "example": "New hires reach expert-level review consistency 40% faster because they can study documented rubric assessments from senior reviewers.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Expert knowledge captured systematically", "Faster onboarding for new reviewers", "Consistent quality regardless of staffing"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Proactive Risk Management",
+      "problem": "Problems are discovered by users, not by your team. Edge cases slip through because there's no systematic way to anticipate them before launch.",
+      "withIcdu": "The Stress Engine generates controlled variations to test AI behavior under different conditions. You discover issues during development, not in production.",
+      "proofMetrics": "Pre-launch issue detection rate, production incident reduction, edge case coverage",
+      "example": "Stress testing revealed that your AI responded inappropriately when users expressed urgency. You fixed it before launch, avoiding customer escalations.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Issues found before users find them", "Systematic edge case coverage", "Reduced production incidents"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Operational Excellence",
+      "problem": "Each team reinvents approaches to AI development. Best practices aren't shared, and there's no clear path from experimentation to production.",
+      "withIcdu": "The full ICDU pipeline provides a clear operational framework. Teams have a shared methodology from requirements to deployment, with built-in quality gates.",
+      "proofMetrics": "Time to production, first-time-right rates, process compliance scores",
+      "example": "Teams now go from concept to validated AI feature 35% faster because the ICDU pipeline provides clear checkpoints and reduces iteration cycles.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Shared methodology across teams", "Faster time to production", "Reduced rework through clear process"]
+    }
+  ],
+  "manager": [
+    {
+      "stepId": "context",
+      "title": "Sprint Planning with AI",
+      "problem": "AI features are hard to scope. Prompts and requirements change constantly, making estimation unreliable. Teams don't know when they're 'done' because success criteria are vague.",
+      "withIcdu": "ICDU defines explicit success criteria upfront. Intent statements clarify what 'done' looks like. Teams can estimate more accurately because requirements are structured.",
+      "proofMetrics": "Estimation accuracy, scope change frequency, definition-of-done clarity scores",
+      "example": "Instead of 'make the AI helpful,' the ICDU specifies: intent = 'explain concept to non-expert,' success criteria = 'accurate, actionable, low jargon.'",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Clear success criteria before development starts", "More accurate sprint estimation", "Reduced scope creep through explicit intent"]
+    },
+    {
+      "stepId": "pain",
+      "title": "Tracking Quality Objectively",
+      "problem": "Quality discussions become subjective debates. Without clear metrics, reviews take too long, and disagreements slow down releases.",
+      "withIcdu": "AI Judge scores provide objective quality measurements. Teams have clear thresholds to meet. Reviews become data-driven, not opinion-driven.",
+      "proofMetrics": "Review cycle time, threshold attainment rates, release confidence scores",
+      "example": "Review meetings now focus on 'we need to improve IAS from 78% to 85%' rather than arguing about whether the AI 'feels right.'",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Objective quality metrics end debates", "Faster review cycles", "Clear improvement targets"]
+    },
+    {
+      "stepId": "change",
+      "title": "Capturing Team Insights",
+      "problem": "Valuable feedback from reviews gets lost in chat threads or forgotten. The team makes the same mistakes because learnings aren't systematically captured.",
+      "withIcdu": "HITL rubric assessments are logged with notes. Patterns emerge from aggregated feedback. Team retrospectives have concrete data to analyze.",
+      "proofMetrics": "Feedback capture rate, recurring issue identification, learning application rate",
+      "example": "Rubric data showed recurring 'clarity' issues. You added a checklist item, and clarity scores improved 28% over two sprints.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Team feedback captured systematically", "Pattern recognition from aggregated data", "Concrete improvement actions from insights"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Testing Before Shipping",
+      "problem": "QA for AI is manual and incomplete. Teams can't systematically test different scenarios, leading to post-release bugs and hotfixes.",
+      "withIcdu": "Stress Engine generates test variations automatically. Coverage is systematic and documented. QA time is reduced while coverage increases.",
+      "proofMetrics": "Test coverage, QA cycle time, post-release bug rates",
+      "example": "Automated stress testing covers 16 scenario variations in minutes, replacing hours of manual testing while catching more edge cases.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Automated test scenario generation", "Increased coverage with less effort", "Fewer post-release issues"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Process That Works",
+      "problem": "Process feels like overhead. Documentation is created for compliance but rarely used. Teams work around processes rather than with them.",
+      "withIcdu": "The ICDU pipeline creates useful artifacts as a byproduct of development. Documentation is generated automatically. Process and product work are aligned.",
+      "proofMetrics": "Process compliance, documentation reuse, team satisfaction scores",
+      "example": "ICDUs created during development automatically generate the documentation compliance needs, eliminating separate documentation sprints.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Documentation generated automatically", "Process aligned with development work", "Reduced overhead, increased compliance"]
+    }
+  ],
+  "developer": [
+    {
+      "stepId": "context",
+      "title": "Clear Implementation Specs",
+      "problem": "Requirements for AI features are vague. 'Make it smart' or 'be helpful' don't translate into implementation. Developers guess at intent and build the wrong thing.",
+      "withIcdu": "ICDU provides structured specifications: explicit intent, governing principles, persona/tone requirements, context constraints. Developers know exactly what to build.",
+      "proofMetrics": "Requirement clarity scores, implementation accuracy, rework rates",
+      "example": "ICDU specifies: intent='explain to non-expert', principles=['cite uncertainty', 'avoid unsafe instructions'], persona='calm, direct'. Clear implementation target.",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Structured specs replace vague requirements", "Clear intent guides implementation", "Reduced guesswork and rework"]
+    },
+    {
+      "stepId": "pain",
+      "title": "Debugging AI Outputs",
+      "problem": "When AI outputs are wrong, it's hard to diagnose why. Is it the prompt? The model? The context? Debugging is trial and error.",
+      "withIcdu": "AI Judge scores break down performance into components: IAS shows intent alignment, PAS shows principle adherence, AS shows application quality. Debug the specific dimension that's failing.",
+      "proofMetrics": "Debug cycle time, root cause identification accuracy, fix success rate",
+      "example": "IAS is 92% but PAS is 68%. The AI understands intent but violates principles. You know to focus on principle enforcement, not intent clarification.",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Component-level performance visibility", "Targeted debugging of specific dimensions", "Faster root cause identification"]
+    },
+    {
+      "stepId": "change",
+      "title": "Learning from Human Feedback",
+      "problem": "Human feedback is unstructured and inconsistent. Different reviewers focus on different things. There's no clear signal for what to improve.",
+      "withIcdu": "HITL rubrics provide structured feedback across consistent dimensions: empathy, clarity, coaching quality, trust, safety. Aggregated scores show clear improvement priorities.",
+      "proofMetrics": "Feedback consistency, actionability scores, improvement implementation rate",
+      "example": "Rubric data shows consistently low 'coaching quality' scores. You update the prompt to include action steps, and scores improve 35%.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Structured feedback across consistent dimensions", "Clear improvement priorities from aggregated data", "Actionable signals for iteration"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Testing Edge Cases Systematically",
+      "problem": "Manual testing misses edge cases. The AI works great in demos but fails with real user variations. Bugs are discovered in production.",
+      "withIcdu": "Stress Engine generates systematic variations: different roles, tones, constraints, channels. You see how the AI behaves across the full variation space.",
+      "proofMetrics": "Edge case coverage, stability scores, production bug reduction",
+      "example": "Stress testing reveals the AI hallucinates when given 'rushed' tone. You add a constraint check, and hallucination rate drops to <2%.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Systematic edge case generation", "Full variation space coverage", "Issues found before production"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Version Control for AI",
+      "problem": "Prompt changes aren't tracked systematically. It's hard to roll back, compare versions, or understand what changed when behavior shifts.",
+      "withIcdu": "ICDUs are versioned artifacts with governance IDs. Changes are tracked, comparisons are easy, and rollback is straightforward. Same rigor as code version control.",
+      "proofMetrics": "Version tracking completeness, rollback success rate, change impact visibility",
+      "example": "When behavior regresses, you compare ICDU v1.3 to v1.4, see the principle change that caused it, and roll back confidently.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Version control for AI configurations", "Easy comparison and rollback", "Change impact visibility"]
+    }
+  ],
+  "risk-compliance": [
+    {
+      "stepId": "context",
+      "title": "Regulatory Requirements",
+      "problem": "Regulators are demanding AI explainability and audit trails. Current systems can't demonstrate how decisions were made or what safeguards were applied.",
+      "withIcdu": "Every ICDU captures explicit governing principles, safety constraints, and traceability. Regulators can see exactly what rules governed each AI decision.",
+      "proofMetrics": "Audit trail completeness, principle documentation rate, regulatory inquiry response time",
+      "example": "When auditors ask 'how do you ensure your AI doesn't give unsafe advice?', you show the explicit safety principles in every ICDU and the PAS scores enforcing them.",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Explicit safety principles documented", "Complete audit trail for every decision", "Rapid response to regulatory inquiries"]
+    },
+    {
+      "stepId": "pain",
+      "title": "Demonstrating Due Diligence",
+      "problem": "There's no systematic evidence that AI outputs were evaluated before reaching users. In case of harm, it's hard to demonstrate reasonable care was taken.",
+      "withIcdu": "AI Judge gates with documented thresholds demonstrate systematic evaluation. Scores, decisions, and rationales are logged for every output.",
+      "proofMetrics": "Gate coverage, threshold documentation, decision logging completeness",
+      "example": "Records show every AI output was scored, outputs below 70% were blocked, and escalated items were human-reviewed. Clear evidence of due diligence.",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Systematic evaluation of every output", "Documented thresholds and decisions", "Evidence of reasonable care"]
+    },
+    {
+      "stepId": "change",
+      "title": "Human Oversight Documentation",
+      "problem": "Human review happens but isn't documented systematically. There's no evidence of what was reviewed, by whom, or what criteria were applied.",
+      "withIcdu": "HITL rubric assessments create structured records of human review: who reviewed, when, what scores were given, what notes were made. Complete oversight documentation.",
+      "proofMetrics": "Review coverage, reviewer identification, assessment completeness",
+      "example": "Audit shows 100% of high-risk outputs received human review with documented empathy, clarity, and safety assessments by identified reviewers.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Complete documentation of human oversight", "Identified reviewers and timestamps", "Structured assessment records"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Bias and Fairness Testing",
+      "problem": "AI systems may exhibit bias across different user groups or scenarios. Without systematic testing, discrimination risks go undetected.",
+      "withIcdu": "Stress Engine tests AI behavior across role, demographic, and scenario variations. Fairness metrics quantify consistency of treatment across groups.",
+      "proofMetrics": "Fairness scores, cross-group consistency, bias detection rates",
+      "example": "Stress testing shows the AI responds consistently across 'customer' vs 'employee' roles, with 96% fairness score across demographic variations.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Systematic bias testing", "Quantified fairness metrics", "Proactive discrimination detection"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Policy Enforcement",
+      "problem": "Safety policies exist on paper but aren't systematically enforced in AI systems. There's no verification that policies are actually applied.",
+      "withIcdu": "Principles in ICDUs encode policies. PAS scores measure adherence. Thresholds enforce minimum compliance. Violations are automatically blocked or escalated.",
+      "proofMetrics": "Policy encoding rate, adherence scores, violation blocking rate",
+      "example": "Your 'no medical advice' policy is encoded as a principle. Any output with PAS <85% on that principle is automatically escalated for human review.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Policies encoded as machine-readable principles", "Automatic adherence measurement", "Enforcement through gates and escalation"]
+    }
+  ],
+  "evaluator": [
+    {
+      "stepId": "context",
+      "title": "Objective Assessment Criteria",
+      "problem": "Evaluating AI systems is subjective and inconsistent. Different evaluators reach different conclusions because there's no shared framework for assessment.",
+      "withIcdu": "ICDU provides a structured format for encoding evaluation criteria. Every assessment is grounded in explicit intent, principles, and context. Comparisons become meaningful.",
+      "proofMetrics": "Inter-evaluator reliability, assessment consistency, comparison validity",
+      "example": "Two evaluators assessing the same AI now use the same ICDU framework, resulting in 91% agreement vs. 63% without the structured criteria.",
+      "whereInPipeline": "ICDU Creation",
+      "keyTakeaways": ["Shared framework for assessment", "Consistent criteria across evaluators", "Meaningful cross-system comparisons"]
+    },
+    {
+      "stepId": "pain",
+      "title": "Reproducible Evaluations",
+      "problem": "Evaluations can't be reproduced. Running the same test twice gives different results, and there's no way to verify claims about AI performance.",
+      "withIcdu": "Same ICDU + same model = comparable results. Evaluations are version-controlled and reproducible. Claims can be independently verified.",
+      "proofMetrics": "Reproduction success rate, version tracking, verification pass rates",
+      "example": "Vendor claims 95% intent alignment. You run their ICDU against their model, get 87%, and have documented evidence of the discrepancy.",
+      "whereInPipeline": "AI Judge Gate",
+      "keyTakeaways": ["Reproducible evaluation methodology", "Version-controlled test configurations", "Independent verification of claims"]
+    },
+    {
+      "stepId": "change",
+      "title": "Qualitative Assessment at Scale",
+      "problem": "Nuanced quality aspects (empathy, clarity, trustworthiness) require human judgment but don't scale. Evaluation coverage is limited by reviewer capacity.",
+      "withIcdu": "HITL rubrics provide efficient structured assessment. Reviewers evaluate quickly against defined dimensions. Sampling strategies ensure coverage while managing workload.",
+      "proofMetrics": "Assessment throughput, coverage rates, quality per reviewer hour",
+      "example": "Structured rubrics enable 3x more assessments per hour while maintaining inter-rater reliability above 85%.",
+      "whereInPipeline": "HITL Nuance Grading",
+      "keyTakeaways": ["Efficient structured assessment", "Scalable qualitative evaluation", "Maintained quality at higher volume"]
+    },
+    {
+      "stepId": "measurement",
+      "title": "Comprehensive Test Coverage",
+      "problem": "Test suites are incomplete. AI systems pass narrow benchmarks but fail on real-world variations. Evaluation doesn't match deployment conditions.",
+      "withIcdu": "Stress Engine generates systematic variations covering roles, tones, constraints, and channels. Evaluation matches the full range of deployment scenarios.",
+      "proofMetrics": "Scenario coverage, variation completeness, deployment-evaluation match",
+      "example": "Standard benchmark: 92% accuracy. Stress-tested with role/tone variations: 78% stability. The comprehensive evaluation reveals hidden weaknesses.",
+      "whereInPipeline": "Stress Testing",
+      "keyTakeaways": ["Comprehensive scenario coverage", "Real-world condition testing", "Hidden weakness detection"]
+    },
+    {
+      "stepId": "governance",
+      "title": "Benchmark Comparisons",
+      "problem": "Comparing AI systems is apples-to-oranges. Different test sets, different conditions, different criteria make vendor claims impossible to validate.",
+      "withIcdu": "Standardized ICDUs enable fair comparisons. Same scenarios, same evaluation criteria, same stress tests across systems. Benchmarking becomes rigorous.",
+      "proofMetrics": "Comparison validity, benchmark standardization, vendor claim verification rate",
+      "example": "Evaluate three vendors using identical ICDUs, judge gates, and stress tests. Make data-driven selection based on fair, reproducible comparisons.",
+      "whereInPipeline": "Full Pipeline",
+      "keyTakeaways": ["Fair cross-system comparisons", "Standardized benchmark methodology", "Data-driven vendor selection"]
+    }
+  ]
+}
