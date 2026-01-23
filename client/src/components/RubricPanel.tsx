@@ -60,56 +60,56 @@ export function RubricPanel() {
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between gap-4 mb-6">
+    <Card className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">HITL Nuance Grader</h3>
+          <h3 className="font-semibold text-sm sm:text-base">HITL Nuance Grader</h3>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={reset}
-            className="gap-2"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
             data-testid="button-reset-rubric"
           >
             <RotateCcw className="h-4 w-4" />
-            Reset
+            <span>Reset</span>
           </Button>
           <Button
             size="sm"
             onClick={save}
-            className="gap-2"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
             disabled={saved}
             data-testid="button-save-rubric"
           >
             {saved ? (
               <>
                 <CheckCircle2 className="h-4 w-4" />
-                Saved
+                <span className="hidden sm:inline">Saved</span>
               </>
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                Save
+                <span>Save</span>
               </>
             )}
           </Button>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {hitlRubricDimensions.map((dimension) => (
-          <div key={dimension.id} className="space-y-3">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <span className="font-medium text-sm">{dimension.label}</span>
-                <p className="text-xs text-muted-foreground">{dimension.description}</p>
+          <div key={dimension.id} className="space-y-2 sm:space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
+              <div className="min-w-0">
+                <span className="font-medium text-xs sm:text-sm">{dimension.label}</span>
+                <p className="text-[10px] sm:text-xs text-muted-foreground truncate sm:whitespace-normal">{dimension.description}</p>
               </div>
               <Badge 
                 className={cn(
-                  "text-white min-w-[90px] justify-center",
+                  "text-white min-w-[70px] sm:min-w-[90px] justify-center text-[10px] sm:text-xs flex-shrink-0 self-start sm:self-center",
                   getScoreColor(scores[dimension.id])
                 )}
               >
@@ -131,7 +131,7 @@ export function RubricPanel() {
                   <span 
                     key={n} 
                     className={cn(
-                      "text-xs",
+                      "text-[10px] sm:text-xs",
                       scores[dimension.id] === n 
                         ? "text-foreground font-medium" 
                         : "text-muted-foreground"
@@ -145,8 +145,8 @@ export function RubricPanel() {
           </div>
         ))}
 
-        <div className="pt-4 border-t space-y-3">
-          <label className="font-medium text-sm">Reviewer Notes</label>
+        <div className="pt-3 sm:pt-4 border-t space-y-2 sm:space-y-3">
+          <label className="font-medium text-xs sm:text-sm">Reviewer Notes</label>
           <Textarea
             placeholder="Add specific, behavior-based comments..."
             value={notes}
@@ -155,28 +155,29 @@ export function RubricPanel() {
               setSaved(false);
             }}
             rows={3}
+            className="text-sm"
             data-testid="input-reviewer-notes"
           />
         </div>
 
-        <div className="p-4 bg-muted/50 rounded-md">
+        <div className="p-3 sm:p-4 bg-muted/50 rounded-md">
           <div className="flex items-center justify-between">
-            <span className="font-medium text-sm">Overall Score</span>
-            <div className="flex items-center gap-2">
+            <span className="font-medium text-xs sm:text-sm">Overall Score</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <div className={cn(
-                "h-3 w-3 rounded-full",
+                "h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full",
                 getScoreColor(Math.round(averageScore))
               )} />
-              <span className="font-mono font-semibold text-lg">{averageScore.toFixed(1)}</span>
-              <span className="text-muted-foreground text-sm">/ 5</span>
+              <span className="font-mono font-semibold text-base sm:text-lg">{averageScore.toFixed(1)}</span>
+              <span className="text-muted-foreground text-xs sm:text-sm">/ 5</span>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
             Average across all {hitlRubricDimensions.length} dimensions
           </p>
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-[10px] sm:text-xs text-muted-foreground">
           Escalate if content appears unsafe or misleading. Keep comments specific and behavior-based.
         </p>
       </div>

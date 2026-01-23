@@ -45,6 +45,15 @@ All content is rendered from configuration files:
 - Glossary and FAQ in `examples.ts`
 
 ## Recent Changes
+- 2026-01-23: Comprehensive mobile-first responsive optimization
+  - Updated all components with sm/md breakpoints for mobile-friendly sizing
+  - Added responsive text sizing (text-xs sm:text-sm, text-[10px] sm:text-xs)
+  - Implemented flexible layouts (flex-col sm:flex-row, grid breakpoints)
+  - Added horizontal scroll containers with -mx-4 px-4 patterns
+  - Touch-optimized buttons and interactive elements
+  - Reduced padding/spacing on mobile (p-3 sm:p-4, gap-2 sm:gap-4)
+  - Shortened labels on mobile (Step 1, Step 2 instead of full titles)
+  - Hidden non-essential columns on mobile tables
 - 2026-01-23: Initial implementation of full ICDU explainer application
   - Created all core components
   - Implemented 6 persona journeys with 5 steps each

@@ -134,37 +134,37 @@ export function JudgePanel() {
     const thresholdPercentage = threshold * 100;
 
     return (
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
+      <div className="space-y-1.5 sm:space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <div>
-            <span className="font-medium text-sm">{label}</span>
-            <span className="text-xs text-muted-foreground ml-2">{description}</span>
+            <span className="font-medium text-xs sm:text-sm">{label}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 sm:ml-2">{description}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <span className={cn(
-              "font-mono text-sm font-semibold",
+              "font-mono text-xs sm:text-sm font-semibold",
               passed ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
             )}>
               {percentage.toFixed(0)}%
             </span>
             {passed ? (
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />
             ) : (
-              <XCircle className="h-4 w-4 text-destructive" />
+              <XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
             )}
           </div>
         </div>
         <div className="relative">
           <Progress value={percentage} className={cn(
-            "h-3",
+            "h-2.5 sm:h-3",
             passed ? "[&>div]:bg-emerald-500" : "[&>div]:bg-destructive"
           )} />
           <div 
-            className="absolute top-0 h-3 w-0.5 bg-foreground/50"
+            className="absolute top-0 h-2.5 sm:h-3 w-0.5 bg-foreground/50"
             style={{ left: `${thresholdPercentage}%` }}
           />
         </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground">
           <span>0%</span>
           <span className="font-medium">Threshold: {thresholdPercentage}%</span>
           <span>100%</span>
@@ -174,11 +174,11 @@ export function JudgePanel() {
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between gap-4 mb-6">
+    <Card className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="flex items-center gap-2">
           <Scale className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">AI Judge</h3>
+          <h3 className="font-semibold text-sm sm:text-base">AI Judge</h3>
         </div>
         <div className="flex gap-2">
           {result && (
@@ -186,61 +186,61 @@ export function JudgePanel() {
               variant="outline"
               size="sm"
               onClick={reset}
-              className="gap-2"
+              className="gap-1 sm:gap-2 flex-1 sm:flex-none"
               data-testid="button-reset-judge"
             >
               <RotateCcw className="h-4 w-4" />
-              Reset
+              <span>Reset</span>
             </Button>
           )}
           <Button
             size="sm"
             onClick={runJudge}
             disabled={isRunning}
-            className="gap-2"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
             data-testid="button-run-judge"
           >
             <Play className="h-4 w-4" />
-            {isRunning ? "Evaluating..." : "Run Evaluation"}
+            <span>{isRunning ? "Evaluating..." : "Run"}</span>
           </Button>
         </div>
       </div>
 
       {!result && !isRunning && (
-        <div className="text-center py-12 text-muted-foreground">
-          <Scale className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-sm">Click "Run Evaluation" to simulate AI Judge scoring</p>
-          <p className="text-xs mt-1">Scores are generated based on configurable thresholds</p>
+        <div className="text-center py-8 sm:py-12 text-muted-foreground">
+          <Scale className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+          <p className="text-xs sm:text-sm">Click "Run" to simulate AI Judge scoring</p>
+          <p className="text-[10px] sm:text-xs mt-1">Scores are generated based on configurable thresholds</p>
         </div>
       )}
 
       {isRunning && (
-        <div className="text-center py-12">
-          <div className="animate-spin h-12 w-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full" />
-          <p className="text-sm text-muted-foreground">Evaluating output against gates...</p>
+        <div className="text-center py-8 sm:py-12">
+          <div className="animate-spin h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 border-4 border-primary border-t-transparent rounded-full" />
+          <p className="text-xs sm:text-sm text-muted-foreground">Evaluating output against gates...</p>
         </div>
       )}
 
       {result && !isRunning && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <div className={cn(
-            "p-4 rounded-md border-2",
+            "p-3 sm:p-4 rounded-md border-2",
             decisionConfig[result.decision].borderColor,
             decisionConfig[result.decision].bgColor
           )}>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <Badge className={decisionConfig[result.decision].color}>
                 {(() => {
                   const Icon = decisionConfig[result.decision].icon;
-                  return <Icon className="h-4 w-4 mr-1" />;
+                  return <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />;
                 })()}
                 {decisionConfig[result.decision].label}
               </Badge>
-              <span className="text-sm">{decisionConfig[result.decision].description}</span>
+              <span className="text-xs sm:text-sm">{decisionConfig[result.decision].description}</span>
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
             <ScoreBar
               label="IAS"
               description="Intent Alignment Score"
@@ -261,12 +261,12 @@ export function JudgePanel() {
             />
           </div>
 
-          <div className="pt-4 border-t">
-            <h4 className="font-medium text-sm mb-2">Rationale</h4>
+          <div className="pt-3 sm:pt-4 border-t">
+            <h4 className="font-medium text-xs sm:text-sm mb-2">Rationale</h4>
             <ul className="space-y-1">
               {result.rationale.map((item, i) => (
-                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                <li key={i} className="text-xs sm:text-sm text-muted-foreground flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
                   {item}
                 </li>
               ))}

@@ -76,38 +76,39 @@ export default function Demos() {
   const currentTakeaways = demoTakeaways[activeTab];
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-6 sm:py-8">
       <div className="container px-4 mx-auto max-w-7xl">
-        <div className="text-center mb-8">
-          <Badge variant="secondary" className="mb-4">
+        <div className="text-center mb-6 sm:mb-8">
+          <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs sm:text-sm">
             Interactive Demos
           </Badge>
-          <h1 className="text-3xl font-bold mb-4">Explore the Pipeline</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Explore the Pipeline</h1>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
             Build an ICDU record, run mock evaluations, grade with the HITL rubric, 
             and stress test with scenario perturbations.
           </p>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
           <PipelineDiagram compact />
         </div>
 
-        <div className="grid lg:grid-cols-[1fr,280px] gap-6">
+        <div className="grid lg:grid-cols-[1fr,280px] gap-4 sm:gap-6">
           <div>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="w-full justify-start h-auto flex-wrap gap-1 bg-transparent p-0 mb-6">
+              <TabsList className="w-full justify-start h-auto flex-wrap gap-1 bg-transparent p-0 mb-4 sm:mb-6">
                 {demoTabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
                     <TabsTrigger
                       key={tab.id}
                       value={tab.id}
-                      className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 sm:py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                       data-testid={`tab-${tab.id}`}
                     >
-                      <Icon className="h-4 w-4" />
-                      {tab.label}
+                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                      <span className="xs:hidden sm:hidden">{tab.id.toUpperCase()}</span>
                     </TabsTrigger>
                   );
                 })}
@@ -132,14 +133,14 @@ export default function Demos() {
           </div>
 
           <div className="hidden lg:block">
-            <Card className="p-5 sticky top-20">
-              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+            <Card className="p-4 sm:p-5 sticky top-20">
+              <h3 className="font-semibold text-xs sm:text-sm mb-2 sm:mb-3 flex items-center gap-2">
                 <Lightbulb className="h-4 w-4 text-primary" />
                 {currentTakeaways.title}
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-1.5 sm:space-y-2">
                 {currentTakeaways.points.map((point, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
+                  <li key={index} className="flex items-start gap-2 text-xs sm:text-sm">
                     <span className="text-primary mt-0.5 font-bold">•</span>
                     <span className="text-muted-foreground">{point}</span>
                   </li>
@@ -149,15 +150,15 @@ export default function Demos() {
           </div>
         </div>
 
-        <div className="lg:hidden mt-6">
-          <Card className="p-5">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
+        <div className="lg:hidden mt-4 sm:mt-6">
+          <Card className="p-4 sm:p-5">
+            <h3 className="font-semibold text-xs sm:text-sm mb-2 sm:mb-3 flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-primary" />
               {currentTakeaways.title}
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5 sm:space-y-2">
               {currentTakeaways.points.map((point, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm">
+                <li key={index} className="flex items-start gap-2 text-xs sm:text-sm">
                   <span className="text-primary mt-0.5 font-bold">•</span>
                   <span className="text-muted-foreground">{point}</span>
                 </li>

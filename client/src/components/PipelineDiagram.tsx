@@ -47,20 +47,21 @@ const pipelineSteps = [
 export function PipelineDiagram({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
-      <div className="flex items-center gap-2 flex-wrap justify-center">
+      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
         {pipelineSteps.map((step, index) => {
           const Icon = step.icon;
           return (
-            <div key={step.id} className="flex items-center gap-2">
+            <div key={step.id} className="flex items-center gap-1 sm:gap-2">
               <div className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-white text-sm font-medium",
+                "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-white text-[10px] sm:text-sm font-medium",
                 step.color
               )}>
-                <Icon className="h-3.5 w-3.5" />
-                <span>{step.label}</span>
+                <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="hidden sm:inline">{step.label}</span>
+                <span className="sm:hidden">{step.label.slice(0, 4)}</span>
               </div>
               {index < pipelineSteps.length - 1 && (
-                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
               )}
             </div>
           );
@@ -70,41 +71,41 @@ export function PipelineDiagram({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className="w-full py-8">
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-2">
+    <div className="w-full py-4 sm:py-8">
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-3 sm:gap-4 lg:gap-2">
         {pipelineSteps.map((step, index) => {
           const Icon = step.icon;
           return (
-            <div key={step.id} className="flex flex-col lg:flex-row items-center gap-4 lg:gap-2">
-              <div className="flex flex-col items-center gap-2">
+            <div key={step.id} className="flex flex-col lg:flex-row items-center gap-3 sm:gap-4 lg:gap-2">
+              <div className="flex flex-col items-center gap-1.5 sm:gap-2">
                 <div className={cn(
-                  "flex items-center justify-center w-16 h-16 rounded-xl text-white shadow-lg",
+                  "flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl text-white shadow-lg",
                   step.color
                 )}>
-                  <Icon className="h-8 w-8" />
+                  <Icon className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-sm">{step.label}</div>
-                  <div className="text-xs text-muted-foreground">{step.sublabel}</div>
+                  <div className="font-semibold text-xs sm:text-sm">{step.label}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">{step.sublabel}</div>
                 </div>
-                <div className="text-xs text-muted-foreground text-center max-w-[120px]">
+                <div className="text-[10px] sm:text-xs text-muted-foreground text-center max-w-[100px] sm:max-w-[120px] hidden sm:block">
                   {step.description}
                 </div>
               </div>
               {index < pipelineSteps.length - 1 && (
-                <ArrowRight className="h-6 w-6 text-muted-foreground rotate-90 lg:rotate-0 flex-shrink-0" />
+                <ArrowRight className="h-4 w-4 sm:h-6 sm:w-6 text-muted-foreground rotate-90 lg:rotate-0 flex-shrink-0" />
               )}
             </div>
           );
         })}
-        <ArrowRight className="h-6 w-6 text-muted-foreground rotate-90 lg:rotate-0 flex-shrink-0" />
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-green-500 dark:bg-green-600 text-white shadow-lg">
-            <CheckCircle2 className="h-8 w-8" />
+        <ArrowRight className="h-4 w-4 sm:h-6 sm:w-6 text-muted-foreground rotate-90 lg:rotate-0 flex-shrink-0" />
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-green-500 dark:bg-green-600 text-white shadow-lg">
+            <CheckCircle2 className="h-6 w-6 sm:h-8 sm:w-8" />
           </div>
           <div className="text-center">
-            <div className="font-semibold text-sm">Deploy</div>
-            <div className="text-xs text-muted-foreground">Safe & Audited</div>
+            <div className="font-semibold text-xs sm:text-sm">Deploy</div>
+            <div className="text-[10px] sm:text-xs text-muted-foreground">Safe & Audited</div>
           </div>
         </div>
       </div>

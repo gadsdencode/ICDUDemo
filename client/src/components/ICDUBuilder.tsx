@@ -128,10 +128,10 @@ export function ICDUBuilder() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-6">
-      <Card className="p-6">
-        <div className="flex items-center gap-2 mb-6">
+      <Card className="p-4 sm:p-6">
+        <div className="flex items-center gap-2 mb-4 sm:mb-6">
           <FileText className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">Build an ICDU</h3>
+          <h3 className="font-semibold text-sm sm:text-base">Build an ICDU</h3>
         </div>
 
         <div className="space-y-5">
@@ -231,7 +231,7 @@ export function ICDUBuilder() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-3">
               <Label htmlFor="persona-role">Persona: Role</Label>
               <Input
@@ -334,30 +334,30 @@ export function ICDUBuilder() {
         </div>
       </Card>
 
-      <Card className="p-6 bg-muted/30">
-        <div className="flex items-center justify-between gap-4 mb-4">
-          <h3 className="font-semibold">Live JSON Preview</h3>
+      <Card className="p-4 sm:p-6 bg-muted/30">
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <h3 className="font-semibold text-sm sm:text-base">Live JSON Preview</h3>
           <Button
             variant="outline"
             size="sm"
             onClick={handleCopy}
-            className="gap-2"
+            className="gap-1 sm:gap-2"
             data-testid="button-copy-json"
           >
             {copied ? (
               <>
                 <Check className="h-4 w-4" />
-                Copied
+                <span className="hidden sm:inline">Copied</span>
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                Copy
+                <span className="hidden sm:inline">Copy</span>
               </>
             )}
           </Button>
         </div>
-        <pre className="text-xs font-mono bg-card p-4 rounded-md overflow-auto max-h-[500px] border">
+        <pre className="text-[10px] sm:text-xs font-mono bg-card p-3 sm:p-4 rounded-md overflow-auto max-h-[300px] sm:max-h-[500px] border">
           {JSON.stringify(icdu, null, 2)}
         </pre>
       </Card>

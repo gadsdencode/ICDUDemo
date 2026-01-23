@@ -60,14 +60,14 @@ export default function Journey() {
 
   if (!personaId) {
     return (
-      <div className="min-h-screen py-12">
+      <div className="min-h-screen py-8 sm:py-12">
         <div className="container px-4 mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs sm:text-sm">
               Persona-Based Journey
             </Badge>
-            <h1 className="text-3xl font-bold mb-4">Choose Your Role</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Choose Your Role</h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
               Select the role that best matches your perspective to see a personalized journey 
               through the ICDU pipeline, highlighting the challenges and benefits most relevant to you.
             </p>
@@ -98,28 +98,28 @@ export default function Journey() {
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-6 sm:py-8">
       <div className="container px-4 mx-auto max-w-7xl">
-        <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setLocation("/journey")}
-            className="gap-2"
+            className="gap-1.5 sm:gap-2 self-start"
             data-testid="button-change-persona"
           >
             <ArrowLeft className="h-4 w-4" />
-            Change Role
+            <span className="text-xs sm:text-sm">Change Role</span>
           </Button>
           
-          <div className="flex items-center gap-2">
-            <Map className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Journey for</span>
-            <Badge variant="secondary">{selectedPersona.name}</Badge>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Map className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+            <span className="text-xs sm:text-sm text-muted-foreground">Journey for</span>
+            <Badge variant="secondary" className="text-xs">{selectedPersona.name}</Badge>
           </div>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-4 sm:mb-8 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
           <PersonaSelector
             personas={personasData}
             selectedPersona={personaId}
@@ -128,7 +128,7 @@ export default function Journey() {
           />
         </div>
 
-        <div className="grid lg:grid-cols-[1fr,300px] gap-6">
+        <div className="grid lg:grid-cols-[1fr,300px] gap-4 sm:gap-6">
           <div>
             <JourneyStepper
               steps={journeySteps}
@@ -145,7 +145,7 @@ export default function Journey() {
           </div>
         </div>
 
-        <div className="lg:hidden mt-6">
+        <div className="lg:hidden mt-4 sm:mt-6">
           {currentStepData && (
             <KeyTakeawaysPanel takeaways={currentStepData.keyTakeaways} />
           )}

@@ -122,32 +122,32 @@ export function StressPanel() {
   const passCount = results?.filter((r) => r.status === "pass").length || 0;
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between gap-4 mb-6">
+    <Card className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="flex items-center gap-2">
           <FlaskConical className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">Stress Engine</h3>
+          <h3 className="font-semibold text-sm sm:text-base">Stress Engine</h3>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={reset}
-            className="gap-2"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
             data-testid="button-reset-stress"
           >
             <RotateCcw className="h-4 w-4" />
-            Reset
+            <span className="sm:inline">Reset</span>
           </Button>
           <Button
             size="sm"
             onClick={runStressTest}
             disabled={isRunning || selectedPerturbations.length === 0}
-            className="gap-2"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
             data-testid="button-run-stress"
           >
             <Play className="h-4 w-4" />
-            {isRunning ? "Testing..." : "Run Test"}
+            <span>{isRunning ? "Testing..." : "Run"}</span>
           </Button>
         </div>
       </div>
@@ -190,7 +190,7 @@ export function StressPanel() {
               );
             })}
           </div>
-          <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-3 sm:gap-4 mt-3 text-[10px] sm:text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-blue-500" /> Tone
             </div>
@@ -232,16 +232,16 @@ export function StressPanel() {
               </Card>
             </div>
 
-            <div className="border rounded-md overflow-hidden">
-              <Table>
+            <div className="border rounded-md overflow-x-auto -mx-4 sm:mx-0">
+              <Table className="min-w-[500px]">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Perturbation</TableHead>
-                    <TableHead className="text-center">Stability</TableHead>
-                    <TableHead className="text-center">Fairness</TableHead>
-                    <TableHead className="text-center">Refusal</TableHead>
-                    <TableHead className="text-center">Halluc.</TableHead>
-                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-xs sm:text-sm">Perturbation</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm">Stab.</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm">Fair.</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm hidden sm:table-cell">Refusal</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm hidden sm:table-cell">Halluc.</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -249,32 +249,32 @@ export function StressPanel() {
                     const StatusIcon = statusConfig[r.status].icon;
                     return (
                       <TableRow key={r.perturbation.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
+                        <TableCell className="py-2">
+                          <div className="flex items-center gap-1 sm:gap-2">
                             <Badge 
-                              className={cn("text-white text-xs", typeColors[r.perturbation.type])}
+                              className={cn("text-white text-[10px] sm:text-xs px-1.5 sm:px-2", typeColors[r.perturbation.type])}
                             >
                               {r.perturbation.type}
                             </Badge>
-                            <span className="text-sm">{r.perturbation.value}</span>
+                            <span className="text-xs sm:text-sm">{r.perturbation.value}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center font-mono text-sm">
+                        <TableCell className="text-center font-mono text-xs sm:text-sm py-2">
                           {(r.stability * 100).toFixed(0)}%
                         </TableCell>
-                        <TableCell className="text-center font-mono text-sm">
+                        <TableCell className="text-center font-mono text-xs sm:text-sm py-2">
                           {(r.fairness * 100).toFixed(0)}%
                         </TableCell>
-                        <TableCell className="text-center font-mono text-sm">
+                        <TableCell className="text-center font-mono text-xs sm:text-sm py-2 hidden sm:table-cell">
                           {(r.refusalConsistency * 100).toFixed(0)}%
                         </TableCell>
-                        <TableCell className="text-center font-mono text-sm">
+                        <TableCell className="text-center font-mono text-xs sm:text-sm py-2 hidden sm:table-cell">
                           {(r.hallucinationRate * 100).toFixed(1)}%
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center py-2">
                           <div className="flex items-center justify-center gap-1">
-                            <StatusIcon className={cn("h-4 w-4", statusConfig[r.status].color)} />
-                            <span className={cn("text-xs", statusConfig[r.status].color)}>
+                            <StatusIcon className={cn("h-3 w-3 sm:h-4 sm:w-4", statusConfig[r.status].color)} />
+                            <span className={cn("text-[10px] sm:text-xs", statusConfig[r.status].color)}>
                               {statusConfig[r.status].label}
                             </span>
                           </div>
