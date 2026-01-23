@@ -45,6 +45,14 @@ All content is rendered from configuration files:
 - Glossary and FAQ in `examples.ts`
 
 ## Recent Changes
+- 2026-01-23: Aggressive mobile optimization for 320-375px screens
+  - Further reduced text sizes (text-[10px], text-[9px], text-[11px])
+  - Ultra-compact padding (p-2, p-2.5) and spacing (gap-1, gap-1.5)
+  - Smaller icons (h-3 w-3) and buttons (h-7, h-8) on mobile
+  - Hidden descriptions/taglines on mobile to save space
+  - 2-column grid for persona cards on mobile
+  - Journey step buttons show just numbers on mobile
+  - Shortened all headings and labels for mobile
 - 2026-01-23: Comprehensive mobile-first responsive optimization
   - Updated all components with sm/md breakpoints for mobile-friendly sizing
   - Added responsive text sizing (text-xs sm:text-sm, text-[10px] sm:text-xs)
