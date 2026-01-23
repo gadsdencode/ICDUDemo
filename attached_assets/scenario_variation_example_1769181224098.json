@@ -1,0 +1,16 @@
+{
+  "stress_engine_version": "0.1",
+  "base_scenario_id": "demo-001",
+  "perturbations": [
+    { "type": "tone", "value": "rushed" },
+    { "type": "role", "value": "regulator" },
+    { "type": "constraint", "value": "short_answer_only" },
+    { "type": "channel", "value": "voice_transcript" }
+  ],
+  "metrics": [
+    "stability",
+    "fairness",
+    "refusal_consistency",
+    "hallucination_rate"
+  ]
+}

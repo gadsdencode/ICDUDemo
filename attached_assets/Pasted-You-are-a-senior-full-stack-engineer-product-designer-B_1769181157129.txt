@@ -1,0 +1,103 @@
+You are a senior full-stack engineer + product designer. Build a polished, responsive web app that explains ICDU (Intent-Conscious Data Unit) and guides users through a persona-based “journey map” showing why ICDU is necessary and what benefits it provides.
+
+## Product goal
+Create an interactive explainer that:
+1) Teaches ICDU in plain language (what it is, what’s inside, why it matters).
+2) Walks a user through a persona-based journey (Executive / Director / Manager / Developer / Risk & Compliance / Evaluator) that shows:
+   - the pain before ICDU
+   - what changes with ICDU
+   - measurable outcomes (auditability, repeatability, governance)
+3) Includes lightweight interactive demos: building an ICDU record, running “AI Judge” scoring gates, showing “HITL nuance grading,” and “Scenario perturbations.”
+
+## Core concepts to incorporate (must be accurate)
+- ICDU = structured record/contract that encodes:
+  - intent (success definition/outcome target)
+  - governing principles (safety, policy, ethics)
+  - persona & tone requirements
+  - context (domain + constraints)
+  - inputs being acted on
+  - governance identifiers/versioning/traceability
+- Pipeline components:
+  1) ICDU (structured unit)
+  2) AI Judge (quantitative evaluator) with example gates:
+     - Intent Alignment Score (IAS)
+     - Principle Adherence Score (PAS)
+     - Application Score (AS)
+     - decisions: promote/pass, escalate, block
+  3) HITL Nuance Grader (qualitative rubric: empathy, clarity, coaching quality, trust)
+  4) Scenario-Perturbation Stress Engine (controlled variations: role/tone/constraints/channel; metrics: stability, fairness, refusal consistency, hallucination patterns)
+- “What is intentionally excluded”: no proprietary claim language, no full filing text, no proprietary diagrams.
+
+## Tech + implementation constraints
+- Use React + TypeScript (either Next.js or Vite is fine—choose what is simplest on Replit).
+- Use a clean component library (Tailwind + shadcn/ui preferred, otherwise Tailwind + your own components).
+- No backend required. All data can be local JSON in the repo.
+- Make it easy to extend: define persona journeys + steps in a data file and render from that config.
+- Include basic client-side analytics events (simple console logging is fine) to track which persona is selected and which steps are visited.
+
+## Information architecture (pages)
+1) Home / Overview
+   - “ICDU in one glance”
+   - Quick diagram of the pipeline (ICDU → model output → AI Judge gate → HITL rubric → Stress test)
+   - CTA: “Choose your role to begin”
+2) Persona Journey
+   - Persona selector (tabs or cards)
+   - Journey map (stepper timeline) with 5–7 steps per persona:
+     - Context / job-to-be-done
+     - Pain without ICDU
+     - What ICDU changes
+     - How success is measured (IAS/PAS/AS and/or rubric outcomes)
+     - Governance/audit trail value
+     - Where it fits in the pipeline
+3) Interactive Demos
+   - “Build an ICDU” form (fields: intent, principles, persona/tone, context/constraints, input)
+   - Live JSON preview
+   - “Run AI Judge” button that produces example scores (deterministic mock scoring based on simple heuristics)
+   - Show gate thresholds and resulting decision (PROMOTE / ESCALATE / BLOCK)
+   - “HITL Nuance” rubric widget (1–5 sliders + notes) that produces a summary score
+   - “Stress Engine” perturbation generator that creates variations (role/tone/constraint/channel) and shows a small table of runs + stability indicator
+4) Glossary / FAQ
+   - Short definitions: ICDU, intent, principles, persona, context, governance id, gates, perturbations
+   - License/evaluation-only notice (no commercial license granted)
+
+## Data model (create local JSON files)
+- personas.json:
+  - id, name, tagline, primary concerns, success metrics, recommended starting section
+- journeys.json:
+  - persona_id -> array of steps:
+    - step_id, title, “problem”, “with_icdu”, “proof/metrics”, “example”, “where_in_pipeline”
+- examples folder:
+  - icdu_sample.json (sanitized)
+  - judge_report_sample.json (IAS/PAS/AS + decision + thresholds + rationale)
+  - stress_engine_sample.json (perturbations + metrics)
+
+## UI/UX requirements
+- Crisp, modern layout with strong spacing and hierarchy (no clutter).
+- Use a persistent top nav: Overview | Journey | Demos | FAQ
+- Use a right-side “Key Takeaways” panel on Journey/Demos that updates based on current step.
+- Include micro-interactions: step transitions, progress indicator, copy-to-clipboard for JSON.
+- Add “Switch persona” control always visible on Journey pages.
+
+## Copy requirements
+Use clear, direct language. Avoid hype. Emphasize:
+- From “best-effort prompting” → to measurable, auditable execution
+- Traceability (governance id + structured records)
+- Repeatability (same ICDU + same model → comparable results)
+- Safety gates (quant scores + escalation paths)
+- Robustness (stress test scenario perturbations)
+
+## Acceptance criteria
+- Runs successfully in Replit
+- Selecting a persona changes the journey content
+- Journey renders from config JSON, not hardcoded JSX
+- ICDU builder produces JSON + copy-to-clipboard
+- AI Judge mock scoring generates IAS/PAS/AS + decision with thresholds shown
+- Stress engine generates at least 4 perturbations and displays a results table
+- FAQ page includes license/evaluation-only notice
+
+## Deliverables
+- Working app
+- Clear README with: how to run, how to add a new persona, how to add journey steps
+- Well-structured components (PersonaSelector, JourneyStepper, ICDUBuilder, JudgePanel, RubricPanel, StressPanel)
+
+Start by scaffolding the app, then implement the data-driven persona journey, then build the demos.

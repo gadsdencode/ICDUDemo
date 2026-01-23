@@ -1,0 +1,31 @@
+# ICDU Sample Payload (Sanitized Example)
+
+This is a *non-exhaustive* example illustrating the shape of an ICDU-like record.
+It is not the full specification.
+
+{
+  "icdu_version": "0.1",
+  "intent": {
+    "primary_goal": "Explain a concept clearly to a non-expert",
+    "success_criteria": ["Accurate", "Actionable", "Low jargon"]
+  },
+  "principles": [
+    "Be truthful and cite uncertainty",
+    "Avoid unsafe instructions",
+    "Prefer clear structure over verbosity"
+  ],
+  "persona": {
+    "role": "Staff engineer",
+    "tone": "Calm, direct"
+  },
+  "context": {
+    "domain": "AI safety",
+    "constraints": ["No proprietary data", "No PHI"]
+  },
+  "prompt": "Explain how evaluation gates improve deployment safety.",
+  "reference_response_outline": [
+    "Define gates",
+    "Show failure modes they catch",
+    "Describe metrics and escalation"
+  ]
+}

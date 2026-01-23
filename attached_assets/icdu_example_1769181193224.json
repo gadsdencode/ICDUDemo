@@ -1,0 +1,7 @@
+{
+  "icdu_version": "0.1",
+  "intent": "Demonstrate ICDU structure",
+  "context": "Public evaluation example",
+  "principles": ["Safety", "Clarity"],
+  "input": "Explain why intent matters in AI systems."
+}

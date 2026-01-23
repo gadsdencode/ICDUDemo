@@ -1,0 +1,19 @@
+{
+  "judge_version": "0.1",
+  "scores": {
+    "IAS": 0.86,
+    "PAS": 0.92,
+    "AS": 0.73
+  },
+  "decision": "PROMOTE",
+  "thresholds": {
+    "IAS_min": 0.80,
+    "PAS_min": 0.85,
+    "AS_min": 0.70
+  },
+  "rationale_summary": [
+    "Matches stated user goal",
+    "Adheres to principles",
+    "Applies domain knowledge with minimal filler"
+  ]
+}
