@@ -9,6 +9,7 @@ import { PipelineDiagram } from "@/components/PipelineDiagram";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { KeyTakeaways } from "@/components/KeyTakeaways";
 import { FileText, Scale, Users, FlaskConical } from "lucide-react";
+import { componentReplacements } from "@/data/businessCase";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 
@@ -19,7 +20,7 @@ const demoTabs = [
   { id: "stress", label: "Stress Engine", icon: FlaskConical },
 ];
 
-const demoTakeaways: Record<string, { title: string; points: string[]; pipelineLocation: string; nextAction: string }> = {
+const demoTakeaways: Record<string, { title: string; points: string[]; pipelineLocation: string; nextAction: string; replaces?: string }> = {
   icdu: {
     title: "ICDU Builder",
     points: [
@@ -30,19 +31,21 @@ const demoTakeaways: Record<string, { title: string; points: string[]; pipelineL
       "Generate structured, versioned JSON"
     ],
     pipelineLocation: "ICDU Creation",
-    nextAction: "Submit ICDU for AI Judge evaluation"
+    nextAction: "Submit ICDU for AI Judge evaluation",
+    replaces: componentReplacements.icduRecord.replaces
   },
   judge: {
     title: "AI Judge",
     points: [
       "Quantitative scoring across three dimensions",
-      "IAS: Intent Alignment Score",
-      "PAS: Principle Adherence Score",
+      "IAS: Intent-Alignment Score",
+      "PAS: Principle-Adherence Score",
       "AS: Application Score",
       "Automatic gate decisions: PROMOTE, ESCALATE, BLOCK"
     ],
     pipelineLocation: "AI Judge Gate",
-    nextAction: "Review score drivers and to_promote checklist"
+    nextAction: "Review score drivers and to_promote checklist",
+    replaces: componentReplacements.aiJudge.replaces
   },
   hitl: {
     title: "HITL Nuance Grader",
@@ -54,7 +57,8 @@ const demoTakeaways: Record<string, { title: string; points: string[]; pipelineL
       "Document reviewer notes for governance"
     ],
     pipelineLocation: "HITL Nuance Grading",
-    nextAction: "Aggregate scores and provide feedback"
+    nextAction: "Aggregate scores and provide feedback",
+    replaces: componentReplacements.hitlGrader.replaces
   },
   stress: {
     title: "Stress Engine",
@@ -66,7 +70,8 @@ const demoTakeaways: Record<string, { title: string; points: string[]; pipelineL
       "Detect hallucination patterns"
     ],
     pipelineLocation: "Stress Testing",
-    nextAction: "Review insights and address warnings"
+    nextAction: "Review insights and address warnings",
+    replaces: componentReplacements.stressEngine.replaces
   }
 };
 
@@ -151,6 +156,7 @@ export default function Demos() {
               takeaways={currentTakeaways.points}
               pipelineLocation={currentTakeaways.pipelineLocation}
               nextAction={currentTakeaways.nextAction}
+              replaces={currentTakeaways.replaces}
             />
           </div>
         </div>
@@ -161,6 +167,7 @@ export default function Demos() {
             takeaways={currentTakeaways.points}
             pipelineLocation={currentTakeaways.pipelineLocation}
             nextAction={currentTakeaways.nextAction}
+            replaces={currentTakeaways.replaces}
             compact
           />
         </div>

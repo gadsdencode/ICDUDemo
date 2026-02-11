@@ -10,6 +10,7 @@ type KeyTakeawaysProps = {
   takeaways: string[];
   pipelineLocation: string;
   nextAction: string;
+  replaces?: string;
   compact?: boolean;
 };
 
@@ -18,6 +19,7 @@ export function KeyTakeaways({
   takeaways, 
   pipelineLocation, 
   nextAction,
+  replaces,
   compact = false 
 }: KeyTakeawaysProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -44,7 +46,12 @@ export function KeyTakeaways({
                 </li>
               ))}
             </ul>
-            <div className="pt-2 border-t">
+            <div className="pt-2 border-t space-y-1">
+              {replaces && (
+                <div className="text-[9px] sm:text-xs text-destructive/80">
+                  <span className="font-medium">Replaces:</span> {replaces}
+                </div>
+              )}
               <div className="flex items-center gap-1 text-[9px] sm:text-xs text-muted-foreground">
                 <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 <span>{pipelineLocation}</span>
@@ -77,6 +84,11 @@ export function KeyTakeaways({
         </div>
 
         <div className="pt-3 border-t space-y-2 sm:space-y-3">
+          {replaces && (
+            <div className="text-[10px] sm:text-xs text-destructive/80 mb-2">
+              <span className="font-medium">Replaces:</span> {replaces}
+            </div>
+          )}
           <div className="flex items-start gap-2">
             <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>

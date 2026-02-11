@@ -349,19 +349,19 @@ export function JudgePanel() {
           <div className="space-y-3 sm:space-y-4">
             <ScoreBar
               label="IAS"
-              description="Intent Alignment"
+              description="Intent-Alignment"
               score={result.scores.IAS}
               threshold={result.thresholds.IAS_min}
             />
             <ScoreBar
               label="PAS"
-              description="Principle Adherence"
+              description="Principle-Adherence"
               score={result.scores.PAS}
               threshold={result.thresholds.PAS_min}
             />
             <ScoreBar
               label="AS"
-              description="Application Score"
+              description="Application"
               score={result.scores.AS}
               threshold={result.thresholds.AS_min}
             />

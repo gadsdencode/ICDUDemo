@@ -17,6 +17,9 @@ import {
   Repeat,
   Eye
 } from "lucide-react";
+import { FinancialImpact } from "@/components/FinancialImpact";
+import { UseCaseGuide } from "@/components/UseCaseGuide";
+import { executiveMessages } from "@/data/businessCase";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 
@@ -51,7 +54,7 @@ const benefits = [
   {
     icon: BarChart3,
     title: "Measurable Evaluation",
-    description: "From 'best-effort prompting' to quantifiable, gateable scores",
+    description: "From 'best-effort prompting' to quantifiable, gateable scores — closing the gap that costs $67.4B/year",
   },
   {
     icon: Eye,
@@ -121,6 +124,18 @@ export default function Overview() {
             </p>
           </div>
           <BeforeAfter />
+        </div>
+      </section>
+
+      <section className="py-6 sm:py-12">
+        <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
+          <div className="text-center mb-4 sm:mb-8">
+            <h2 className="text-base sm:text-2xl font-bold mb-1 sm:mb-2">The Cost of Inaction</h2>
+            <p className="text-[10px] sm:text-base text-muted-foreground">
+              {executiveMessages.gapStatement}
+            </p>
+          </div>
+          <FinancialImpact compact />
         </div>
       </section>
 
@@ -209,7 +224,10 @@ export default function Overview() {
                   <p className="text-[9px] sm:text-sm text-muted-foreground mb-1 sm:mb-3 hidden sm:block">
                     Scores outputs using gateable metrics with clear thresholds.
                   </p>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
+                  <p className="text-[9px] sm:text-xs text-destructive/70 mt-1 hidden sm:block">
+                    Replaces: Post-hoc red-teaming with no formal thresholds
+                  </p>
+                  <div className="flex flex-wrap gap-1 sm:gap-2 mt-1 sm:mt-2">
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">IAS</Badge>
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">PAS</Badge>
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">AS</Badge>
@@ -228,7 +246,10 @@ export default function Overview() {
                   <p className="text-[9px] sm:text-sm text-muted-foreground mb-1 sm:mb-3 hidden sm:block">
                     Human rubric scoring for qualitative dimensions.
                   </p>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
+                  <p className="text-[9px] sm:text-xs text-destructive/70 mt-1 hidden sm:block">
+                    Replaces: Unstructured preference rankings (Chatbot Arena)
+                  </p>
+                  <div className="flex flex-wrap gap-1 sm:gap-2 mt-1 sm:mt-2">
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">Empathy</Badge>
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">Clarity</Badge>
                   </div>
@@ -246,7 +267,10 @@ export default function Overview() {
                   <p className="text-[9px] sm:text-sm text-muted-foreground mb-1 sm:mb-3 hidden sm:block">
                     Tests AI behavior under controlled variations.
                   </p>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
+                  <p className="text-[9px] sm:text-xs text-destructive/70 mt-1 hidden sm:block">
+                    Replaces: Limited jailbreak testing with no systematic coverage
+                  </p>
+                  <div className="flex flex-wrap gap-1 sm:gap-2 mt-1 sm:mt-2">
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">Role</Badge>
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">Tone</Badge>
                     <Badge variant="outline" className="text-[8px] sm:text-xs px-1 sm:px-2">Constraint</Badge>
@@ -258,11 +282,26 @@ export default function Overview() {
         </div>
       </section>
 
+      <section className="py-6 sm:py-12">
+        <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
+          <div className="text-center mb-4 sm:mb-8">
+            <h2 className="text-base sm:text-2xl font-bold mb-1 sm:mb-2">Is ICDU Right for You?</h2>
+            <p className="text-[10px] sm:text-base text-muted-foreground">
+              ICDU is essential for regulated and high-stakes AI — not everything needs it
+            </p>
+          </div>
+          <UseCaseGuide />
+        </div>
+      </section>
+
       <section className="py-6 sm:py-16 bg-primary text-primary-foreground">
         <div className="container px-3 sm:px-4 mx-auto max-w-7xl text-center">
           <h2 className="text-base sm:text-2xl font-bold mb-2 sm:mb-4">Ready to Explore?</h2>
-          <p className="text-[10px] sm:text-base text-primary-foreground/80 mb-4 sm:mb-8 max-w-2xl mx-auto">
+          <p className="text-[10px] sm:text-base text-primary-foreground/80 mb-2 sm:mb-4 max-w-2xl mx-auto">
             Choose your role or try the interactive demos.
+          </p>
+          <p className="text-[10px] sm:text-sm text-primary-foreground/60 italic mb-4 sm:mb-6 max-w-2xl mx-auto">
+            {executiveMessages.bottomLine}
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-4">
             <Link href="/journey" className="w-full sm:w-auto">

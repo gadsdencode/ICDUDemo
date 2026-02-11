@@ -80,8 +80,8 @@ export const hitlRubricDimensions = [
   },
   {
     id: "trust",
-    label: "Trustworthiness",
-    description: "Does the response flag uncertainty and avoid over-claiming?"
+    label: "Perceived Trust",
+    description: "Does the response flag uncertainty, cite limitations, and avoid over-claiming?"
   },
   {
     id: "safety",
@@ -117,7 +117,7 @@ export const glossaryTerms = [
   },
   {
     term: "AI Judge",
-    definition: "A quantitative evaluator that scores AI outputs on Intent Alignment (IAS), Principle Adherence (PAS), and Application (AS)."
+    definition: "A quantitative evaluator that scores AI outputs on Intent-Alignment (IAS), Principle-Adherence (PAS), and Application (AS)."
   },
   {
     term: "Gates",
@@ -132,16 +132,28 @@ export const glossaryTerms = [
     definition: "Controlled variations of scenarios (role, tone, constraints, channel) used to stress-test AI behavior."
   },
   {
-    term: "IAS (Intent Alignment Score)",
-    definition: "Measures how well the AI output matches the stated intent and success criteria."
+    term: "IAS (Intent-Alignment Score)",
+    definition: "Measures how well the AI output matches the stated intent and success criteria. Scored by the AI Judge; must meet threshold for PROMOTE gate."
   },
   {
-    term: "PAS (Principle Adherence Score)",
-    definition: "Measures how well the AI output follows the governing principles and constraints."
+    term: "PAS (Principle-Adherence Score)",
+    definition: "Measures how well the AI output follows the governing principles and constraints. Principle adherence is non-negotiable — PAS below threshold triggers BLOCK."
   },
   {
     term: "AS (Application Score)",
     definition: "Measures how well the AI applies domain knowledge and produces actionable outputs."
+  },
+  {
+    term: "Promote / Escalate / Block",
+    definition: "The three gate decisions made by the AI Judge. PROMOTE: all scores exceed thresholds, ready for deployment. ESCALATE: borderline scores, human review required. BLOCK: critical thresholds failed, revision required before re-evaluation."
+  },
+  {
+    term: "Stability",
+    definition: "A metric from the Stress Engine measuring whether AI behavior remains consistent across controlled perturbations of role, tone, constraints, and channel."
+  },
+  {
+    term: "Disparity Indicators",
+    definition: "Fairness metrics measured across perturbation sets in the Stress Engine. Unlike isolated fairness benchmarks (BBQ, WinoBias), disparity is tracked as a continuous pipeline metric across deployment scenarios."
   }
 ];
 
@@ -164,14 +176,26 @@ export const faqItems = [
   },
   {
     question: "Is ICDU patented?",
-    answer: "Yes. ICDU is protected by one or more patent-pending applications in the United States. Publication of this repository does not grant a license to practice any patented method."
+    answer: "Yes. ICDU is protected by one or more patent-pending applications in the United States (PCT planned). Publication of this repository does not grant a license to practice any patented method."
   },
   {
     question: "How does the AI Judge work?",
-    answer: "The AI Judge produces quantitative scores across three dimensions: Intent Alignment Score (IAS), Principle Adherence Score (PAS), and Application Score (AS). Based on configurable thresholds, it makes gate decisions: PROMOTE (meets all thresholds), ESCALATE (needs human review), or BLOCK (fails critical thresholds)."
+    answer: "The AI Judge produces quantitative scores across three dimensions: Intent-Alignment Score (IAS), Principle-Adherence Score (PAS), and Application Score (AS). Based on configurable thresholds, it makes gate decisions: PROMOTE (meets all thresholds), ESCALATE (needs human review), or BLOCK (fails critical thresholds)."
   },
   {
     question: "What is the purpose of the Stress Engine?",
     answer: "The Scenario-Perturbation Stress Engine generates controlled variations of scenarios (changing role, tone, constraints, channel) to systematically test AI behavior. It measures stability, fairness, refusal consistency, and hallucination patterns across variations."
+  },
+  {
+    question: "What regulatory requirements does ICDU help address?",
+    answer: "ICDU's built-in audit trails, governance IDs, and structured evaluation gates help satisfy requirements from the EU AI Act (risk assessments, audit trails, human oversight), GDPR (transparency in algorithmic decisions), US state laws like the Colorado AI Act and Texas AI law, and proposed federal legislation like the AI LEAD Act."
+  },
+  {
+    question: "What is the financial risk of deploying AI without structured evaluation?",
+    answer: "In 2024, $67.4B in global losses were attributed to AI hallucinations. 70–85% of AI projects fail to meet expected outcomes. Per-employee hallucination mitigation costs approximately $14,200/year. The EU AI Act carries fines up to €35M or 7% of global turnover per violation. Gartner projects over $10B in AI remediation costs by mid-2026."
+  },
+  {
+    question: "How does ICDU compare to standard benchmarks like MMLU or HumanEval?",
+    answer: "Standard benchmarks measure model capability in isolation — MMLU tests knowledge, HumanEval tests code generation. They don't verify intent alignment, principle adherence, or stability under real-world perturbations. ICDU adds structured intent encoding, automated safety gates, human rubric scoring, and systematic perturbation testing — answering not just 'is this model capable?' but 'is it safe and stable enough to deploy?'"
   }
 ];

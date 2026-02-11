@@ -3,8 +3,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { HelpCircle, Book, AlertTriangle, Mail } from "lucide-react";
+import { HelpCircle, Book, AlertTriangle, Mail, DollarSign, GitCompare } from "lucide-react";
 import { glossaryTerms, faqItems } from "@/data/examples";
+import { FinancialImpact } from "@/components/FinancialImpact";
+import { CompetitiveBenchmarks } from "@/components/CompetitiveBenchmarks";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 
@@ -37,7 +39,7 @@ export default function FAQ() {
           <AlertDescription className="text-amber-600/90 dark:text-amber-400/90 text-xs sm:text-sm">
             This repository is published for evaluation and research purposes only. 
             Commercial use requires a license. ICDU is protected by patent-pending applications 
-            in the United States. Publication of this repository does not grant a license 
+            in the United States. PCT filing planned. Publication of this repository does not grant a license 
             to practice any patented method.
           </AlertDescription>
         </Alert>
@@ -61,6 +63,22 @@ export default function FAQ() {
                 </AccordionItem>
               ))}
             </Accordion>
+          </section>
+
+          <section>
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <h2 className="text-lg sm:text-xl font-bold">The Financial Case</h2>
+            </div>
+            <FinancialImpact />
+          </section>
+
+          <section>
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <GitCompare className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <h2 className="text-lg sm:text-xl font-bold">How ICDU Compares to Standard Benchmarks</h2>
+            </div>
+            <CompetitiveBenchmarks />
           </section>
 
           <section>

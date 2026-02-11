@@ -10,6 +10,7 @@ import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
 import Demos from "@/pages/Demos";
 import FAQ from "@/pages/FAQ";
+import BusinessCase from "@/pages/BusinessCase";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/journey" component={Journey} />
       <Route path="/journey/:personaId" component={Journey} />
       <Route path="/demos" component={Demos} />
+      <Route path="/business-case" component={BusinessCase} />
       <Route path="/faq" component={FAQ} />
       <Route component={NotFound} />
     </Switch>

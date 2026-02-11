@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { XCircle, CheckCircle2, AlertTriangle, Target, Shield, Eye, Repeat, FileCheck } from "lucide-react";
+import { XCircle, CheckCircle2, AlertTriangle, Target, Shield, Eye, Repeat, FileCheck, Users, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const beforePoints = [
@@ -8,6 +8,9 @@ const beforePoints = [
   { icon: XCircle, text: "No audit trail" },
   { icon: XCircle, text: "Unclear constraints" },
   { icon: XCircle, text: "Hard to evaluate changes" },
+  { icon: AlertTriangle, text: "No structured rubric for empathy, clarity, trust" },
+  { icon: XCircle, text: "Limited adversarial testing (jailbreaks only)" },
+  { icon: XCircle, text: "Fairness tested in isolation, not across scenarios" },
 ];
 
 const afterPoints = [
@@ -16,6 +19,9 @@ const afterPoints = [
   { icon: Eye, text: "Traceable governance IDs" },
   { icon: Repeat, text: "Repeatable evaluations" },
   { icon: FileCheck, text: "Gated release decisions" },
+  { icon: Users, text: "HITL rubric scoring for human nuance" },
+  { icon: FlaskConical, text: "Systematic perturbation testing at scale" },
+  { icon: Shield, text: "Fairness as a continuous pipeline metric" },
 ];
 
 type BeforeAfterProps = {

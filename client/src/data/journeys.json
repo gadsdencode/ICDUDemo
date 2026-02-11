@@ -17,7 +17,7 @@
       "title": "The Risk You're Carrying",
       "problem": "Without structured evaluation, you're essentially hoping your AI behaves correctly. Each deployment is a liability exposure with no quantifiable risk assessment. Competitors with better governance will win regulated contracts.",
       "withIcdu": "AI Judge gates provide quantitative scores before any output reaches production. You have clear thresholds and automatic escalation paths that demonstrate due diligence.",
-      "proofMetrics": "Intent Alignment Score (IAS), Principle Adherence Score (PAS), Application Score (AS) - all measured and logged",
+      "proofMetrics": "Intent-Alignment Score (IAS), Principle-Adherence Score (PAS), Application Score (AS) - all measured and logged",
       "example": "Before launch, you can show stakeholders that your AI achieved 92% PAS and 87% IAS, exceeding your 85% thresholds, with automatic blocks for scores below 70%.",
       "whereInPipeline": "AI Judge Gate",
       "keyTakeaways": ["Quantifiable risk metrics for every AI output", "Automatic escalation prevents costly mistakes", "Demonstrable due diligence for regulators"],
