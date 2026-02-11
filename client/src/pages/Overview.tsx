@@ -92,7 +92,7 @@ export default function Overview() {
               AI Safety Pipeline
             </Badge>
             <h1 className="text-xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 sm:mb-6">
-              ICDU Explainer
+              Intent-Conscious Data Unit
             </h1>
             <p className="text-[11px] sm:text-lg text-muted-foreground mb-4 sm:mb-8 leading-relaxed">
               Move from "best-effort prompting" to 
