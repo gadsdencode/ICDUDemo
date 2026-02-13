@@ -1,8 +1,16 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
-import { Home, Map, Zap, Briefcase, HelpCircle, Menu, X } from "lucide-react";
+import { Home, Map, Zap, Briefcase, HelpCircle, Menu, X, Download, FileText, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 
 const navItems = [
@@ -13,9 +21,38 @@ const navItems = [
   { path: "/faq", label: "FAQ", icon: HelpCircle },
 ];
 
+const downloadItems = [
+  {
+    label: "ICDU AI Research Paper",
+    filename: "ICDU_AI_Research_Paper.pdf",
+    description: "Full research paper (PDF)",
+  },
+  {
+    label: "Why Overture - One Pager",
+    filename: "Why_Overture_OnePager.docx",
+    description: "Overture overview (Word)",
+  },
+  {
+    label: "ICDU Executive Pitch",
+    filename: "ICDU_Executive_Pitch.docx",
+    description: "Executive summary (Word)",
+  },
+  {
+    label: "ICDU Executive Quick Hits",
+    filename: "ICDU_Executive_Quick_Hits.docx",
+    description: "Key highlights (Word)",
+  },
+  {
+    label: "ICDU vs Standard LLM",
+    filename: "ICDU_vs_Standard_LLM_Financial_Impact.docx",
+    description: "Comparison & financial impact (Word)",
+  },
+];
+
 export function Navigation() {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -50,6 +87,41 @@ export function Navigation() {
               </Link>
             );
           })}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2"
+                data-testid="nav-resources"
+              >
+                <Download className="h-4 w-4" />
+                Resources
+                <ChevronDown className="h-3 w-3 opacity-60" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-72">
+              <DropdownMenuLabel>Download Documents</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {downloadItems.map((item) => (
+                <DropdownMenuItem key={item.filename} asChild>
+                  <a
+                    href={`/downloads/${item.filename}`}
+                    download={item.filename}
+                    className="flex items-start gap-3 cursor-pointer"
+                    data-testid={`download-${item.filename}`}
+                  >
+                    <FileText className="h-4 w-4 mt-0.5 shrink-0 opacity-60" />
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-sm font-medium">{item.label}</span>
+                      <span className="text-xs text-muted-foreground">{item.description}</span>
+                    </div>
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
@@ -57,7 +129,7 @@ export function Navigation() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-8 w-8 sm:h-9 sm:w-9"
+            className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             data-testid="button-mobile-menu"
           >
@@ -89,6 +161,39 @@ export function Navigation() {
                 </Link>
               );
             })}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2 h-9 sm:h-10"
+              onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+              data-testid="nav-mobile-resources"
+            >
+              <Download className="h-4 w-4" />
+              Resources
+              <ChevronDown className={cn("h-3 w-3 ml-auto transition-transform", mobileResourcesOpen && "rotate-180")} />
+            </Button>
+
+            {mobileResourcesOpen && (
+              <div className="flex flex-col gap-1 pl-4">
+                {downloadItems.map((item) => (
+                  <a
+                    key={item.filename}
+                    href={`/downloads/${item.filename}`}
+                    download={item.filename}
+                    className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover-elevate"
+                    data-testid={`download-mobile-${item.filename}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FileText className="h-4 w-4 shrink-0 opacity-60" />
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-medium">{item.label}</span>
+                      <span className="text-xs text-muted-foreground">{item.description}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
           </nav>
         </div>
       )}
