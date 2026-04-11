@@ -176,11 +176,6 @@ const domains = [
   { name: "HR & Recruiting", detail: "Candidate screening, employee-facing AI, onboarding" },
 ];
 
-const teamMembers = [
-  { name: "Brian Frerichs", initials: "BF", color: "var(--accent-blue)" },
-  { name: "Jordan Martens", initials: "JM", color: "var(--accent-green)" },
-  { name: "Samuel Conrad", initials: "SC", color: "var(--accent-amber)" },
-];
 
 /* ═══════════════════════════════════════════════════════════════════
    CSS — theme tokens + component classes
@@ -1245,13 +1240,16 @@ export default function Overview() {
             </Reveal>
           </div>
 
-          {/* Right — team card */}
+          {/* Right — enterprise readiness card */}
           <Reveal delay={0.2}>
             <div
               style={{
                 border: "1px solid var(--lr-border)",
                 borderRadius: "0.75rem",
                 padding: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",
               }}
             >
               <div
@@ -1261,62 +1259,72 @@ export default function Overview() {
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   color: "var(--lr-fg-ghost)",
-                  marginBottom: "1.5rem",
                 }}
               >
-                Inventors
+                Enterprise Ready
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                }}
-              >
-                {teamMembers.map((m) => (
-                  <div
-                    key={m.name}
+
+              {[
+                {
+                  icon: "🔒",
+                  label: "Patent-Pending Technology",
+                  detail: "A proprietary approach to AI evaluation, formally protected and purpose-built.",
+                },
+                {
+                  icon: "⚖️",
+                  label: "Regulatory-First Design",
+                  detail: "Designed to align with EU AI Act, GDPR, and emerging US state requirements.",
+                },
+                {
+                  icon: "🚀",
+                  label: "Deployment-Focused",
+                  detail: "Not just another research project — built for real-world deployment, and evolving as the landscape does.",
+                },
+                {
+                  icon: "🤝",
+                  label: "Pre-NDA Discussion Ready",
+                  detail: "Ready to have a real conversation about your deployment needs.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    display: "flex",
+                    gap: "0.875rem",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <span
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1rem",
+                      fontSize: "1.125rem",
+                      lineHeight: 1.4,
+                      flexShrink: 0,
                     }}
                   >
+                    {item.icon}
+                  </span>
+                  <div>
                     <div
                       style={{
-                        width: "2.5rem",
-                        height: "2.5rem",
-                        borderRadius: "50%",
-                        background: m.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#fff",
-                        fontSize: "0.75rem",
                         fontWeight: 600,
-                        flexShrink: 0,
+                        fontSize: "0.9375rem",
+                        marginBottom: "0.2rem",
                       }}
                     >
-                      {m.initials}
+                      {item.label}
                     </div>
-                    <span
-                      style={{ fontSize: "0.9375rem", fontWeight: 500 }}
+                    <div
+                      style={{
+                        fontSize: "0.8125rem",
+                        color: "var(--lr-fg-faint)",
+                        lineHeight: 1.5,
+                      }}
                     >
-                      {m.name}
-                    </span>
+                      {item.detail}
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div
-                style={{
-                  marginTop: "1.5rem",
-                  fontStyle: "italic",
-                  fontSize: "0.8125rem",
-                  color: "var(--lr-fg-faint)",
-                }}
-              >
-                Patent Pending
-              </div>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
