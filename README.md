@@ -9,6 +9,7 @@ This application teaches ICDU concepts through:
 2. **Persona Journeys** - Role-specific walkthroughs (Executive, Director, Manager, Developer, Risk & Compliance, Evaluator)
 3. **Interactive Demos** - Build ICDUs, run AI Judge evaluations, use HITL rubrics, and stress test
 4. **FAQ & Glossary** - Reference documentation and terminology
+5. **Fine-Tuning Developer Page** - Local training API preflight + status polling (`/fine-tune`)
 
 ## How to Run
 
@@ -21,6 +22,18 @@ npm run dev
 ```
 
 The application will be available at `http://localhost:5000`.
+
+## Environment Variables
+
+Create a `.env` file in the project root if you want to override local defaults:
+
+```bash
+VITE_ICDU_API_BASE_URL=http://localhost:8000
+```
+
+The fine-tuning page (`/fine-tune`) uses this value to call:
+- `POST /training-jobs/preflight-upload`
+- `GET /training-jobs/{job_id}`
 
 ## Project Structure
 
