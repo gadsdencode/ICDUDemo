@@ -1,15 +1,25 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
-import { Home, Map, Zap, Briefcase, HelpCircle, Menu, X } from "lucide-react";
+import {
+  Home,
+  Map,
+  Zap,
+  Briefcase,
+  HelpCircle,
+  Wrench,
+  Menu,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const navItems = [
   { path: "/", label: "Overview", icon: Home },
+  { path: "/business-case", label: "Business Case", icon: Briefcase },
   { path: "/journey", label: "Journey", icon: Map },
   { path: "/demos", label: "Demos", icon: Zap },
-  { path: "/business-case", label: "Business Case", icon: Briefcase },
+  { path: "/fine-tune", label: "Fine-Tune", icon: Wrench },
   { path: "/faq", label: "FAQ", icon: HelpCircle },
 ];
 
