@@ -31,7 +31,7 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="icdu-theme">
+      <ThemeProvider defaultTheme="light" storageKey="icdu-theme">
         <TooltipProvider>
           <div className="min-h-screen bg-background">
             <Navigation />
