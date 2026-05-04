@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Quote } from "lucide-react";
+import { Quote, XCircle, CheckCircle2, ArrowRight, ArrowDown } from "lucide-react";
 import {
   standardBenchmarks,
   componentReplacements,
@@ -23,21 +23,59 @@ function WhatIcduAdds() {
 
   return (
     <div>
-      <h3 className="text-sm sm:text-lg font-semibold mb-2 sm:mb-4">
+      <h3 className="text-base sm:text-xl font-semibold mb-3 sm:mb-5">
         What ICDU Adds
       </h3>
-      <div className="grid md:grid-cols-2 gap-2 sm:gap-4">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
         {replacements.map((item) => (
-          <Card key={item.component} className="p-2.5 sm:p-4">
-            <div className="font-semibold text-[10px] sm:text-sm mb-1.5 sm:mb-2">
+          <Card
+            key={item.component}
+            className="p-4 sm:p-5 flex flex-col gap-3 sm:gap-4"
+            data-testid={`card-icdu-adds-${item.component.toLowerCase().replace(/\s+/g, "-")}`}
+          >
+            <h4
+              className="text-base sm:text-lg font-bold tracking-tight"
+              data-testid={`text-component-${item.component.toLowerCase().replace(/\s+/g, "-")}`}
+            >
               {item.component}
+            </h4>
+
+            <div className="flex flex-col sm:flex-row sm:items-stretch gap-2 sm:gap-3">
+              {/* Replaces (before) */}
+              <div className="flex-1 rounded-md border border-destructive/20 bg-destructive/5 p-3 sm:p-3.5">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <XCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-destructive">
+                    Replaces
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-snug line-through decoration-destructive/40 decoration-1">
+                  {item.replaces}
+                </p>
+              </div>
+
+              {/* Connector arrow */}
+              <div
+                className="flex sm:flex-col items-center justify-center text-muted-foreground/60 shrink-0"
+                aria-hidden="true"
+              >
+                <ArrowDown className="h-4 w-4 sm:hidden" />
+                <ArrowRight className="hidden sm:block h-4 w-4" />
+              </div>
+
+              {/* Outcome (after) */}
+              <div className="flex-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/10 p-3 sm:p-3.5">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                    Outcome
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-foreground font-medium leading-snug">
+                  {item.outcome}
+                </p>
+              </div>
             </div>
-            <p className="text-[9px] sm:text-xs text-destructive/80 mb-1">
-              <span className="font-medium">Replaces:</span> {item.replaces}
-            </p>
-            <p className="text-[9px] sm:text-xs text-emerald-600 dark:text-emerald-400">
-              <span className="font-medium">Outcome:</span> {item.outcome}
-            </p>
           </Card>
         ))}
       </div>
