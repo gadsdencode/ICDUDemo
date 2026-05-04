@@ -1,7 +1,19 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
-import { Home, Map, Zap, Briefcase, HelpCircle, Wrench, Menu, X, Download, FileText, ChevronDown } from "lucide-react";
+import {
+  Home,
+  Map,
+  Zap,
+  Briefcase,
+  HelpCircle,
+  Wrench,
+  Menu,
+  X,
+  Download,
+  FileText,
+  ChevronDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
