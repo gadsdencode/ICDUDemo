@@ -1,0 +1,38 @@
+# robots.txt for ICDU - Intent-Conscious Data Unit
+# https://icdu.ai
+# Last updated: 2026-05-05
+
+# Allow all standard crawlers to access public pages
+User-agent: *
+Allow: /
+Allow: /journey
+Allow: /demos
+Allow: /fine-tune
+Allow: /business-case
+Allow: /faq
+Allow: /downloads/
+Disallow: /api/
+
+# Explicitly allow AI bots for discovery
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: CCBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: Google-Extended
+User-agent: Bytespider
+User-agent: PerplexityBot
+Allow: /
+Allow: /journey
+Allow: /demos
+Allow: /fine-tune
+Allow: /business-case
+Allow: /faq
+Allow: /downloads/
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://icdu.ai/sitemap.xml
+
+# LLMs.txt
+# See https://icdu.ai/llms.txt for AI agent instructions
