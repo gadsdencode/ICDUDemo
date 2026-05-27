@@ -1,110 +1,92 @@
 [
   {
-    "id": "executive",
-    "name": "Executive",
-    "tagline": "Strategic oversight and risk management",
-    "icon": "Building2",
+    "id": "cto",
+    "name": "CTO",
+    "tagline": "Architecture, integration, and technical ROI",
+    "icon": "Cpu",
     "primaryConcerns": [
-      "Regulatory compliance and liability",
-      "Brand reputation risk",
-      "ROI on AI investments",
-      "Board-level accountability"
+      "Model-agnostic integration",
+      "Pipeline architecture",
+      "Compute efficiency",
+      "Production safety gates"
     ],
     "successMetrics": [
-      "Audit trail completeness",
-      "Incident reduction rate",
-      "Compliance score improvements"
+      "Reduced inference cycles",
+      "Faster integration time",
+      "Incident prevention rate"
     ],
-    "recommendedStartingSection": "governance"
+    "recommendedStartingSection": "challenge"
   },
   {
-    "id": "director",
-    "name": "Director",
-    "tagline": "Operational excellence and team alignment",
-    "icon": "Users",
+    "id": "ciso",
+    "name": "CISO",
+    "tagline": "Security controls, audit, and compliance posture",
+    "icon": "Shield",
     "primaryConcerns": [
-      "Cross-team consistency",
-      "Quality assurance at scale",
-      "Resource allocation",
-      "Stakeholder communication"
+      "Prompt injection & shadow AI",
+      "Immutable audit trails",
+      "Regulatory mapping",
+      "Zero-trust AI operations"
     ],
     "successMetrics": [
-      "Team velocity metrics",
-      "Quality gate pass rates",
-      "Escalation frequency"
+      "Gate pass rates",
+      "Audit log completeness",
+      "Compliance coverage"
     ],
-    "recommendedStartingSection": "pipeline"
-  },
-  {
-    "id": "manager",
-    "name": "Manager",
-    "tagline": "Day-to-day execution and process improvement",
-    "icon": "ClipboardList",
-    "primaryConcerns": [
-      "Sprint deliverables",
-      "Team productivity",
-      "Process documentation",
-      "Performance tracking"
-    ],
-    "successMetrics": [
-      "Task completion rates",
-      "Rework reduction",
-      "Process cycle time"
-    ],
-    "recommendedStartingSection": "workflow"
+    "recommendedStartingSection": "threat"
   },
   {
     "id": "developer",
     "name": "Developer",
-    "tagline": "Building reliable AI-powered features",
+    "tagline": "SDK integration, gates, and CI/CD testing",
     "icon": "Code2",
     "primaryConcerns": [
-      "Clear implementation specs",
-      "Debugging AI outputs",
-      "Testing and validation",
-      "Version control for prompts"
+      "Prompt fragility",
+      "Pre-execution validation",
+      "Gate configuration",
+      "Test harness patterns"
     ],
     "successMetrics": [
+      "First-pass accuracy",
       "Test coverage",
-      "Bug reduction",
       "Deployment confidence"
     ],
-    "recommendedStartingSection": "implementation"
+    "recommendedStartingSection": "problem"
   },
   {
-    "id": "risk-compliance",
-    "name": "Risk & Compliance",
-    "tagline": "Ensuring safety and regulatory adherence",
-    "icon": "Shield",
+    "id": "compliance",
+    "name": "Compliance Officer",
+    "tagline": "Frameworks, evidence, and regulatory readiness",
+    "icon": "Scale",
     "primaryConcerns": [
-      "Regulatory requirements",
-      "Audit readiness",
-      "Risk assessment documentation",
-      "Policy enforcement"
+      "EU AI Act enforcement",
+      "Evidence generation",
+      "Risk classification",
+      "Audit-ready reporting"
     ],
     "successMetrics": [
-      "Compliance violations prevented",
-      "Audit success rate",
-      "Policy adherence scores"
+      "Framework coverage",
+      "Execution trace completeness",
+      "Reporting cycle time"
     ],
-    "recommendedStartingSection": "safety"
+    "recommendedStartingSection": "mandate"
   },
   {
-    "id": "evaluator",
-    "name": "Evaluator",
-    "tagline": "Assessing AI systems for quality and safety",
-    "icon": "Search",
+    "id": "cfo",
+    "name": "CFO",
+    "tagline": "Financial exposure, pricing, and ROI justification",
+    "icon": "BarChart3",
     "primaryConcerns": [
-      "Objective assessment criteria",
-      "Reproducible evaluations",
-      "Comprehensive test coverage",
-      "Benchmark comparisons"
+      "Regulatory fines",
+      "Incident cost exposure",
+      "Compute efficiency ROI",
+      "Budget justification"
     ],
     "successMetrics": [
-      "Evaluation consistency",
-      "Coverage completeness",
-      "Detection accuracy"
+      "Risk-adjusted ROI",
+      "Cost per execution",
+      "Compliance cost reduction"
     ],
-    "recommendedStartingSection": "evaluation"
+    "recommendedStartingSection": "exposure"
   }
 ]

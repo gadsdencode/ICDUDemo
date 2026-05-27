@@ -9,9 +9,10 @@ import {
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 import {
-  financialImpact,
   executiveMessages,
-  standardBenchmarks,
+  efficiencyStats,
+  marketBars,
+  regulatoryTailwinds,
 } from "@/data/businessCase";
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -88,92 +89,152 @@ function GlowDivider() {
 /* ═══════════════════════════════════════════════════════════════════
    Static data derived from businessCase.ts
    ═══════════════════════════════════════════════════════════════════ */
-const heroStats = [
-  {
-    value: financialImpact.hallucination_losses.figure,
-    label: "in AI hallucination losses",
-  },
-  {
-    value: financialImpact.project_failure_rate.figure,
-    label: "of AI projects fail",
-  },
-  {
-    value: financialImpact.eu_ai_act_max_fine.figure,
-    label: "max fine per violation",
-  },
-  {
-    value: financialImpact.remediation_costs.figure,
-    label: "projected remediation costs",
-  },
-];
+const heroSupportingParagraph =
+  "Unlike point solutions, ICDU works alongside existing AI environments without replacing them. The architecture is protected under U.S. provisional patent filings and ready for pilot validation.";
 
 const pipelineStages = [
   {
     num: "01",
-    name: "Intent Encoding",
+    name: "Define",
     color: "var(--accent-blue)",
-    desc: "Define what success looks like before the AI ever responds.",
-    tags: ["Explicit Intent", "Governing Principles", "Persona & Tone"],
+    desc: "Encode your AI's purpose as a structured, versioned ICDU spec — not a freeform prompt. Intent is explicit, testable, and version-controlled like code.",
   },
   {
     num: "02",
-    name: "AI Judge",
+    name: "Gate",
     color: "var(--accent-green)",
-    desc: "Score every output against clear thresholds — block what doesn't pass.",
-    tags: ["IAS", "PAS", "Alignment Score"],
+    desc: "Safety, scope, and sensitivity checks fire before the model call. Injection attacks blocked. Data access constrained to declared fields only.",
   },
   {
     num: "03",
-    name: "HITL Grader",
+    name: "Execute",
     color: "var(--accent-amber)",
-    desc: "Humans score what machines miss — empathy, tone, and real-world clarity.",
-    tags: ["Empathy", "Clarity", "Domain Accuracy"],
+    desc: "The AI runs within intent-bound, gate-verified parameters. Fewer unnecessary cycles. Higher first-pass accuracy. Lower compute and energy cost.",
   },
   {
     num: "04",
-    name: "Stress Engine",
+    name: "Audit",
     color: "var(--accent-red)",
-    desc: "Find where your AI breaks before your users do.",
-    tags: ["Role Variation", "Tone Shifts", "Constraint Pressure"],
+    desc: "A full immutable trace written for every execution — inputs, outputs, gate results, model version, and timestamps. Regulator-ready out of the box.",
   },
 ];
 
-const capabilityCards = [
+const withoutIcduItems = [
   {
-    title: "Measurable Evaluation",
-    desc: "From 'best-effort prompting' to quantifiable, gateable scores that close the deployment gap.",
+    title: "Prompt injection risk",
+    desc: "No input validation before model invocation — malicious inputs can redirect AI behavior or exfiltrate data.",
   },
   {
-    title: "Complete Traceability",
-    desc: "Governance IDs link every output to its intent, constraints, and evaluation lineage.",
+    title: "No audit trail",
+    desc: "Incident response is impossible without intent logs. You can't reconstruct what the AI was supposed to do when it fails.",
   },
   {
-    title: "Repeatability",
-    desc: "Same ICDU + same model = comparable, reproducible results across evaluations.",
+    title: "Silent model drift",
+    desc: "Upstream model updates silently break AI behaviour. You find out from a customer, not your monitoring stack.",
   },
   {
-    title: "Safety Gates",
-    desc: "Automatic escalation and blocking based on configurable score thresholds.",
-  },
-  {
-    title: "Regulatory Alignment",
-    desc: "Built for EU AI Act, GDPR, and emerging US state-level compliance requirements.",
-  },
-  {
-    title: "Domain Agnostic",
-    desc: "Healthcare, legal, finance, education — one evaluation framework fits all verticals.",
+    title: "Regulatory exposure",
+    desc: "EU AI Act, GDPR Art. 22, and SEC AI disclosures are in force. Non-compliance: fines up to €35M or 7% of global turnover.",
   },
 ];
 
-const domains = [
-  { name: "Healthcare", detail: "Patient safety, clinical AI, diagnostic support" },
-  { name: "Legal", detail: "Contract review, compliance, case research" },
-  { name: "Finance", detail: "Risk scoring, fraud detection, advisory AI" },
-  { name: "Education", detail: "Student-facing AI, assessment, content generation" },
-  { name: "Insurance", detail: "Claims processing, underwriting, customer service" },
-  { name: "Government", detail: "Public services, benefits administration, policy AI" },
-  { name: "Customer Service", detail: "Chatbots, ticket routing, response generation" },
-  { name: "HR & Recruiting", detail: "Candidate screening, employee-facing AI, onboarding" },
+const withIcduItems = [
+  {
+    title: "Intent encoding",
+    desc: "Every AI action is defined as a versioned, testable ICDU spec. Intent is explicit, auditable, and rollback-able like code.",
+  },
+  {
+    title: "Pre-execution safety gates",
+    desc: "Scope, sensitivity, and injection checks fire before the model call — catching failures before they happen.",
+  },
+  {
+    title: "Immutable audit logs",
+    desc: "Cryptographically signed execution traces for every AI decision — inputs, outputs, gates, model version, timestamps.",
+  },
+  {
+    title: "Compliance-ready artifacts",
+    desc: "ICDU artifacts map directly to EU AI Act Art. 9, 12, 13, NIST AI RMF, and ISO/IEC 42001 — no custom instrumentation.",
+  },
+];
+
+const strainCards = [
+  {
+    title: "Data center capacity",
+    desc: "Up to 75% fewer compute cycles means far less infrastructure required. ICDU reduces AI infrastructure overhead through improved cycle time efficiency.",
+  },
+  {
+    title: "Energy demand",
+    desc: "The US faces critical shortages in power generation for AI. Reduced inference overhead directly lowers power draw per workload.",
+  },
+  {
+    title: "Compute cost",
+    desc: "With up to 80% efficiency improvement, ICDU significantly lowers the cost of every AI job you run — at any scale.",
+  },
+  {
+    title: "Reliability & governance",
+    desc: "Errors and inaccuracies decreased by up to 75% — reducing rework, remediation, and the legal liability that follows AI failures.",
+  },
+];
+
+const useCaseCards = [
+  {
+    category: "FINANCIAL SERVICES",
+    title: "Auditable AI decisions",
+    desc: "Loan approvals, fraud detection, and trading signals with full regulatory trace. Every model decision is defensible to regulators and customers.",
+  },
+  {
+    category: "HEALTHCARE",
+    title: "Clinical decision support",
+    desc: "Intent-bound AI recommendations with clinician oversight gates built in. Patient safety and regulatory compliance by architecture, not policy.",
+  },
+  {
+    category: "LEGAL & COMPLIANCE",
+    title: "Contract & risk analysis",
+    desc: "AI that operates within defined legal parameters and logs every reasoning step. Complete defensibility for any AI-assisted legal work.",
+  },
+  {
+    category: "ENTERPRISE SAAS",
+    title: "AI feature governance",
+    desc: "Ship AI-powered product features with safety and compliance built into the release pipeline — not retrofitted after an incident.",
+  },
+  {
+    category: "GOVERNMENT",
+    title: "Accountable public AI",
+    desc: "Transparent, auditable AI operations meeting public accountability standards. Every decision explainable to oversight bodies and citizens.",
+  },
+  {
+    category: "INSURANCE",
+    title: "Underwriting & claims AI",
+    desc: "Structured intent ensures AI outputs are explainable to regulators and customers alike. Reduces dispute risk and litigation exposure.",
+  },
+];
+
+const icduChecklist = [
+  "Improved first-pass task accuracy",
+  "Reduced iterative inference cycles",
+  "More efficient compute & energy use",
+  "Structured output governance & audit",
+  "Works with any AI model provider",
+  "SDK-first integration in hours, not months",
+];
+
+const icduDifferentiators = [
+  {
+    title: "Structured intent, not prompt engineering",
+    desc: "Versioned ICDU specs replace freeform prompts — testable, auditable, and rollback-able",
+  },
+  {
+    title: "Pipeline-native architecture",
+    desc: "Integrates into existing MLOps and CI/CD — not another tool engineers work around",
+  },
+  {
+    title: "Measurable safety, not keyword filters",
+    desc: "Quantitative thresholds with compliance artifacts — every gate is verifiable and auditable",
+  },
+  {
+    title: "Compliance-ready from day one",
+    desc: "Maps to EU AI Act, NIST AI RMF, and ISO/IEC 42001 — no custom instrumentation required",
+  },
 ];
 
 
@@ -332,9 +393,206 @@ html { scroll-behavior: smooth; }
 .lr-stat-item + .lr-stat-item {
   border-left: 1px solid var(--lr-border);
 }
+.lr-stat-sublabel {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-top: 0.5rem;
+}
 @media (max-width: 639px) {
   .lr-stat-item { min-width: 50%; }
   .lr-stat-item + .lr-stat-item { border-left: none; }
+}
+
+/* ── Compare columns ── */
+.lr-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+@media (min-width: 768px) {
+  .lr-compare-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+.lr-compare-col {
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  background: var(--lr-surface);
+}
+.lr-compare-col--without {
+  border-color: rgba(220, 38, 38, 0.2);
+}
+.lr-compare-col--with {
+  border-color: rgba(5, 150, 105, 0.2);
+}
+.lr-compare-heading {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.lr-compare-item + .lr-compare-item {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--lr-border);
+}
+.lr-compare-item-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.35rem;
+}
+.lr-compare-item-desc {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--lr-fg-muted);
+  margin: 0;
+}
+
+/* ── Two-column sections ── */
+.lr-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+@media (min-width: 768px) {
+  .lr-two-col {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+/* ── Market bars ── */
+.lr-market-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.lr-market-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.lr-market-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.8125rem;
+}
+.lr-market-bar-track {
+  height: 0.5rem;
+  background: var(--lr-border);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.lr-market-bar-fill {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 9999px;
+  transition: width 1s cubic-bezier(.16,1,.3,1);
+}
+
+/* ── Regulatory tailwinds ── */
+.lr-tailwind-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 1.5rem;
+}
+.lr-tailwind-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--lr-border);
+  border-radius: 0.5rem;
+  background: var(--lr-surface);
+}
+.lr-tailwind-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+.lr-tailwind-desc {
+  font-size: 0.8125rem;
+  color: var(--lr-fg-muted);
+  line-height: 1.5;
+}
+
+/* ── Use case cards ── */
+.lr-use-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.lr-use-card {
+  background: var(--lr-surface);
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.lr-use-card:hover {
+  background: var(--lr-surface-hover);
+  border-color: var(--lr-border-hover);
+  box-shadow: 0 0 24px var(--lr-glow-green);
+}
+.lr-use-category {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--accent-green);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Checklist ── */
+.lr-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+.lr-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--lr-fg-muted);
+}
+.lr-checklist li::before {
+  content: "✓";
+  color: var(--accent-green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Status card ── */
+.lr-status-card {
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.lr-status-notice {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--lr-fg-muted);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: var(--lr-glow-blue);
+  border: 1px solid var(--lr-border);
 }
 
 /* ── Pipeline rows ── */
@@ -473,9 +731,9 @@ html { scroll-behavior: smooth; }
    ═══════════════════════════════════════════════════════════════════ */
 export default function Overview() {
   useSEO({
-    title: "ICDU — Intent-Conscious Data Unit | AI Evaluation Pipeline",
+    title: "ICDU — AI That Executes With Intent",
     description:
-      "Patent-pending AI evaluation pipeline. From best-effort prompting to measurable, auditable, deployment-ready AI execution.",
+      "ICDU is a bolt-on structured execution layer that aligns model behavior with human intent while reducing compute, energy, and operational overhead.",
   });
 
   useEffect(() => {
@@ -586,7 +844,7 @@ export default function Overview() {
               marginBottom: "1.5rem",
             }}
           >
-            Patent-Pending AI Evaluation Pipeline
+            PATENT-PENDING AI EVALUATION PIPELINE
           </div>
         </Reveal>
 
@@ -602,15 +860,15 @@ export default function Overview() {
               maxWidth: "50rem",
             }}
           >
-            Intent-Conscious
+            AI that executes with intent,
             <br />
             <span
               style={{
-                fontWeight: 300,
+                fontWeight: 600,
                 color: "var(--accent-blue)",
               }}
             >
-              Data Unit
+              not guesswork.
             </span>
           </h1>
         </Reveal>
@@ -621,11 +879,22 @@ export default function Overview() {
               fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
               lineHeight: 1.7,
               color: "var(--lr-fg-muted)",
-              maxWidth: "38rem",
-              margin: "0 0 2.5rem",
+              maxWidth: "42rem",
+              margin: "0 auto 1.25rem",
             }}
           >
             {executiveMessages.gapStatement}
+          </p>
+          <p
+            style={{
+              fontSize: "clamp(0.875rem, 1.1vw, 1rem)",
+              lineHeight: 1.7,
+              color: "var(--lr-fg-faint)",
+              maxWidth: "42rem",
+              margin: "0 auto 2.5rem",
+            }}
+          >
+            {heroSupportingParagraph}
           </p>
         </Reveal>
 
@@ -638,11 +907,11 @@ export default function Overview() {
               justifyContent: "center",
             }}
           >
-            <a href="#pipeline" className="lr-btn-primary">
+            <a href="/journey" className="lr-btn-primary">
               Explore the Pipeline{" "}
               <span aria-hidden="true">→</span>
             </a>
-            <a href="#contact" className="lr-btn-ghost">
+            <a href="/business-case" className="lr-btn-ghost">
               Start a Conversation
             </a>
           </div>
@@ -703,8 +972,8 @@ export default function Overview() {
           ════════════════════════════════════════════════════════════ */}
       <Reveal>
         <div className="lr-stat-bar">
-          {heroStats.map((stat) => (
-            <div key={stat.label} className="lr-stat-item">
+          {efficiencyStats.map((stat) => (
+            <div key={stat.sublabel} className="lr-stat-item">
               <div
                 style={{
                   fontFamily: "'Instrument Serif', serif",
@@ -719,10 +988,12 @@ export default function Overview() {
                   fontSize: "0.75rem",
                   color: "var(--lr-fg-faint)",
                   marginTop: "0.25rem",
+                  lineHeight: 1.4,
                 }}
               >
                 {stat.label}
               </div>
+              <div className="lr-stat-sublabel">{stat.sublabel}</div>
             </div>
           ))}
         </div>
@@ -758,7 +1029,7 @@ export default function Overview() {
               marginBottom: "1.5rem",
             }}
           >
-            Capability ≠ Deployability
+            Prompting is not governance.
           </h2>
         </Reveal>
         <Reveal delay={0.2}>
@@ -770,15 +1041,44 @@ export default function Overview() {
               maxWidth: "44rem",
             }}
           >
-            {executiveMessages.costOfInaction} Enterprise AI sits on a fault
-            line: models score higher every quarter on standard benchmarks, yet
-            hallucination losses reached{" "}
-            {financialImpact.hallucination_losses.figure} in 2024 and{" "}
-            {financialImpact.project_failure_rate.figure} of AI projects still
-            fail to meet expected outcomes. The gap isn't capability — it's the
-            absence of structured, intent-aware evaluation before deployment.
+            {executiveMessages.costOfInaction}
           </p>
         </Reveal>
+
+        <div className="lr-compare-grid">
+          <Reveal delay={0.25}>
+            <div className="lr-compare-col lr-compare-col--without">
+              <div
+                className="lr-compare-heading"
+                style={{ color: "var(--accent-red)" }}
+              >
+                Without ICDU
+              </div>
+              {withoutIcduItems.map((item) => (
+                <div key={item.title} className="lr-compare-item">
+                  <div className="lr-compare-item-title">{item.title}</div>
+                  <p className="lr-compare-item-desc">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal delay={0.35}>
+            <div className="lr-compare-col lr-compare-col--with">
+              <div
+                className="lr-compare-heading"
+                style={{ color: "var(--accent-green)" }}
+              >
+                With ICDU
+              </div>
+              {withIcduItems.map((item) => (
+                <div key={item.title} className="lr-compare-item">
+                  <div className="lr-compare-item-title">{item.title}</div>
+                  <p className="lr-compare-item-desc">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       <GlowDivider />
@@ -847,19 +1147,6 @@ export default function Overview() {
                       {stage.desc}
                     </span>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    {stage.tags.map((tag) => (
-                      <span key={tag} className="lr-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </Reveal>
@@ -870,7 +1157,206 @@ export default function Overview() {
       <GlowDivider />
 
       {/* ════════════════════════════════════════════════════════════
-          CAPABILITIES — 6-card grid
+          WHY THIS MATTERS
+          ════════════════════════════════════════════════════════════ */}
+      <section className="lr-section">
+        <Reveal>
+          <div
+            style={{
+              fontSize: "0.6875rem",
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--accent-amber)",
+              marginBottom: "1rem",
+            }}
+          >
+            Why This Matters
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2
+            style={{
+              fontFamily: "'Instrument Serif', serif",
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              marginBottom: "1rem",
+            }}
+          >
+            AI infrastructure is under serious strain.
+          </h2>
+        </Reveal>
+        <Reveal delay={0.15}>
+          <p
+            style={{
+              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
+              lineHeight: 1.7,
+              color: "var(--lr-fg-muted)",
+              maxWidth: "44rem",
+              marginBottom: "2.5rem",
+            }}
+          >
+            Data center capacity, power delivery, and compute costs are all under
+            mounting pressure as AI adoption accelerates. ICDU directly addresses
+            each constraint.
+          </p>
+        </Reveal>
+
+        <div className="lr-two-col">
+          <div>
+            {strainCards.map((card, i) => (
+              <Reveal key={card.title} delay={0.08 * i}>
+                <div className="lr-cap-card" style={{ marginBottom: "1rem" }}>
+                  <h3
+                    style={{
+                      fontFamily: "'Instrument Serif', serif",
+                      fontSize: "1.125rem",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: 1.6,
+                      color: "var(--lr-fg-muted)",
+                      margin: 0,
+                    }}
+                  >
+                    {card.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={0.2}>
+            <div>
+              <div
+                style={{
+                  fontSize: "0.6875rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "var(--lr-fg-ghost)",
+                  marginBottom: "1rem",
+                }}
+              >
+                Market Opportunity
+              </div>
+              <div className="lr-market-bars">
+                {marketBars.map((bar) => (
+                  <div key={bar.label} className="lr-market-bar-row">
+                    <div className="lr-market-bar-header">
+                      <span>{bar.label}</span>
+                      <span style={{ fontWeight: 600 }}>{bar.value}</span>
+                    </div>
+                    <div className="lr-market-bar-track">
+                      <div
+                        className="lr-market-bar-fill"
+                        style={{ width: `${bar.width * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  fontSize: "0.6875rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "var(--lr-fg-ghost)",
+                  marginTop: "2rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Regulatory Tailwinds
+              </div>
+              <div className="lr-tailwind-list">
+                {regulatoryTailwinds.map((item) => (
+                  <div key={item.tag} className="lr-tailwind-item">
+                    <span className="lr-tailwind-tag">{item.tag}</span>
+                    <span className="lr-tailwind-desc">{item.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <GlowDivider />
+
+      {/* ════════════════════════════════════════════════════════════
+          USE CASES
+          ════════════════════════════════════════════════════════════ */}
+      <section className="lr-section" id="use-cases">
+        <Reveal>
+          <div
+            style={{
+              fontSize: "0.6875rem",
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--accent-green)",
+              marginBottom: "1rem",
+            }}
+          >
+            Use Cases
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2
+            style={{
+              fontFamily: "'Instrument Serif', serif",
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              marginBottom: "2.5rem",
+            }}
+          >
+            Built for High-Stakes AI
+          </h2>
+        </Reveal>
+
+        <div className="lr-use-grid">
+          {useCaseCards.map((card, i) => (
+            <Reveal key={card.category} delay={0.06 * i}>
+              <div className="lr-use-card">
+                <div className="lr-use-category">{card.category}</div>
+                <h3
+                  style={{
+                    fontFamily: "'Instrument Serif', serif",
+                    fontSize: "1.25rem",
+                    marginBottom: "0.75rem",
+                  }}
+                >
+                  {card.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    lineHeight: 1.6,
+                    color: "var(--lr-fg-muted)",
+                    margin: 0,
+                  }}
+                >
+                  {card.desc}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <GlowDivider />
+
+      {/* ════════════════════════════════════════════════════════════
+          WHAT ICDU DOES
           ════════════════════════════════════════════════════════════ */}
       <section className="lr-section" id="capabilities">
         <Reveal>
@@ -884,7 +1370,7 @@ export default function Overview() {
               marginBottom: "1rem",
             }}
           >
-            Capabilities
+            What ICDU Does
           </div>
         </Reveal>
         <Reveal delay={0.1}>
@@ -894,119 +1380,10 @@ export default function Overview() {
               fontSize: "clamp(2rem, 4vw, 3.5rem)",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
-              marginBottom: "2.5rem",
-            }}
-          >
-            ICDU Delivers
-          </h2>
-        </Reveal>
-
-        <div className="lr-cap-grid">
-          {capabilityCards.map((cap, i) => (
-            <Reveal key={cap.title} delay={0.08 * i}>
-              <div className="lr-cap-card">
-                <h3
-                  style={{
-                    fontFamily: "'Instrument Serif', serif",
-                    fontSize: "1.25rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  {cap.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.875rem",
-                    lineHeight: 1.6,
-                    color: "var(--lr-fg-muted)",
-                    margin: 0,
-                  }}
-                >
-                  {cap.desc}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          DOMAINS — stacked typographic list
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section">
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-green)",
               marginBottom: "1rem",
             }}
           >
-            Verticals
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "3rem",
-            }}
-          >
-            One Framework. Every Industry.
-          </h2>
-        </Reveal>
-
-        <div>
-          {domains.map((d, i) => (
-            <Reveal key={d.name} delay={0.06 * i}>
-              <div className="lr-domain-row">
-                <span className="lr-domain-name">{d.name}</span>
-                <span className="lr-domain-detail">{d.detail}</span>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          WHAT ICDU REPLACES — benchmark blind spots
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section">
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-red)",
-              marginBottom: "1rem",
-            }}
-          >
-            What ICDU Replaces
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Standard Benchmarks Pass the Test. They Miss the Point.
+            A bolt-on layer. No rip-and-replace.
           </h2>
         </Reveal>
         <Reveal delay={0.15}>
@@ -1019,239 +1396,23 @@ export default function Overview() {
               marginBottom: "2.5rem",
             }}
           >
-            Industry-standard benchmarks prove capability — but every one of
-            them has a critical blind spot that ICDU addresses.
+            ICDU operates alongside existing AI systems — improving how they
+            execute without replacing the models already in use. Integration is
+            fast, non-disruptive, and model-agnostic.
           </p>
         </Reveal>
 
-        <div className="lr-bench-grid">
-          {standardBenchmarks.map((bench, i) => (
-            <Reveal key={bench.name} delay={0.08 * i}>
-              <div className="lr-bench-card">
-                <h3
-                  style={{
-                    fontFamily: "'Instrument Serif', serif",
-                    fontSize: "1.25rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  {bench.name}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.8125rem",
-                    color: "var(--lr-fg-muted)",
-                    lineHeight: 1.5,
-                    margin: 0,
-                  }}
-                >
-                  <span
-                    style={{
-                      color: "var(--accent-red)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    Blind spot:
-                  </span>{" "}
-                  {bench.blindSpot}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          PULL QUOTE — contrast pair
-          ════════════════════════════════════════════════════════════ */}
-      <section
-        className="lr-section"
-        style={{ textAlign: "center", maxWidth: "56rem" }}
-      >
-        {/* Old-world framing */}
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 500,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--lr-fg-ghost)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            Standard evaluation asks
-          </div>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <div
-            style={{
-              fontFamily: "'Sora', sans-serif",
-              fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)",
-              fontWeight: 300,
-              letterSpacing: "-0.01em",
-              lineHeight: 1.3,
-              color: "var(--lr-fg-faint)",
-            }}
-          >
-            &ldquo;Is this model capable?&rdquo;
-          </div>
-        </Reveal>
-
-        {/* Divider — visual pivot */}
-        <Reveal delay={0.16}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "1rem",
-              margin: "2rem auto",
-              maxWidth: "12rem",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                height: 1,
-                background:
-                  "linear-gradient(90deg, transparent, var(--lr-fg-whisper))",
-              }}
-            />
-            <div
-              style={{
-                fontSize: "0.625rem",
-                fontWeight: 600,
-                letterSpacing: "0.15em",
-                color: "var(--accent-blue)",
-                textTransform: "uppercase",
-              }}
-            >
-              ICDU asks
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: 1,
-                background:
-                  "linear-gradient(90deg, var(--lr-fg-whisper), transparent)",
-              }}
-            />
-          </div>
-        </Reveal>
-
-        {/* New-world framing — the punchline */}
-        <Reveal delay={0.24}>
-          <div
-            style={{
-              fontFamily: "'Sora', sans-serif",
-              fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-              fontWeight: 600,
-              letterSpacing: "-0.035em",
-              lineHeight: 1.2,
-              color: "var(--lr-fg)",
-              maxWidth: "40rem",
-              margin: "0 auto",
-            }}
-          >
-            &ldquo;Is it{" "}
-            <span style={{ color: "var(--accent-blue)" }}>safe</span>,{" "}
-            <span style={{ color: "var(--accent-green)" }}>aligned</span>,
-            and{" "}
-            <span style={{ color: "var(--accent-amber)" }}>stable enough</span>{" "}
-            to deploy?&rdquo;
-          </div>
-        </Reveal>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          ABOUT / TEAM
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section">
-        <div className="lr-about-grid">
-          {/* Left — company info */}
-          <div>
-            <Reveal>
-              <div
-                style={{
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--accent-blue)",
-                  marginBottom: "1rem",
-                }}
-              >
-                About
-              </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <h2
-                style={{
-                  fontFamily: "'Instrument Serif', serif",
-                  fontSize: "clamp(2rem, 4vw, 3rem)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                Overture Systems Solutions
-              </h2>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p
-                style={{
-                  fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-                  lineHeight: 1.7,
-                  color: "var(--lr-fg-muted)",
-                  marginBottom: "2rem",
-                }}
-              >
-                We build the infrastructure for trustworthy AI deployment. The
-                ICDU pipeline is our patent-pending evaluation framework that
-                bridges the gap between AI capability and production safety —
-                giving enterprises the confidence to deploy AI in regulated,
-                high-stakes environments.
-              </p>
-            </Reveal>
-            <Reveal delay={0.3}>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                }}
-              >
-                {[
-                  "AI Safety",
-                  "Evaluation Pipelines",
-                  "Deployment Readiness",
-                  "Compliance",
-                ].map((svc) => (
-                  <span key={svc} className="lr-tag">
-                    {svc}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Right — enterprise readiness card */}
+        <div className="lr-two-col">
           <Reveal delay={0.2}>
-            <div
-              style={{
-                border: "1px solid var(--lr-border)",
-                borderRadius: "0.75rem",
-                padding: "2rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.5rem",
-              }}
-            >
+            <ul className="lr-checklist">
+              {icduChecklist.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <div className="lr-status-card">
               <div
                 style={{
                   fontSize: "0.6875rem",
@@ -1261,67 +1422,31 @@ export default function Overview() {
                   color: "var(--lr-fg-ghost)",
                 }}
               >
-                Enterprise Ready
+                Protection &amp; Status
               </div>
-
-              {[
-                {
-                  icon: "🔒",
-                  label: "Patent-Pending Technology",
-                  detail: "A proprietary approach to AI evaluation, formally protected and purpose-built.",
-                },
-                {
-                  icon: "⚖️",
-                  label: "Regulatory-First Design",
-                  detail: "Designed to align with EU AI Act, GDPR, and emerging US state requirements.",
-                },
-                {
-                  icon: "🚀",
-                  label: "Deployment-Focused",
-                  detail: "Not just another research project — built for real-world deployment, and evolving as the landscape does.",
-                },
-                {
-                  icon: "🤝",
-                  label: "Pre-NDA Discussion Ready",
-                  detail: "Ready to have a real conversation about your deployment needs.",
-                },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: "flex",
-                    gap: "0.875rem",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <span
+              <div className="lr-status-notice">
+                Architecture developed and protected under U.S. provisional patent
+                filings. Positioned for real-world pilot validation.
+              </div>
+              {icduDifferentiators.map((item) => (
+                <div key={item.title}>
+                  <div
                     style={{
-                      fontSize: "1.125rem",
-                      lineHeight: 1.4,
-                      flexShrink: 0,
+                      fontWeight: 600,
+                      fontSize: "0.9375rem",
+                      marginBottom: "0.25rem",
                     }}
                   >
-                    {item.icon}
-                  </span>
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: 600,
-                        fontSize: "0.9375rem",
-                        marginBottom: "0.2rem",
-                      }}
-                    >
-                      {item.label}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.8125rem",
-                        color: "var(--lr-fg-faint)",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {item.detail}
-                    </div>
+                    {item.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.8125rem",
+                      color: "var(--lr-fg-faint)",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {item.desc}
                   </div>
                 </div>
               ))}
@@ -1350,7 +1475,7 @@ export default function Overview() {
               marginBottom: "1rem",
             }}
           >
-            Let's Talk Deployment
+            Ready to see the opportunity?
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
@@ -1359,11 +1484,26 @@ export default function Overview() {
               fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
               lineHeight: 1.7,
               color: "var(--lr-fg-muted)",
-              maxWidth: "32rem",
+              maxWidth: "36rem",
+              margin: "0 auto 1.25rem",
+            }}
+          >
+            Request the investor deck, schedule a live walkthrough, or explore
+            the pipeline interactively.
+          </p>
+        </Reveal>
+        <Reveal delay={0.15}>
+          <p
+            style={{
+              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
+              lineHeight: 1.7,
+              fontWeight: 600,
+              maxWidth: "36rem",
               margin: "0 auto 2.5rem",
             }}
           >
-            {executiveMessages.deployability}
+            If you are going to use AI, you cannot afford not to have ICDU as
+            part of your solution.
           </p>
         </Reveal>
         <Reveal delay={0.2}>
@@ -1437,9 +1577,11 @@ export default function Overview() {
           </span>
         </div>
         <div
-          style={{ fontSize: "0.6875rem", color: "var(--lr-fg-ghost)" }}
+          style={{ fontSize: "0.6875rem", color: "var(--lr-fg-ghost)", textAlign: "right", maxWidth: "28rem" }}
         >
-          Pre-NDA · For Discussion Only · Patent Pending · © 2026
+          Architecture developed and protected under U.S. provisional patent
+          filings. Positioned for real-world pilot validation. By Overture
+          Systems Solutions.
         </div>
       </footer>
     </div>

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Building2, Users, ClipboardList, Code2, Shield, Search } from "lucide-react";
+import { Building2, Users, ClipboardList, Code2, Shield, Search, Cpu, Scale, BarChart3 } from "lucide-react";
 import { trackPersonaSelected } from "@/lib/analytics";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -11,6 +11,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2,
   Shield,
   Search,
+  Cpu,
+  Scale,
+  BarChart3,
 };
 
 type Persona = {

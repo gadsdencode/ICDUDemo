@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
 import { PersonaSelector } from "@/components/PersonaSelector";
-import { JourneyStepper, KeyTakeawaysPanel } from "@/components/JourneyStepper";
-import { BeforeAfter } from "@/components/BeforeAfter";
-import { KeyTakeaways } from "@/components/KeyTakeaways";
+import { JourneyStepper, type PersonaJourney } from "@/components/JourneyStepper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Map } from "lucide-react";
@@ -12,20 +10,7 @@ import { useSEO } from "@/lib/seo";
 import personasData from "@/data/personas.json";
 import journeysData from "@/data/journeys.json";
 
-type JourneyStep = {
-  stepId: string;
-  title: string;
-  problem: string;
-  withIcdu: string;
-  proofMetrics: string;
-  example: string;
-  whereInPipeline: string;
-  keyTakeaways: string[];
-  persona_kpi: string;
-  decision_moment: string;
-};
-
-type JourneysData = Record<string, JourneyStep[]>;
+type JourneysData = Record<string, PersonaJourney>;
 
 const journeys = journeysData as JourneysData;
 
@@ -33,18 +18,23 @@ export default function Journey() {
   const [, setLocation] = useLocation();
   const [, params] = useRoute("/journey/:personaId");
   const personaId = params?.personaId || null;
-  
-  const [currentStep, setCurrentStep] = useState(0);
 
   const selectedPersona = personasData.find((p) => p.id === personaId);
-  
+  const personaJourney = personaId ? journeys[personaId] : null;
+  const defaultTabId =
+    personaJourney?.tabs[0]?.id ??
+    selectedPersona?.recommendedStartingSection ??
+    null;
+
+  const [currentTabId, setCurrentTabId] = useState<string | null>(defaultTabId);
+
   useSEO({
-    title: selectedPersona 
-      ? `${selectedPersona.name} Journey | ICDU` 
+    title: selectedPersona
+      ? `${selectedPersona.name} Journey | ICDU`
       : "Choose Your Role | ICDU Journey",
     description: selectedPersona
-      ? `Explore the ICDU journey for ${selectedPersona.name}s. Learn how ICDU addresses ${selectedPersona.tagline.toLowerCase()} challenges with measurable, auditable AI safety.`
-      : "Select your role to see a personalized journey through the ICDU AI safety pipeline, highlighting challenges and benefits most relevant to you.",
+      ? `Explore the ICDU journey for ${selectedPersona.name}s — architecture, security, compliance, and ROI tailored to your role.`
+      : "Select your role to explore ICDU through a personalized tabbed journey — CTO, CISO, Developer, Compliance Officer, or CFO.",
   });
 
   useEffect(() => {
@@ -52,15 +42,14 @@ export default function Journey() {
   }, []);
 
   useEffect(() => {
-    setCurrentStep(0);
-  }, [personaId]);
+    if (personaJourney?.tabs[0]) {
+      setCurrentTabId(personaJourney.tabs[0].id);
+    }
+  }, [personaId, personaJourney]);
 
   const handleSelectPersona = (id: string) => {
     setLocation(`/journey/${id}`);
   };
-
-  const journeySteps = personaId ? journeys[personaId] : null;
-  const currentStepData = journeySteps?.[currentStep];
 
   if (!personaId) {
     return (
@@ -68,11 +57,13 @@ export default function Journey() {
         <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
           <div className="text-center mb-4 sm:mb-12">
             <Badge variant="secondary" className="mb-2 sm:mb-4 text-[10px] sm:text-sm">
-              Persona-Based Journey
+              <Map className="h-3 w-3 sm:h-4 sm:w-4 inline mr-1" />
+              Role-Based Journey
             </Badge>
             <h1 className="text-lg sm:text-3xl font-bold mb-2 sm:mb-4">Choose Your Role</h1>
             <p className="text-[11px] sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Select a role to see a personalized journey through the ICDU pipeline.
+              Select a persona to explore ICDU through tabbed content tailored to your
+              priorities — from technical architecture to financial ROI.
             </p>
           </div>
 
@@ -86,7 +77,7 @@ export default function Journey() {
     );
   }
 
-  if (!selectedPersona || !journeySteps) {
+  if (!selectedPersona || !personaJourney || !currentTabId) {
     return (
       <div className="min-h-screen py-12">
         <div className="container px-4 mx-auto max-w-7xl text-center">
@@ -112,15 +103,15 @@ export default function Journey() {
             data-testid="button-change-persona"
           >
             <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-[10px] sm:text-sm">Back</span>
+            <span className="text-[10px] sm:text-sm">All roles</span>
           </Button>
-          
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 sm:px-2">{selectedPersona.name}</Badge>
-          </div>
+
+          <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 sm:px-2">
+            {selectedPersona.name}
+          </Badge>
         </div>
 
-        <div className="mb-2 sm:mb-8">
+        <div className="mb-3 sm:mb-6">
           <PersonaSelector
             personas={personasData}
             selectedPersona={personaId}
@@ -129,43 +120,12 @@ export default function Journey() {
           />
         </div>
 
-        <div className="mb-3 sm:mb-6">
-          <BeforeAfter compact />
-        </div>
-
-        <div className="grid lg:grid-cols-[1fr,300px] gap-3 sm:gap-6">
-          <div>
-            <JourneyStepper
-              steps={journeySteps}
-              currentStep={currentStep}
-              onStepChange={setCurrentStep}
-              personaId={personaId}
-            />
-          </div>
-
-          <div className="hidden lg:block">
-            {currentStepData && (
-              <KeyTakeaways
-                title={currentStepData.title}
-                takeaways={currentStepData.keyTakeaways}
-                pipelineLocation={currentStepData.whereInPipeline}
-                nextAction={currentStepData.decision_moment}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="lg:hidden mt-2 sm:mt-6">
-          {currentStepData && (
-            <KeyTakeaways
-              title={currentStepData.title}
-              takeaways={currentStepData.keyTakeaways}
-              pipelineLocation={currentStepData.whereInPipeline}
-              nextAction={currentStepData.decision_moment}
-              compact
-            />
-          )}
-        </div>
+        <JourneyStepper
+          journey={personaJourney}
+          currentTabId={currentTabId}
+          onTabChange={setCurrentTabId}
+          personaId={personaId}
+        />
       </div>
     </div>
   );
