@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, X, ChevronDown, BookOpen } from "lucide-react";
+import { Menu, X, ChevronDown, BookOpen, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
+import { resourceDocs, downloadDoc, type DocFormat } from "@/lib/downloads";
 
 const navItems = [
   { path: "/", label: "Overview", emoji: "🏠" },
@@ -22,11 +24,11 @@ const navItems = [
   { path: "/faq", label: "FAQ", emoji: "❓" },
 ];
 
-const resourceItems = [
-  { label: "Whitepaper", href: "#", testId: "whitepaper" },
-  { label: "Case Studies", href: "#", testId: "case-studies" },
-  { label: "Documentation", href: "#", testId: "documentation" },
-];
+const formatBadgeClass: Record<DocFormat, string> = {
+  MD: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200 dark:border-blue-900",
+  JSON: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-900",
+  CSV: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900",
+};
 
 export function Navigation() {
   const [location] = useLocation();
@@ -90,18 +92,40 @@ export function Navigation() {
                 <ChevronDown className="h-3 w-3 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuLabel>Resources</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-[22rem] max-w-[calc(100vw-1rem)]">
+              <DropdownMenuLabel className="flex items-center justify-between">
+                <span>Downloadable Resources</span>
+                <span className="text-[10px] font-normal text-muted-foreground">
+                  {resourceDocs.length} files
+                </span>
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {resourceItems.map((item) => (
-                <DropdownMenuItem key={item.label} asChild>
-                  <a
-                    href={item.href}
-                    className="cursor-pointer"
-                    data-testid={`nav-resource-${item.testId}`}
-                  >
-                    {item.label}
-                  </a>
+              {resourceDocs.map((doc) => (
+                <DropdownMenuItem
+                  key={doc.id}
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    downloadDoc(doc);
+                  }}
+                  className="cursor-pointer flex-col items-start gap-1 py-2.5"
+                  data-testid={`nav-resource-${doc.id}`}
+                >
+                  <div className="flex w-full items-center gap-2">
+                    <Download className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="font-medium text-sm flex-1 truncate">{doc.title}</span>
+                    <Badge
+                      variant="outline"
+                      className={cn("h-4 px-1.5 text-[9px] font-semibold", formatBadgeClass[doc.format])}
+                    >
+                      {doc.format}
+                    </Badge>
+                    <span className="text-[10px] text-muted-foreground tabular-nums shrink-0">
+                      {doc.size}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-snug pl-5">
+                    {doc.description}
+                  </p>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -131,7 +155,9 @@ export function Navigation() {
       <div
         className={cn(
           "md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-hidden transition-all duration-300 ease-in-out",
-          mobileMenuOpen ? "max-h-[36rem] opacity-100" : "max-h-0 opacity-0 border-t-transparent",
+          mobileMenuOpen
+            ? "max-h-[calc(100vh-3rem)] opacity-100 overflow-y-auto"
+            : "max-h-0 opacity-0 border-t-transparent",
         )}
       >
         <nav className="container flex flex-col p-3 sm:p-4 gap-1 sm:gap-2 mx-auto max-w-7xl">
@@ -176,20 +202,38 @@ export function Navigation() {
 
           <div
             className={cn(
-              "flex flex-col gap-1 pl-4 overflow-hidden transition-all duration-200",
-              mobileResourcesOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0",
+              "flex flex-col gap-1 pl-2 overflow-hidden transition-all duration-200",
+              mobileResourcesOpen ? "max-h-[40rem] opacity-100" : "max-h-0 opacity-0",
             )}
           >
-            {resourceItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="rounded-md px-3 py-2 text-sm hover-elevate"
-                data-testid={`nav-mobile-resource-${item.testId}`}
-                onClick={() => setMobileMenuOpen(false)}
+            {resourceDocs.map((doc) => (
+              <button
+                key={doc.id}
+                type="button"
+                className="rounded-md px-3 py-2 text-left hover-elevate flex flex-col gap-1"
+                data-testid={`nav-mobile-resource-${doc.id}`}
+                onClick={() => {
+                  downloadDoc(doc);
+                  setMobileMenuOpen(false);
+                }}
               >
-                {item.label}
-              </a>
+                <div className="flex items-center gap-2">
+                  <Download className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  <span className="font-medium text-sm flex-1 truncate">{doc.title}</span>
+                  <Badge
+                    variant="outline"
+                    className={cn("h-4 px-1.5 text-[9px] font-semibold", formatBadgeClass[doc.format])}
+                  >
+                    {doc.format}
+                  </Badge>
+                  <span className="text-[10px] text-muted-foreground tabular-nums shrink-0">
+                    {doc.size}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-snug pl-5">
+                  {doc.description}
+                </p>
+              </button>
             ))}
           </div>
         </nav>
