@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
+import { BrandPage, PageHero } from "@/components/brand";
 
 const PRESETS = ["balanced", "fast", "quality", "low_memory"] as const;
 type Preset = (typeof PRESETS)[number];
@@ -516,9 +517,9 @@ async function parseJsonlPreview(file: File): Promise<FilePreview> {
 
 export default function FineTune() {
   useSEO({
-    title: "Fine-Tuning Developer Page | ICDU",
+    title: "Fine-Tune Developer Lab | ICDU",
     description:
-      "Minimal ICDU training API integration for running preflight uploads and polling job status.",
+      "Local ICDU training API utility for developers. Requires a private or local API endpoint — not a public production service.",
   });
 
   useEffect(() => {
@@ -1166,20 +1167,90 @@ export default function FineTune() {
   }
 
   return (
-    <div className="min-h-screen py-6 sm:py-8">
-      <div className="container px-4 mx-auto max-w-4xl space-y-6">
-        <div>
-          <Badge variant="secondary" className="mb-3">
-            Developer
-          </Badge>
-          <h1 className="text-2xl sm:text-3xl font-bold">Start Fine-Tuning</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-2">
-            Minimal local integration for the ICDU training API.
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            API base URL: <span className="font-mono">{apiBaseUrl}</span>
+    <BrandPage>
+      <div className="mx-auto max-w-4xl space-y-6">
+        <PageHero
+          label="Developer Lab"
+          title="Fine-Tune utility"
+          description="Local developer utility for teams running an ICDU training API in their own environment. Not required for buyer evaluation and not a public production service."
+          align="left"
+          displayTitle={false}
+        />
+
+        <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[color:var(--icdu-fg)] m-0">
+            Prerequisites
+          </h2>
+          <ul className="space-y-1.5 m-0 p-0 list-none text-sm text-[color:var(--icdu-fg-muted)]">
+            <li className="pl-3 relative">
+              <span
+                className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full"
+                style={{ background: "var(--icdu-blue)" }}
+              />
+              A training API process reachable from your machine (configure via{" "}
+              <code className="text-xs">VITE_ICDU_API_BASE_URL</code> or the
+              panel below).
+            </li>
+            <li className="pl-3 relative">
+              <span
+                className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full"
+                style={{ background: "var(--icdu-blue)" }}
+              />
+              Train and validation JSONL files with required ICDU fields.
+            </li>
+            <li className="pl-3 relative">
+              <span
+                className="absolute left-0 top-2 h-1.5 w-1.5 rounded-full"
+                style={{ background: "var(--icdu-blue)" }}
+              />
+              Network access only to your intended local or private endpoint —
+              do not point this UI at untrusted hosts.
+            </li>
+          </ul>
+          <p className="text-xs text-[color:var(--icdu-fg-faint)] m-0">
+            Buyer demos and schema exploration belong on{" "}
+            <a
+              href="/developers"
+              className="text-[color:var(--icdu-blue)] hover:underline"
+            >
+              Developers
+            </a>{" "}
+            and{" "}
+            <a
+              href="/demos?mode=lab"
+              className="text-[color:var(--icdu-blue)] hover:underline"
+            >
+              Advanced Lab
+            </a>
+            .
           </p>
         </div>
+
+        <details className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 group">
+          <summary className="cursor-pointer text-sm font-semibold text-[color:var(--icdu-fg)] list-none flex items-center justify-between gap-2">
+            <span>Developer configuration</span>
+            <span className="text-xs font-normal text-[color:var(--icdu-fg-faint)] group-open:hidden">
+              Show endpoint
+            </span>
+            <span className="text-xs font-normal text-[color:var(--icdu-fg-faint)] hidden group-open:inline">
+              Hide
+            </span>
+          </summary>
+          <div className="mt-3 pt-3 border-t border-[color:var(--icdu-border)] space-y-2">
+            <p className="text-xs text-[color:var(--icdu-fg-muted)] m-0">
+              Resolved API base URL for this browser session. Default falls back
+              to a local development host when the environment variable is unset.
+            </p>
+            <code className="block text-xs font-mono break-all rounded-md border border-[color:var(--icdu-border)] bg-[color:var(--icdu-bg)] px-3 py-2 text-[color:var(--icdu-fg)]">
+              {apiBaseUrl}
+            </code>
+            <p className="text-sm text-[color:var(--icdu-fg-faint)] m-0">
+              Set <code className="text-xs">VITE_ICDU_API_BASE_URL</code> at
+              build time to override. This URL is for local developer wiring
+              only.
+            </p>
+          </div>
+        </details>
 
         <Card>
           <CardHeader>
@@ -1625,6 +1696,6 @@ export default function FineTune() {
           </Card>
         )}
       </div>
-    </div>
+    </BrandPage>
   );
 }

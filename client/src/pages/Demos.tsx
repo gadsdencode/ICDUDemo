@@ -1,177 +1,104 @@
 import { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { ICDUBuilder } from "@/components/ICDUBuilder";
-import { JudgePanel } from "@/components/JudgePanel";
-import { RubricPanel } from "@/components/RubricPanel";
-import { StressPanel } from "@/components/StressPanel";
-import { PipelineDiagram } from "@/components/PipelineDiagram";
-import { BeforeAfter } from "@/components/BeforeAfter";
-import { KeyTakeaways } from "@/components/KeyTakeaways";
-import { FileText, Scale, Users, FlaskConical } from "lucide-react";
-import { componentReplacements } from "@/data/businessCase";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
+import { BrandPage, PageHero } from "@/components/brand";
+import { GuidedDemo, AdvancedLab } from "@/components/guided";
+import { cn } from "@/lib/utils";
+import { Compass, FlaskConical } from "lucide-react";
 
-const demoTabs = [
-  { id: "icdu", label: "ICDU Builder", icon: FileText },
-  { id: "judge", label: "AI Judge", icon: Scale },
-  { id: "hitl", label: "HITL Rubric", icon: Users },
-  { id: "stress", label: "Stress Engine", icon: FlaskConical },
-];
+type DemoMode = "guided" | "lab";
 
-const demoTakeaways: Record<string, { title: string; points: string[]; pipelineLocation: string; nextAction: string; replaces?: string }> = {
-  icdu: {
-    title: "ICDU Builder",
-    points: [
-      "Define explicit intent with success criteria",
-      "Encode governing principles for safety",
-      "Specify persona and tone requirements",
-      "Set context constraints and boundaries",
-      "Generate structured, versioned JSON"
-    ],
-    pipelineLocation: "ICDU Creation",
-    nextAction: "Submit ICDU for AI Judge evaluation",
-    replaces: componentReplacements.icduRecord.replaces
-  },
-  judge: {
-    title: "AI Judge",
-    points: [
-      "Quantitative scoring across three dimensions",
-      "IAS: Intent-Alignment Score",
-      "PAS: Principle-Adherence Score",
-      "AS: Application Score",
-      "Automatic gate decisions: PROMOTE, ESCALATE, BLOCK"
-    ],
-    pipelineLocation: "AI Judge Gate",
-    nextAction: "Review score drivers and to_promote checklist",
-    replaces: componentReplacements.aiJudge.replaces
-  },
-  hitl: {
-    title: "HITL Nuance Grader",
-    points: [
-      "Structured rubric for qualitative assessment",
-      "Rate empathy, clarity, coaching quality",
-      "Evaluate trustworthiness and safety judgment",
-      "Aggregate scores across dimensions",
-      "Document reviewer notes for governance"
-    ],
-    pipelineLocation: "HITL Nuance Grading",
-    nextAction: "Aggregate scores and provide feedback",
-    replaces: componentReplacements.hitlGrader.replaces
-  },
-  stress: {
-    title: "Stress Engine",
-    points: [
-      "Test AI behavior under controlled variations",
-      "Perturbations: role, tone, constraint, channel",
-      "Measure stability and fairness",
-      "Track refusal consistency",
-      "Detect hallucination patterns"
-    ],
-    pipelineLocation: "Stress Testing",
-    nextAction: "Review insights and address warnings",
-    replaces: componentReplacements.stressEngine.replaces
-  }
-};
+function modeFromSearch(): DemoMode {
+  if (typeof window === "undefined") return "guided";
+  const params = new URLSearchParams(window.location.search);
+  return params.get("mode") === "lab" ? "lab" : "guided";
+}
 
 export default function Demos() {
-  const [activeTab, setActiveTab] = useState("icdu");
-  
+  const [mode, setMode] = useState<DemoMode>(modeFromSearch);
+
   useSEO({
     title: "Interactive Demos | ICDU",
-    description: "Try interactive ICDU demos: build structured AI records, run mock AI Judge evaluations, grade with HITL rubrics, and stress test with scenario perturbations.",
+    description:
+      "Take a guided ICDU path from intent to evidence, or open the Advanced Lab for Builder, Judge, HITL, and Stress tools.",
   });
 
   useEffect(() => {
     trackPageViewed("demos");
   }, []);
 
-  const currentTakeaways = demoTakeaways[activeTab];
+  useEffect(() => {
+    setMode(modeFromSearch());
+  }, []);
+
+  const selectMode = (next: DemoMode) => {
+    setMode(next);
+    const url = new URL(window.location.href);
+    if (next === "lab") {
+      url.searchParams.set("mode", "lab");
+    } else {
+      url.searchParams.delete("mode");
+    }
+    window.history.replaceState({}, "", url.pathname + url.search);
+  };
 
   return (
-    <div className="min-h-screen py-6 sm:py-8">
-      <div className="container px-4 mx-auto max-w-7xl">
-        <div className="text-center mb-6 sm:mb-8">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs sm:text-sm">
-            Interactive Demos
-          </Badge>
-          <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Explore the Pipeline</h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-            Build an ICDU record, run mock evaluations, grade with the HITL rubric, 
-            and stress test with scenario perturbations.
-          </p>
+    <BrandPage>
+      <div className="mx-auto max-w-7xl">
+        <PageHero
+          label="Interactive Experience"
+          title="See ICDU in action"
+          description="Start with a guided scenario that carries one workflow from intent to evidence — or open the Advanced Lab for full technical controls."
+          displayTitle={false}
+        />
+
+        <div
+          className="mb-6 sm:mb-8 inline-flex max-w-full rounded-full border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-1"
+          role="tablist"
+          aria-label="Demo mode"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "guided"}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              mode === "guided"
+                ? "bg-[color:var(--icdu-blue)] text-white"
+                : "text-[color:var(--icdu-fg-muted)] hover:text-[color:var(--icdu-fg)]",
+            )}
+            onClick={() => selectMode("guided")}
+            data-testid="mode-guided"
+          >
+            <Compass className="h-4 w-4" />
+            Guided Demo
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "lab"}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              mode === "lab"
+                ? "bg-[color:var(--icdu-blue)] text-white"
+                : "text-[color:var(--icdu-fg-muted)] hover:text-[color:var(--icdu-fg)]",
+            )}
+            onClick={() => selectMode("lab")}
+            data-testid="mode-lab"
+          >
+            <FlaskConical className="h-4 w-4" />
+            Advanced Lab
+          </button>
         </div>
 
-        <div className="mb-4 sm:mb-6">
-          <BeforeAfter compact />
-        </div>
-
-        <div className="mb-6 sm:mb-8">
-          <PipelineDiagram compact />
-        </div>
-
-        <div className="grid lg:grid-cols-[1fr,280px] gap-4 sm:gap-6">
-          <div>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="w-full justify-start h-auto flex-wrap gap-1 bg-transparent p-0 mb-4 sm:mb-6">
-                {demoTabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <TabsTrigger
-                      key={tab.id}
-                      value={tab.id}
-                      className="gap-1.5 sm:gap-2 text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 sm:py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                      data-testid={`tab-${tab.id}`}
-                    >
-                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      <span className="hidden xs:inline sm:inline">{tab.label}</span>
-                      <span className="xs:hidden sm:hidden">{tab.id.toUpperCase()}</span>
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
-
-              <TabsContent value="icdu" className="mt-0">
-                <ICDUBuilder />
-              </TabsContent>
-
-              <TabsContent value="judge" className="mt-0">
-                <JudgePanel />
-              </TabsContent>
-
-              <TabsContent value="hitl" className="mt-0">
-                <RubricPanel />
-              </TabsContent>
-
-              <TabsContent value="stress" className="mt-0">
-                <StressPanel />
-              </TabsContent>
-            </Tabs>
-          </div>
-
-          <div className="hidden lg:block">
-            <KeyTakeaways
-              title={currentTakeaways.title}
-              takeaways={currentTakeaways.points}
-              pipelineLocation={currentTakeaways.pipelineLocation}
-              nextAction={currentTakeaways.nextAction}
-              replaces={currentTakeaways.replaces}
-            />
-          </div>
-        </div>
-
-        <div className="lg:hidden mt-4 sm:mt-6">
-          <KeyTakeaways
-            title={currentTakeaways.title}
-            takeaways={currentTakeaways.points}
-            pipelineLocation={currentTakeaways.pipelineLocation}
-            nextAction={currentTakeaways.nextAction}
-            replaces={currentTakeaways.replaces}
-            compact
-          />
-        </div>
+        {mode === "guided" ? (
+          <GuidedDemo onOpenAdvancedLab={() => selectMode("lab")} />
+        ) : (
+          <AdvancedLab />
+        )}
       </div>
-    </div>
+    </BrandPage>
   );
 }

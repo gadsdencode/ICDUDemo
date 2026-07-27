@@ -233,7 +233,7 @@ export function JudgePanel() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <div>
             <span className="font-medium text-xs sm:text-sm">{label}</span>
-            <span className="text-[10px] sm:text-xs text-muted-foreground ml-1 sm:ml-2">{description}</span>
+            <span className="text-xs sm:text-sm text-muted-foreground ml-1 sm:ml-2">{description}</span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className={cn(
@@ -259,7 +259,7 @@ export function JudgePanel() {
             style={{ left: `${thresholdPercentage}%` }}
           />
         </div>
-        <div className="flex justify-between text-[10px] sm:text-xs text-muted-foreground">
+        <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
           <span>0%</span>
           <span className="font-medium">Threshold: {thresholdPercentage}%</span>
           <span>100%</span>
@@ -274,7 +274,7 @@ export function JudgePanel() {
         <div className="flex items-center gap-2">
           <Scale className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           <h3 className="font-semibold text-sm sm:text-base">AI Judge</h3>
-          <Badge variant="outline" className="text-[10px] sm:text-xs">Explainable</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">Explainable</Badge>
         </div>
         <div className="flex gap-2">
           {result && (
@@ -282,7 +282,7 @@ export function JudgePanel() {
               variant="outline"
               size="sm"
               onClick={reset}
-              className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-[10px] sm:text-xs"
+              className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
               data-testid="button-reset-judge"
             >
               <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -293,7 +293,7 @@ export function JudgePanel() {
             size="sm"
             onClick={runJudge}
             disabled={isRunning}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-[10px] sm:text-xs"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
             data-testid="button-run-judge"
           >
             <Play className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -303,13 +303,13 @@ export function JudgePanel() {
       </div>
 
       <div className="p-2.5 sm:p-4 rounded-md bg-muted/50 border mb-4 sm:mb-6">
-        <div className="text-[10px] sm:text-xs font-medium mb-2">Gate Thresholds</div>
+        <div className="text-xs sm:text-sm font-medium mb-2">Gate Thresholds</div>
         <div className="flex flex-wrap gap-2 sm:gap-3">
-          <Badge variant="outline" className="text-[10px] sm:text-xs">IAS ≥ 80%</Badge>
-          <Badge variant="outline" className="text-[10px] sm:text-xs">PAS ≥ 85%</Badge>
-          <Badge variant="outline" className="text-[10px] sm:text-xs">AS ≥ 70%</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">IAS ≥ 80%</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">PAS ≥ 85%</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">AS ≥ 70%</Badge>
         </div>
-        <p className="text-[9px] sm:text-xs text-muted-foreground mt-2">
+        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
           Principles are non-negotiable: PAS below threshold triggers BLOCK regardless of other scores.
         </p>
       </div>
@@ -318,7 +318,7 @@ export function JudgePanel() {
         <div className="text-center py-8 sm:py-12 text-muted-foreground">
           <Scale className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-20" />
           <p className="text-xs sm:text-sm">Click "Run Evaluation" to simulate AI Judge scoring</p>
-          <p className="text-[10px] sm:text-xs mt-1">Scores are deterministic based on ICDU field heuristics</p>
+          <p className="text-xs sm:text-sm mt-1">Scores are deterministic based on ICDU field heuristics</p>
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-6">
@@ -338,7 +338,7 @@ export function JudgePanel() {
                     </div>
                     <div>
                       <div className="font-bold text-sm sm:text-base">{config.label}</div>
-                      <div className="text-[10px] sm:text-xs text-muted-foreground">{config.description}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">{config.description}</div>
                     </div>
                   </>
                 );
@@ -383,7 +383,7 @@ export function JudgePanel() {
                 </div>
                 <ul className="space-y-1.5 sm:space-y-2">
                   {result.rationale.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[10px] sm:text-xs text-muted-foreground">
+                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
                       <span className="w-1 h-1 mt-1.5 bg-primary rounded-full flex-shrink-0" />
                       {r}
                     </li>
@@ -400,12 +400,12 @@ export function JudgePanel() {
                   <div className="space-y-2">
                     {result.drivers.map((d, i) => (
                       <div key={i} className="flex items-start gap-2 p-2 rounded bg-background border">
-                        <Badge variant={d.impact > 0 ? "default" : "destructive"} className="text-[9px] sm:text-xs px-1.5 flex-shrink-0">
+                        <Badge variant={d.impact > 0 ? "default" : "destructive"} className="text-xs sm:text-sm px-1.5 flex-shrink-0">
                           {d.metric} {d.impact > 0 ? '+' : ''}{d.impact}
                         </Badge>
                         <div className="min-w-0">
-                          <p className="text-[10px] sm:text-xs">{d.reason}</p>
-                          <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5">Field: {d.icduField}</p>
+                          <p className="text-xs sm:text-sm">{d.reason}</p>
+                          <p className="text-xs sm:text-xs text-muted-foreground mt-0.5">Field: {d.icduField}</p>
                         </div>
                       </div>
                     ))}
@@ -425,7 +425,7 @@ export function JudgePanel() {
                         <Badge 
                           variant="outline" 
                           className={cn(
-                            "text-[9px] sm:text-xs px-1.5 flex-shrink-0",
+                            "text-xs sm:text-sm px-1.5 flex-shrink-0",
                             item.priority === "high" && "border-destructive text-destructive",
                             item.priority === "medium" && "border-amber-500 text-amber-600 dark:text-amber-400"
                           )}
@@ -433,8 +433,8 @@ export function JudgePanel() {
                           {item.priority}
                         </Badge>
                         <div className="min-w-0">
-                          <p className="text-[10px] sm:text-xs">{item.action}</p>
-                          <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">Expected: {item.impact}</p>
+                          <p className="text-xs sm:text-sm">{item.action}</p>
+                          <p className="text-xs sm:text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Expected: {item.impact}</p>
                         </div>
                       </div>
                     ))}
@@ -446,13 +446,13 @@ export function JudgePanel() {
                 variant="ghost" 
                 size="sm" 
                 onClick={() => setShowJson(!showJson)}
-                className="w-full text-[10px] sm:text-xs h-7 sm:h-8"
+                className="w-full text-xs sm:text-sm h-7 sm:h-8"
               >
                 {showJson ? "Hide" : "View as"} Report JSON
               </Button>
               
               {showJson && (
-                <pre className="p-2.5 sm:p-3 rounded-md bg-background border text-[9px] sm:text-xs font-mono overflow-auto max-h-48">
+                <pre className="icdu-code-panel p-2.5 sm:p-3 rounded-md bg-background border font-mono">
                   {JSON.stringify(result, null, 2)}
                 </pre>
               )}

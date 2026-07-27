@@ -166,7 +166,7 @@ const baseDocs: Omit<ResourceDoc, "size">[] = [
   {
     id: "personas-journeys",
     title: "Personas & Journeys",
-    description: "Every persona definition plus the grouped tab content (challenge, pipeline, ROI, next steps) shown in the Journey experience.",
+    description: "Every role definition plus the five-step journey content (situation, changes, how it works, evidence, next step) shown in the Journey experience.",
     format: "JSON",
     filename: "icdu-personas-journeys.json",
     build: buildPersonasJourneys,

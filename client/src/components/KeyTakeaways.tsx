@@ -31,7 +31,7 @@ export function KeyTakeaways({
           <button className="w-full flex items-center justify-between p-2.5 sm:p-3 rounded-md bg-primary/5 border border-primary/20 hover-elevate">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-              <span className="font-medium text-[10px] sm:text-xs">Key Takeaways</span>
+              <span className="font-medium text-xs sm:text-sm">Key Takeaways</span>
             </div>
             <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", isOpen && "rotate-180")} />
           </button>
@@ -40,7 +40,7 @@ export function KeyTakeaways({
           <div className="mt-2 p-2.5 sm:p-3 rounded-md bg-muted/30 border space-y-2">
             <ul className="space-y-1">
               {takeaways.slice(0, 3).map((t, i) => (
-                <li key={i} className="flex items-start gap-1.5 text-[9px] sm:text-xs text-muted-foreground">
+                <li key={i} className="flex items-start gap-1.5 text-xs sm:text-sm text-muted-foreground">
                   <span className="w-1 h-1 mt-1.5 bg-primary rounded-full flex-shrink-0" />
                   {t}
                 </li>
@@ -48,11 +48,11 @@ export function KeyTakeaways({
             </ul>
             <div className="pt-2 border-t space-y-1">
               {replaces && (
-                <div className="text-[9px] sm:text-xs text-destructive/80">
+                <div className="text-xs sm:text-sm text-destructive/80">
                   <span className="font-medium">Replaces:</span> {replaces}
                 </div>
               )}
-              <div className="flex items-center gap-1 text-[9px] sm:text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
                 <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 <span>{pipelineLocation}</span>
               </div>
@@ -72,10 +72,10 @@ export function KeyTakeaways({
 
       <div className="space-y-3 sm:space-y-4">
         <div>
-          <Badge variant="secondary" className="text-[9px] sm:text-xs mb-2">{title}</Badge>
+          <Badge variant="secondary" className="text-xs sm:text-sm mb-2">{title}</Badge>
           <ul className="space-y-1.5 sm:space-y-2">
             {takeaways.map((t, i) => (
-              <li key={i} className="flex items-start gap-2 text-[10px] sm:text-xs text-muted-foreground">
+              <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
                 <span className="w-1 h-1 mt-1.5 bg-primary rounded-full flex-shrink-0" />
                 {t}
               </li>
@@ -85,23 +85,23 @@ export function KeyTakeaways({
 
         <div className="pt-3 border-t space-y-2 sm:space-y-3">
           {replaces && (
-            <div className="text-[10px] sm:text-xs text-destructive/80 mb-2">
+            <div className="text-xs sm:text-sm text-destructive/80 mb-2">
               <span className="font-medium">Replaces:</span> {replaces}
             </div>
           )}
           <div className="flex items-start gap-2">
             <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
-              <div className="text-[10px] sm:text-xs text-muted-foreground">Pipeline Location</div>
-              <div className="text-[10px] sm:text-xs font-medium">{pipelineLocation}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Pipeline Location</div>
+              <div className="text-xs sm:text-sm font-medium">{pipelineLocation}</div>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
             <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0 mt-0.5" />
             <div>
-              <div className="text-[10px] sm:text-xs text-muted-foreground">Next Action</div>
-              <div className="text-[10px] sm:text-xs font-medium text-primary">{nextAction}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Next Action</div>
+              <div className="text-xs sm:text-sm font-medium text-primary">{nextAction}</div>
             </div>
           </div>
         </div>

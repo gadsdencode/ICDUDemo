@@ -238,22 +238,60 @@ export const useCaseGuidance = {
 export const sourcesLine = "Sources: AllAboutAI 2025, Forrester 2025, S&P Global 2025, MIT/RAND, Gartner 2025, EU AI Act Art. 99, IBM AI Adoption Index 2025, McKinsey 2025, Customer Experience Association 2024";
 
 // === BUSINESS CASE PAGE ===
-export const businessCaseTabs = [
-  { id: "financial-risk", label: "Financial Risk" },
-  { id: "roi-calculator", label: "ROI Calculator" },
-  { id: "value-by-role", label: "Value by Role" },
-  { id: "common-concerns", label: "Common Concerns" },
-  { id: "next-steps", label: "Next Steps" },
-] as const;
 
-export const financialRiskPanel = {
-  heading: "The financial case for structured AI governance",
-  lead: "AI governance isn't a cost center — it's risk reduction with measurable ROI. Here's the financial exposure your organization carries today without structured AI intent governance.",
-  stats: [
-    { value: "€35M", label: "max EU AI Act fine or 7% global turnover" },
-    { value: "$4.1M", label: "avg cost of public AI output incident (IBM 2024)" },
-    { value: "3.2×", label: "cost of remediation vs. prevention" },
-    { value: "38%", label: "CAGR AI governance spend — growing everywhere" },
+export const businessCaseIntro = {
+  label: "Business Case",
+  title: "Decide with a bounded model — not a slide of statistics",
+  description:
+    "ICDU improves the quality and repeatability of AI-assisted work, reduces exposure from ungoverned prompts and opaque decisions, and can be evaluated through an estimated 4–6 week pilot on one high-value workflow.",
+  outcomes: [
+    {
+      title: "What ICDU improves",
+      body: "Consistent, reviewable AI outputs tied to explicit intent — so teams promote work against a shared definition of done instead of prompt improvisation.",
+    },
+    {
+      title: "What exposure it reduces",
+      body: "Ungoverned endpoints, silent model drift, missing audit evidence, and the remediation cost of decisions you cannot defend.",
+    },
+    {
+      title: "How to evaluate it",
+      body: "Run one workflow through Define → Gate → Execute → Audit, compare quality and rework to your current path, and leave with an evidence pack — not a multi-year platform program.",
+    },
+  ],
+};
+
+export const exposurePanel = {
+  heading: "Current exposure without structured intent",
+  lead: "This page focuses on decision inputs for finance and leadership — not the same headline statistics used on the homepage. Use sourced ceilings where they exist, then size your own exposure in the calculator.",
+  items: [
+    {
+      title: "Regulatory penalty ceiling",
+      body: "High-risk AI systems under the EU AI Act face material administrative fines when required risk, transparency, and logging obligations are not met.",
+      figure: "€35M or 7% turnover",
+      claimKind: "sourced" as const,
+      source: "EU AI Act, Art. 99",
+    },
+    {
+      title: "Incident and remediation cost",
+      body: "Public AI failures drive legal, PR, engineering rework, and customer remediation. Treat published averages as reference points — your calculator input should reflect your workflows.",
+      figure: "Org-specific",
+      claimKind: "estimate" as const,
+      source: "Sized in the Value Model below (user-entered)",
+    },
+    {
+      title: "Evidence and inquiry burden",
+      body: "Without intent contracts and execution traces, responding to regulators, customers, or counsel becomes a reconstruction exercise after the fact.",
+      figure: "Audit labor",
+      claimKind: "estimate" as const,
+      source: "Modeled via audit-cycle inputs",
+    },
+    {
+      title: "Engineering rework",
+      body: "Fragile prompts and retry loops consume senior time whenever models, context, or policy change. Governance reduces that churn when intent is versioned and testable.",
+      figure: "Day-rate × days",
+      claimKind: "estimate" as const,
+      source: "Modeled via workflow and day-rate inputs",
+    },
   ],
 };
 
@@ -275,7 +313,18 @@ export type RoiResults = {
   totalCost: number;
   yr1Return: number;
   yr1Cost: number;
+  netBenefit: number;
 };
+
+/** ICDU-specific constants baked into calculateRoi — not user sliders. */
+export const roiModelAssumptions = {
+  annualSubscriptionUsd: 60_000,
+  yearOneSetupUsd: 15_000,
+  engineeringDaysSavedPerWorkflow: 4,
+  hoursPerAuditCyclePerWorkflow: 30,
+  riskCaptureFactor: 0.7,
+  horizonYears: 3,
+} as const;
 
 export const roiCalculatorDefaults: RoiInputs = {
   workflows: 10,
@@ -286,12 +335,65 @@ export const roiCalculatorDefaults: RoiInputs = {
 };
 
 export const roiCalculatorRanges = {
-  workflows: { min: 1, max: 50, step: 1, label: "AI workflows" },
-  dayRate: { min: 400, max: 2000, step: 50, label: "Engineering day rate" },
-  incidentProb: { min: 5, max: 40, step: 1, label: "Incident probability" },
-  incidentCost: { min: 100_000, max: 10_000_000, step: 50_000, label: "Incident cost" },
-  auditCycles: { min: 1, max: 12, step: 1, label: "Audit cycles / year" },
-};
+  workflows: {
+    min: 1,
+    max: 50,
+    step: 1,
+    label: "AI workflows in scope",
+    help: "Number of production AI-assisted workflows you would place under ICDU in the first three years.",
+  },
+  dayRate: {
+    min: 400,
+    max: 2000,
+    step: 50,
+    label: "Engineering day rate",
+    help: "Fully loaded daily cost for the engineers who currently fix prompts, retries, and governance gaps.",
+  },
+  incidentProb: {
+    min: 5,
+    max: 40,
+    step: 1,
+    label: "Annual incident probability",
+    help: "Your estimate that a material AI output or process incident occurs this year without stronger pre-execution controls.",
+  },
+  incidentCost: {
+    min: 100_000,
+    max: 10_000_000,
+    step: 50_000,
+    label: "Cost of one material incident",
+    help: "Legal, remediation, customer, and operational cost if a significant AI failure reaches production or the public.",
+  },
+  auditCycles: {
+    min: 1,
+    max: 12,
+    step: 1,
+    label: "Audit / evidence cycles per year",
+    help: "How often compliance, security, or legal currently collects AI evidence manually across these workflows.",
+  },
+} as const;
+
+export const roiModelAssumptionCopy = [
+  {
+    label: `Annual subscription $${(roiModelAssumptions.annualSubscriptionUsd / 1000).toFixed(0)}K`,
+    detail: "Illustrative ICDU commercial assumption used for modeled cost.",
+  },
+  {
+    label: `Year-1 setup $${(roiModelAssumptions.yearOneSetupUsd / 1000).toFixed(0)}K`,
+    detail: "One-time illustrative onboarding / integration allowance in year one.",
+  },
+  {
+    label: `${roiModelAssumptions.engineeringDaysSavedPerWorkflow} eng. days saved / workflow / year`,
+    detail: "ICDU model assumption for reduced prompt rework and retry loops.",
+  },
+  {
+    label: `${roiModelAssumptions.hoursPerAuditCyclePerWorkflow} hours / audit cycle / workflow`,
+    detail: "ICDU model assumption for evidence collection effort avoided when traces are automatic.",
+  },
+  {
+    label: `${Math.round(roiModelAssumptions.riskCaptureFactor * 100)}% risk-capture factor`,
+    detail: "Share of expected annual incident cost treated as avoidable under gated execution — illustrative, not a guarantee.",
+  },
+];
 
 export function formatBusinessCurrency(value: number): string {
   const abs = Math.abs(value);
@@ -307,16 +409,24 @@ export function formatBusinessCurrency(value: number): string {
 
 export function calculateRoi(inputs: RoiInputs): RoiResults {
   const { workflows, dayRate, incidentProb, incidentCost, auditCycles } = inputs;
+  const {
+    annualSubscriptionUsd,
+    yearOneSetupUsd,
+    engineeringDaysSavedPerWorkflow,
+    hoursPerAuditCyclePerWorkflow,
+    riskCaptureFactor,
+  } = roiModelAssumptions;
+
   const hrDay = dayRate / 8;
-  const engSave = workflows * 4 * dayRate;
-  const compSave = workflows * auditCycles * 30 * hrDay;
-  const ravAnnual = Math.round((incidentProb / 100) * incidentCost * 0.7);
-  const annualSub = 60_000;
-  const yr1Cost = annualSub + 15_000 + engSave;
+  const engSave = workflows * engineeringDaysSavedPerWorkflow * dayRate;
+  const compSave = workflows * auditCycles * hoursPerAuditCyclePerWorkflow * hrDay;
+  const ravAnnual = Math.round((incidentProb / 100) * incidentCost * riskCaptureFactor);
+  const yr1Cost = annualSubscriptionUsd + yearOneSetupUsd + engSave;
   const yr1Return = engSave + compSave + ravAnnual;
   const totalReturn = yr1Return + (compSave + ravAnnual) * 2;
-  const totalCost = yr1Cost + annualSub * 2;
-  const roi = Math.round(((totalReturn - totalCost) / totalCost) * 100);
+  const totalCost = yr1Cost + annualSubscriptionUsd * 2;
+  const netBenefit = totalReturn - totalCost;
+  const roi = Math.round((netBenefit / totalCost) * 100);
   const payMonths = yr1Return > 0 ? Math.ceil(yr1Cost / (yr1Return / 12)) : 99;
 
   return {
@@ -329,56 +439,93 @@ export function calculateRoi(inputs: RoiInputs): RoiResults {
     totalCost,
     yr1Return,
     yr1Cost,
+    netBenefit,
   };
+}
+
+export function buildRoiSummary(inputs: RoiInputs, results: RoiResults): string {
+  const lines = [
+    "ICDU Value Model — illustrative estimate",
+    "",
+    "Your inputs",
+    `• AI workflows in scope: ${inputs.workflows}`,
+    `• Engineering day rate: ${formatBusinessCurrency(inputs.dayRate)}/day`,
+    `• Annual incident probability: ${inputs.incidentProb}%`,
+    `• Cost of one material incident: ${formatBusinessCurrency(inputs.incidentCost)}`,
+    `• Audit / evidence cycles per year: ${inputs.auditCycles}`,
+    "",
+    "ICDU model assumptions",
+    `• Annual subscription: ${formatBusinessCurrency(roiModelAssumptions.annualSubscriptionUsd)}`,
+    `• Year-1 setup: ${formatBusinessCurrency(roiModelAssumptions.yearOneSetupUsd)}`,
+    `• Engineering days saved per workflow / year: ${roiModelAssumptions.engineeringDaysSavedPerWorkflow}`,
+    `• Hours per audit cycle per workflow: ${roiModelAssumptions.hoursPerAuditCyclePerWorkflow}`,
+    `• Risk-capture factor: ${Math.round(roiModelAssumptions.riskCaptureFactor * 100)}%`,
+    `• Horizon: ${roiModelAssumptions.horizonYears} years`,
+    "",
+    "Modeled outputs (illustrative)",
+    `• 3-year ROI: ${results.roi}%`,
+    `• Payback: ${results.payMonths >= 99 ? "n/a" : `${results.payMonths} months`}`,
+    `• Annual risk avoidance: ${formatBusinessCurrency(results.ravAnnual)}`,
+    `• Annual engineering savings: ${formatBusinessCurrency(results.engSave)}`,
+    `• Annual compliance labor saved: ${formatBusinessCurrency(results.compSave)}`,
+    `• 3-year modeled savings: ${formatBusinessCurrency(results.totalReturn)}`,
+    `• 3-year modeled cost: ${formatBusinessCurrency(results.totalCost)}`,
+    `• 3-year net benefit: ${formatBusinessCurrency(results.netBenefit)}`,
+    "",
+    "These figures are illustrative estimates for planning discussions, not forecasts or guarantees.",
+  ];
+  return lines.join("\n");
+}
+
+export function roiResultSummarySentence(inputs: RoiInputs, results: RoiResults): string {
+  const payback =
+    results.payMonths >= 99 ? "an indeterminate payback" : `about ${results.payMonths}-month payback`;
+  return `With ${inputs.workflows} workflows at ${formatBusinessCurrency(inputs.dayRate)}/day and a ${inputs.incidentProb}% chance of a ${formatBusinessCurrency(inputs.incidentCost)} incident, this illustrative model shows roughly ${results.roi}% 3-year ROI, ${payback}, and ${formatBusinessCurrency(results.netBenefit)} net benefit versus ${formatBusinessCurrency(results.totalCost)} modeled cost.`;
 }
 
 export const stakeholderArguments = [
   {
     role: "CTO",
-    headline: "Bolt-on architecture, not rip-and-replace",
+    headline: "Middleware beside the stack you already run",
     argument:
-      "ICDU is a stateless execution layer that wraps existing model calls — model-agnostic, API-first, and SDK-integrable in hours. It reduces inference cycles by up to 75% while adding pre-execution gates and immutable audit logs.",
+      "ICDU wraps existing model calls as a readiness control plane — model-agnostic and API-first — so architecture gains gates and evidence without a platform rip-and-replace.",
     talkingPoints: [
-      "Works with OpenAI, Anthropic, Mistral, and internal models",
-      "Define → Gate → Execute → Audit pipeline on every call",
-      "SDK-first integration — typical pilot in one sprint",
-      "75% reduction in iterative inference cycles",
+      "Define → Gate → Execute → Audit on the call path",
+      "Works with major hosted and internal models",
+      "Pilot integration sized for a single sprint on one workflow",
     ],
   },
   {
     role: "CISO",
-    headline: "Close the largest unmanaged attack surface",
+    headline: "Controls before the model call, evidence after",
     argument:
-      "Ungoverned AI endpoints are vectors for prompt injection, shadow AI, and undetectable policy violations. ICDU enforces six security controls before every model call and produces cryptographically signed audit traces.",
+      "Shadow AI and prompt injection thrive where intent is informal. ICDU applies pre-execution gates and produces exportable traces security teams can review beside existing SIEM practice.",
     talkingPoints: [
-      "Pre-execution gates: injection, scope, sensitivity, redaction",
-      "Immutable audit logs exportable to SIEM",
-      "Maps to NIST AI RMF and EU AI Act Art. 9/12/13",
-      "Zero-trust AI: verify before execute, log everything",
+      "Injection, scope, sensitivity, and redaction-style gates",
+      "Immutable execution traces for inquiry response",
+      "Maps cleanly to NIST AI RMF-style govern/measure loops",
     ],
   },
   {
     role: "CFO",
-    headline: "Risk reduction with quantifiable ROI",
+    headline: "A unit-economic case you can stress-test",
     argument:
-      "One AI incident averages $4.1M. EU AI Act fines reach €35M. ICDU converts ungoverned AI exposure into a measurable control — with execution-based pricing and a 3-year ROI that typically exceeds 200%.",
+      "Use the Value Model to replace anecdote with adjustable assumptions: workflow count, day rates, incident exposure, and audit labor — then compare modeled savings to illustrative subscription cost.",
     talkingPoints: [
-      "3.2× cheaper to prevent incidents than remediate them",
-      "Execution-based pricing — pay for gated calls, not seats",
-      "Compute savings from 75% fewer inference cycles",
-      "Model ROI against your org's actual parameters",
+      "Execution-oriented commercial framing (gated work, not seats)",
+      "Separate your assumptions from ICDU model constants",
+      "Copy a plain-text summary into the investment memo",
     ],
   },
   {
-    role: "General Counsel",
-    headline: "Defensibility and regulatory readiness",
+    role: "Legal / Compliance",
+    headline: "Defensibility when intent must be proven",
     argument:
-      "Regulators and courts increasingly demand proof of what AI was intended to do and what safeguards were applied. ICDU produces audit-ready artifacts on every execution — reducing litigation exposure and accelerating regulatory inquiry response.",
+      "Counsel and compliance need artifacts that show what the system was supposed to do and what checks ran. ICDU produces intent-bound evidence packs suited to inquiry and disclosure workflows.",
     talkingPoints: [
-      "Cryptographically signed execution traces for every AI decision",
-      "GDPR Art. 22 automated decision transparency",
-      "SEC AI risk disclosure documentation",
-      "Complete defensibility for AI-assisted legal and compliance work",
+      "Signed traces tied to the governing contract",
+      "Supports transparency expectations for automated decisions",
+      "Shortens reconstruction time during reviews",
     ],
   },
 ];
@@ -387,56 +534,92 @@ export const commonConcerns = [
   {
     question: "How is this different from monitoring we already have?",
     answer:
-      "Monitoring observes outputs after the fact. ICDU gates inputs before the model is called and produces intent-bound audit artifacts regulators expect. Observability tells you something went wrong; ICDU prevents it and proves what you intended.",
+      "Monitoring observes outputs after the fact. ICDU encodes intent, gates inputs before the model is called, and produces artifacts that show what was allowed to run — prevention plus proof, not only post-hoc observation.",
   },
   {
     question: "We haven't had an incident — why act now?",
     answer:
-      "Absence of evidence isn't evidence of absence. 67% of AI incidents trace to ungoverned prompts, and upstream model updates silently change behavior. ICDU makes intent explicit and testable so you detect drift before customers or regulators do.",
+      "Model updates, prompt drift, and informal shadow tools can change behavior without a ticket. A bounded pilot surfaces whether your critical workflows already need stronger readiness gates before a public failure forces the issue.",
   },
   {
     question: "Will this add latency to AI calls?",
     answer:
-      "Pre-execution gates add single-digit milliseconds — far less than the latency of an unnecessary retry loop caused by an ungoverned prompt failure. Net effect: fewer total calls and lower p99 latency under production load.",
+      "Pre-execution checks are designed to be lightweight relative to model inference. The decision question is whether fewer retries and clearer promotion criteria offset any gate overhead — measure that on your pilot workflow.",
   },
   {
     question: "Could we build equivalent controls internally?",
     answer:
-      "Building intent encoding, six gate types, immutable audit logging, and compliance framework mapping is 12–18 months of platform engineering — plus ongoing maintenance as regulations evolve. ICDU is patent-pending, production-ready, and integrates in one sprint.",
+      "You can. Intent encoding, multiple gate types, durable audit logging, and ongoing regulatory mapping is multi-quarter platform work. ICDU is offered as a ready control plane for teams that want a pilot-sized path instead of a greenfield build.",
   },
   {
     question: "Does this matter if we aren't in a regulated industry?",
     answer:
-      "SEC AI disclosures, state-level AI laws, and customer contractual requirements are expanding beyond traditional regulated sectors. Any enterprise deploying customer-facing AI carries reputational and legal exposure — governance is becoming table stakes, not optional.",
+      "Customer contracts, disclosure expectations, and state AI rules increasingly reach beyond classic regulated verticals. If AI touches customers or material decisions, defensibility and consistency still matter.",
   },
   {
     question: "What if budget isn't available this quarter?",
     answer:
-      "The sandbox tier is free for 5,000 executions. A single prevented incident ($4.1M average) pays for years of ICDU. Treat it as risk-mitigation infrastructure — comparable to cybersecurity spend — with measurable ROI and a payback period measured in months.",
+      "Start with the interactive demos and a scoped walkthrough. Use the Value Model to document assumptions for the next planning cycle — the calculator is for decision prep, not a purchase commitment.",
   },
 ];
 
-export const nextStepsPanel = {
-  heading: "How most organizations move forward",
-  lead: "From evaluation to production typically takes 4–6 weeks. Below is a practical path — owners, milestones, and what to validate at each stage.",
-  stats: [
-    { value: "3–5 days", label: "to first deployment" },
-    { value: "4–6 wks", label: "sign-off to compliance-ready" },
-    { value: "Free", label: "sandbox tier up to 5K executions" },
-    { value: "1 sprint", label: "typical integration" },
-  ],
-  timeline: [
-    { stage: "Now", action: "Align stakeholders on risk exposure and ROI assumptions", who: "Leadership" },
-    { stage: "Week 1", action: "Request sandbox access and run first ICDU", who: "Engineering" },
-    { stage: "Week 1–2", action: "CTO/CISO architecture and security review", who: "CTO / CSO" },
-    { stage: "Week 2", action: "Run ROI model with your org's actual parameters", who: "CFO / Finance" },
-    { stage: "Week 2–3", action: "Compliance framework mapping review", who: "Compliance" },
-    { stage: "Week 3–4", action: "POC against one critical AI workflow", who: "Engineering" },
-    { stage: "Week 4–5", action: "Commercial proposal and procurement review", who: "Legal / Finance" },
-    { stage: "Week 5–6", action: "Deployment to staging and production", who: "Engineering" },
+export const pilotPathPanel = {
+  heading: "Estimated 4–6 week pilot path",
+  lead: "Timeline below is an estimate for a single high-value workflow. Actual duration depends on access, stakeholder availability, and how quickly success criteria are agreed.",
+  estimateNote: "Estimate only — not a contractual delivery schedule.",
+  phases: [
+    {
+      stage: "Week 1",
+      title: "Scope and encode",
+      action: "Pick one workflow, name an owner, and encode intent with success criteria.",
+      who: "Ops owner + Engineering",
+    },
+    {
+      stage: "Weeks 2–3",
+      title: "Governed runs",
+      action: "Run side-by-side unstructured vs. ICDU-gated executions; capture quality, rework, and traces.",
+      who: "Engineering + Security",
+    },
+    {
+      stage: "Weeks 3–4",
+      title: "Evidence review",
+      action: "Review gate decisions and evidence packs with security and compliance stakeholders.",
+      who: "CISO / Compliance",
+    },
+    {
+      stage: "Weeks 4–6",
+      title: "Readout",
+      action: "Executive readout: keep, expand, or redesign — with modeled value and observed pilot outcomes.",
+      who: "Leadership + Finance",
+    },
   ],
   ctas: [
-    { label: "Request sandbox access", href: "mailto:brian@osscontact.com?subject=ICDU%20Sandbox%20Access" },
-    { label: "Book intro call", href: "mailto:brian@osscontact.com?subject=ICDU%20Intro%20Call" },
+    {
+      label: "Book a Walkthrough",
+      href: "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough",
+    },
+    {
+      label: "Try the Live Demo",
+      href: "/demos",
+    },
   ],
 };
+
+/** @deprecated Prefer exposurePanel — retained for any residual imports. */
+export const financialRiskPanel = {
+  heading: exposurePanel.heading,
+  lead: exposurePanel.lead,
+  stats: [] as { value: string; label: string }[],
+};
+
+/** @deprecated Prefer pilotPathPanel */
+export const nextStepsPanel = pilotPathPanel;
+
+/** @deprecated Tabs removed from Business Case UI */
+export const businessCaseTabs = [
+  { id: "current-exposure", label: "Current Exposure" },
+  { id: "value-model", label: "Value Model" },
+  { id: "value-by-stakeholder", label: "Value by Stakeholder" },
+  { id: "common-questions", label: "Common Questions" },
+  { id: "pilot-path", label: "Pilot Path" },
+] as const;

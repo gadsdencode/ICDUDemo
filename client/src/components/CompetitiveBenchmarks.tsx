@@ -45,7 +45,7 @@ function WhatIcduAdds() {
               <div className="flex-1 rounded-md border border-destructive/20 bg-destructive/5 p-3 sm:p-3.5">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <XCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
-                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-destructive">
+                  <span className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-destructive">
                     Replaces
                   </span>
                 </div>
@@ -67,7 +67,7 @@ function WhatIcduAdds() {
               <div className="flex-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/10 p-3 sm:p-3.5">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                  <span className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                     Outcome
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export function CompetitiveBenchmarks({ compact = false }: CompetitiveBenchmarks
           </h3>
           <div className="border rounded-md overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-[10px] sm:text-sm">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/50">
                     <th className="text-left p-2 sm:p-3 font-medium w-24 sm:w-28">Benchmark</th>
@@ -109,11 +109,11 @@ export function CompetitiveBenchmarks({ compact = false }: CompetitiveBenchmarks
                       <td className="p-2 sm:p-3 font-medium">{bm.name}</td>
                       <td className="p-2 sm:p-3 text-muted-foreground">{bm.measures}</td>
                       <td className="p-2 sm:p-3">
-                        <Badge variant="secondary" className="text-[8px] sm:text-xs">
+                        <Badge variant="secondary" className="text-xs sm:text-sm">
                           {bm.topScore}
                         </Badge>
                       </td>
-                      <td className="p-2 sm:p-3 text-destructive/80 text-[9px] sm:text-xs">
+                      <td className="p-2 sm:p-3 text-destructive/80 text-xs sm:text-sm">
                         {bm.blindSpot}
                       </td>
                     </tr>
@@ -131,7 +131,7 @@ export function CompetitiveBenchmarks({ compact = false }: CompetitiveBenchmarks
       {/* Bottom-line callout */}
       <Alert className="border-primary/30 bg-primary/5">
         <Quote className="h-4 w-4 text-primary" />
-        <AlertDescription className="text-[10px] sm:text-sm text-foreground italic">
+        <AlertDescription className="text-sm text-foreground italic">
           {executiveMessages.bottomLine}
         </AlertDescription>
       </Alert>

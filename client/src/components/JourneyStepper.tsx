@@ -1,11 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, ArrowLeft, ChevronRight } from "lucide-react";
 import { trackJourneyStepViewed } from "@/lib/analytics";
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { PrimaryCTA, SecondaryCTA } from "@/components/brand";
 
 export type ContentBlock =
   | { type: "paragraph"; text: string }
@@ -34,7 +32,7 @@ export type TabGroup = {
 };
 
 export type PersonaJourney = {
-  groups: TabGroup[];
+  groups?: TabGroup[];
   tabs: JourneyTab[];
 };
 
@@ -45,40 +43,58 @@ type JourneyStepperProps = {
   personaId: string;
 };
 
+function isExternalHref(href: string) {
+  return href.startsWith("mailto:") || href.startsWith("http");
+}
+
 function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {blocks.map((block, i) => {
         switch (block.type) {
           case "paragraph":
             return (
-              <p key={i} className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p
+                key={i}
+                className="text-sm sm:text-base text-[color:var(--icdu-fg-muted)] leading-relaxed m-0"
+              >
                 {block.text}
               </p>
             );
           case "stats":
             return (
-              <div key={i} className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              <div
+                key={i}
+                className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+              >
                 {block.items.map((stat) => (
-                  <Card key={stat.label} className="p-2.5 sm:p-4 text-center">
-                    <div className="text-lg sm:text-2xl font-bold text-primary">{stat.value}</div>
-                    <div className="text-[9px] sm:text-xs text-muted-foreground mt-1 leading-snug">
+                  <div
+                    key={stat.label}
+                    className="rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-3 sm:p-4 text-center"
+                  >
+                    <div className="font-editorial text-2xl sm:text-3xl tracking-tight text-[color:var(--icdu-fg)]">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-[color:var(--icdu-fg-muted)] mt-1.5 leading-snug">
                       {stat.label}
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             );
           case "flow":
             return (
-              <div key={i} className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <div key={i} className="flex flex-wrap items-center gap-2">
                 {block.steps.map((step, j) => (
-                  <div key={step.label} className="flex items-center gap-1.5 sm:gap-2">
-                    <Badge variant="secondary" className="text-[9px] sm:text-xs whitespace-nowrap">
+                  <div key={step.label} className="flex items-center gap-2">
+                    <span className="inline-flex items-center rounded-md border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] px-2.5 py-1.5 text-sm font-medium text-[color:var(--icdu-fg)]">
                       {step.label}
-                    </Badge>
+                    </span>
                     {j < block.steps.length - 1 && (
-                      <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
+                      <ChevronRight
+                        className="h-3.5 w-3.5 text-[color:var(--icdu-fg-faint)] shrink-0"
+                        aria-hidden="true"
+                      />
                     )}
                   </div>
                 ))}
@@ -86,10 +102,16 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             );
           case "checklist":
             return (
-              <ul key={i} className="space-y-1.5 sm:space-y-2">
+              <ul key={i} className="space-y-2 m-0 p-0 list-none">
                 {block.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
-                    <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500 mt-0.5 shrink-0" />
+                  <li
+                    key={item}
+                    className="flex items-start gap-2.5 text-sm text-[color:var(--icdu-fg-muted)]"
+                  >
+                    <Check
+                      className="h-4 w-4 text-[color:var(--icdu-green)] mt-0.5 shrink-0"
+                      aria-hidden="true"
+                    />
                     {item}
                   </li>
                 ))}
@@ -99,19 +121,25 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <pre
                 key={i}
-                className="overflow-x-auto rounded-md border bg-muted/50 p-3 sm:p-4 text-[10px] sm:text-xs leading-relaxed"
+                className="overflow-x-auto rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-3 sm:p-4 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]"
               >
                 <code>{block.code}</code>
               </pre>
             );
           case "table":
             return (
-              <div key={i} className="overflow-x-auto rounded-md border">
-                <table className="w-full text-[10px] sm:text-xs">
+              <div
+                key={i}
+                className="overflow-x-auto rounded-lg border border-[color:var(--icdu-border)]"
+              >
+                <table className="w-full text-xs sm:text-sm">
                   <thead>
-                    <tr className="border-b bg-muted/50">
+                    <tr className="border-b border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)]">
                       {block.headers.map((h) => (
-                        <th key={h} className="px-2 sm:px-3 py-2 text-left font-semibold">
+                        <th
+                          key={h}
+                          className="px-3 py-2.5 text-left font-semibold text-[color:var(--icdu-fg)]"
+                        >
                           {h}
                         </th>
                       ))}
@@ -119,9 +147,15 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
                   </thead>
                   <tbody>
                     {block.rows.map((row, ri) => (
-                      <tr key={ri} className="border-b last:border-0">
+                      <tr
+                        key={ri}
+                        className="border-b border-[color:var(--icdu-border)] last:border-0"
+                      >
                         {row.map((cell, ci) => (
-                          <td key={ci} className="px-2 sm:px-3 py-2 text-muted-foreground align-top">
+                          <td
+                            key={ci}
+                            className="px-3 py-2.5 text-[color:var(--icdu-fg-muted)] align-top"
+                          >
                             {cell}
                           </td>
                         ))}
@@ -133,28 +167,32 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             );
           case "callout":
             return (
-              <Card
+              <div
                 key={i}
                 className={cn(
-                  "p-3 sm:p-4",
-                  block.variant === "warning"
-                    ? "border-amber-500/30 bg-amber-500/5"
-                    : "border-primary/30 bg-primary/5",
+                  "rounded-lg border p-4",
+                    block.variant === "warning"
+                    ? "border-[color:var(--icdu-amber)]/30 bg-[color:var(--icdu-amber)]/5"
+                    : "border-[color:var(--icdu-blue)]/30 bg-[color:var(--icdu-blue)]/5",
                 )}
               >
-                <h4 className="font-semibold text-xs sm:text-sm mb-1">{block.title}</h4>
-                <p className="text-[10px] sm:text-sm text-muted-foreground leading-relaxed">
+                <h4 className="font-semibold text-sm text-[color:var(--icdu-fg)] mb-1 m-0">
+                  {block.title}
+                </h4>
+                <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0">
                   {block.body}
                 </p>
-              </Card>
+              </div>
             );
           case "list":
             return (
-              <div key={i} className="space-y-2 sm:space-y-3">
+              <div key={i} className="space-y-4">
                 {block.items.map((item) => (
                   <div key={item.title}>
-                    <div className="font-semibold text-xs sm:text-sm">{item.title}</div>
-                    <p className="text-[10px] sm:text-sm text-muted-foreground leading-relaxed mt-0.5">
+                    <div className="font-semibold text-sm text-[color:var(--icdu-fg)]">
+                      {item.title}
+                    </div>
+                    <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed mt-1 m-0">
                       {item.desc}
                     </p>
                   </div>
@@ -163,20 +201,25 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             );
           case "timeline":
             return (
-              <div key={i} className="space-y-2 sm:space-y-3">
+              <div key={i} className="space-y-3">
                 {block.steps.map((step, j) => (
-                  <div key={step.title} className="flex gap-2 sm:gap-3">
+                  <div key={step.title} className="flex gap-3">
                     <div className="flex flex-col items-center shrink-0">
-                      <div className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-[9px] sm:text-xs font-semibold">
+                      <div
+                        className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold text-white"
+                        style={{ background: "var(--icdu-blue)" }}
+                      >
                         {j + 1}
                       </div>
                       {j < block.steps.length - 1 && (
-                        <div className="w-px flex-1 bg-border mt-1 min-h-[1rem]" />
+                        <div className="w-px flex-1 bg-[color:var(--icdu-border)] mt-1 min-h-[1rem]" />
                       )}
                     </div>
-                    <div className="pb-2 sm:pb-3 min-w-0">
-                      <div className="font-semibold text-xs sm:text-sm">{step.title}</div>
-                      <p className="text-[10px] sm:text-sm text-muted-foreground leading-relaxed mt-0.5">
+                    <div className="pb-3 min-w-0">
+                      <div className="font-semibold text-sm text-[color:var(--icdu-fg)]">
+                        {step.title}
+                      </div>
+                      <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed mt-1 m-0">
                         {step.desc}
                       </p>
                     </div>
@@ -192,13 +235,42 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
   );
 }
 
+function StepCta({ cta }: { cta: { label: string; href: string } }) {
+  if (isExternalHref(cta.href)) {
+    return (
+      <PrimaryCTA href={cta.href} data-testid="journey-tab-cta">
+        {cta.label}
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </PrimaryCTA>
+    );
+  }
+
+  return (
+    <PrimaryCTA asChild>
+      <Link href={cta.href} data-testid="journey-tab-cta">
+        {cta.label}
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </Link>
+    </PrimaryCTA>
+  );
+}
+
 export function JourneyStepper({
   journey,
   currentTabId,
   onTabChange,
   personaId,
 }: JourneyStepperProps) {
-  const tab = journey.tabs.find((t) => t.id === currentTabId) ?? journey.tabs[0];
+  const tabs = journey.tabs;
+  const currentIndex = Math.max(
+    0,
+    tabs.findIndex((t) => t.id === currentTabId),
+  );
+  const tab = tabs[currentIndex] ?? tabs[0];
+  const stepNumber = currentIndex + 1;
+  const total = tabs.length;
+  const isFirst = currentIndex <= 0;
+  const isLast = currentIndex >= total - 1;
 
   useEffect(() => {
     if (tab) {
@@ -208,80 +280,143 @@ export function JourneyStepper({
 
   if (!tab) return null;
 
+  const goPrev = () => {
+    if (!isFirst) onTabChange(tabs[currentIndex - 1].id);
+  };
+
+  const goNext = () => {
+    if (!isLast) onTabChange(tabs[currentIndex + 1].id);
+  };
+
   return (
-    <div className="grid lg:grid-cols-[220px,1fr] gap-4 sm:gap-6">
-      {/* Left sidebar — tab groups */}
-      <nav className="space-y-3 sm:space-y-4">
-        {journey.groups.map((group) => (
-          <div key={group.label}>
-            <div className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 px-1">
-              {group.label}
-            </div>
-            <div className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0">
-              {group.tabIds.map((tabId) => {
-                const groupTab = journey.tabs.find((t) => t.id === tabId);
-                if (!groupTab) return null;
-                const isActive = tabId === currentTabId;
-                return (
-                  <button
-                    key={tabId}
-                    onClick={() => onTabChange(tabId)}
-                    className={cn(
-                      "whitespace-nowrap lg:w-full text-left px-2 sm:px-3 py-1.5 sm:py-2 rounded-md border text-[10px] sm:text-xs font-medium transition-all shrink-0",
-                      isActive
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card border-border hover-elevate text-muted-foreground",
-                    )}
-                    data-testid={`journey-tab-${tabId}`}
-                  >
-                    {groupTab.title}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+    <div className="space-y-6 sm:space-y-8" data-testid="journey-stepper">
+      {/* Progress stepper */}
+      <nav aria-label="Journey progress" className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-medium text-[color:var(--icdu-fg-muted)] m-0">
+            Step{" "}
+            <span className="text-[color:var(--icdu-fg)]">
+              {stepNumber} of {total}
+            </span>
+            <span className="sm:hidden text-[color:var(--icdu-fg-faint)]">
+              {" "}
+              · {tab.title}
+            </span>
+          </p>
+          <p className="text-sm text-[color:var(--icdu-fg-faint)] m-0 hidden sm:block">
+            {tab.title}
+          </p>
+        </div>
+
+        <ol className="flex items-stretch gap-1 sm:gap-2 m-0 p-0 list-none overflow-x-auto pb-1">
+          {tabs.map((step, index) => {
+            const isActive = index === currentIndex;
+            const isComplete = index < currentIndex;
+            return (
+              <li key={step.id} className="flex-1 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => onTabChange(step.id)}
+                  className={cn(
+                    "w-full flex items-center justify-center sm:justify-start rounded-lg border px-2 sm:px-3 py-2.5 transition-colors cursor-pointer",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+                    isActive
+                      ? "border-[color:var(--icdu-blue)] bg-[color:var(--icdu-blue)]/5"
+                      : isComplete
+                        ? "border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] hover:border-[color:var(--icdu-border-hover)]"
+                        : "border-[color:var(--icdu-border)] bg-transparent hover:border-[color:var(--icdu-border-hover)]",
+                  )}
+                  aria-current={isActive ? "step" : undefined}
+                  aria-label={`Step ${index + 1}: ${step.title}`}
+                  data-testid={`journey-tab-${step.id}`}
+                >
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                    <span
+                      className={cn(
+                        "flex h-7 w-7 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                        isActive || isComplete
+                          ? "text-white"
+                          : "bg-[color:var(--icdu-surface)] text-[color:var(--icdu-fg-faint)] border border-[color:var(--icdu-border)]",
+                      )}
+                      style={
+                        isActive || isComplete
+                          ? { background: "var(--icdu-blue)" }
+                          : undefined
+                      }
+                    >
+                      {isComplete ? (
+                        <Check className="h-3 w-3" aria-hidden="true" />
+                      ) : (
+                        index + 1
+                      )}
+                    </span>
+                    <span
+                      className={cn(
+                        "hidden sm:inline text-sm font-medium leading-tight truncate",
+                        isActive
+                          ? "text-[color:var(--icdu-fg)]"
+                          : "text-[color:var(--icdu-fg-muted)]",
+                      )}
+                    >
+                      {step.title}
+                    </span>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
       </nav>
 
-      {/* Right content panel */}
-      <Card className="p-3 sm:p-6">
-        <Badge variant="secondary" className="text-[9px] sm:text-xs mb-2 sm:mb-3">
-          {tab.sectionTag}
-        </Badge>
-        <h2 className="text-base sm:text-2xl font-bold mb-1 sm:mb-2">{tab.h2}</h2>
-        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-6">
+      {/* Step content */}
+      <article className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-8">
+        <div className="icdu-section-label mb-3">{tab.sectionTag}</div>
+        <h2 className="font-editorial text-2xl sm:text-3xl tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2 sm:mb-3">
+          {tab.h2}
+        </h2>
+        <p className="text-sm sm:text-base text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 mb-5 sm:mb-7 max-w-3xl">
           {tab.lead}
         </p>
 
         <ContentBlocks blocks={tab.blocks} />
 
         {tab.cta && (
-          <div className="mt-5 sm:mt-8 pt-4 sm:pt-6 border-t">
-            <Link href={tab.cta.href}>
-              <Button size="sm" className="gap-2 text-xs sm:text-sm" data-testid="journey-tab-cta">
-                {tab.cta.label}
-                <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              </Button>
-            </Link>
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[color:var(--icdu-border)]">
+            <StepCta cta={tab.cta} />
           </div>
         )}
-      </Card>
-    </div>
-  );
-}
+      </article>
 
-export function KeyTakeawaysPanel({ takeaways }: { takeaways: string[] }) {
-  return (
-    <Card className="p-2.5 sm:p-5 sticky top-20">
-      <h3 className="font-semibold text-[10px] sm:text-sm mb-1.5 sm:mb-3">Key Takeaways</h3>
-      <ul className="space-y-1 sm:space-y-2">
-        {takeaways.map((takeaway, index) => (
-          <li key={index} className="flex items-start gap-1.5 sm:gap-2 text-[10px] sm:text-sm">
-            <Check className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-            <span className="text-muted-foreground">{takeaway}</span>
-          </li>
-        ))}
-      </ul>
-    </Card>
+      {/* Previous / Next */}
+      <div className="sticky bottom-3 z-10 flex items-center justify-between gap-3 rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface-solid)]/95 backdrop-blur-sm p-3 sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+        <SecondaryCTA
+          type="button"
+          onClick={goPrev}
+          disabled={isFirst}
+          className={cn(isFirst && "opacity-40 pointer-events-none")}
+          data-testid="journey-prev"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Previous
+        </SecondaryCTA>
+
+        {!isLast ? (
+          <PrimaryCTA
+            type="button"
+            onClick={goNext}
+            data-testid="journey-next"
+          >
+            Next
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </PrimaryCTA>
+        ) : tab.cta ? (
+          <StepCta cta={tab.cta} />
+        ) : (
+          <span className="text-xs text-[color:var(--icdu-fg-faint)]">
+            End of path
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

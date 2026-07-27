@@ -53,7 +53,7 @@ export function PipelineDiagram({ compact = false }: { compact?: boolean }) {
           return (
             <div key={step.id} className="flex items-center gap-1 sm:gap-2">
               <div className={cn(
-                "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-white text-[10px] sm:text-sm font-medium",
+                "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-white text-sm font-medium",
                 step.color
               )}>
                 <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
@@ -86,9 +86,9 @@ export function PipelineDiagram({ compact = false }: { compact?: boolean }) {
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-xs sm:text-sm">{step.label}</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">{step.sublabel}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">{step.sublabel}</div>
                 </div>
-                <div className="text-[10px] sm:text-xs text-muted-foreground text-center max-w-[100px] sm:max-w-[120px] hidden sm:block">
+                <div className="text-xs sm:text-sm text-muted-foreground text-center max-w-[100px] sm:max-w-[120px] hidden sm:block">
                   {step.description}
                 </div>
               </div>
@@ -105,7 +105,7 @@ export function PipelineDiagram({ compact = false }: { compact?: boolean }) {
           </div>
           <div className="text-center">
             <div className="font-semibold text-xs sm:text-sm">Deploy</div>
-            <div className="text-[10px] sm:text-xs text-muted-foreground">Safe & Audited</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Safe & Audited</div>
           </div>
         </div>
       </div>

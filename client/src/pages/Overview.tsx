@@ -3,20 +3,19 @@ import {
   useEffect,
   useRef,
   useState,
-  useCallback,
   type ReactNode,
+  type CSSProperties,
 } from "react";
+import { Link } from "wouter";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
-import {
-  executiveMessages,
-  efficiencyStats,
-  marketBars,
-  regulatoryTailwinds,
-} from "@/data/businessCase";
+import { SiteFooter } from "@/components/SiteFooter";
+
+const WALKTHROUGH_URL =
+  "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough";
 
 /* ═══════════════════════════════════════════════════════════════════
-   Hook: useInView — observe once, fire on threshold
+   Hooks
    ═══════════════════════════════════════════════════════════════════ */
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -41,9 +40,18 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   Reveal — scroll-triggered fade-up wrapper
-   ═══════════════════════════════════════════════════════════════════ */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 function Reveal({
   children,
   delay = 0,
@@ -54,14 +62,19 @@ function Reveal({
   className?: string;
 }) {
   const { ref, visible } = useInView();
+  const reduced = usePrefersReducedMotion();
+  // Always keep content readable; only apply a subtle settle motion.
+  const settled = visible || reduced;
   return (
     <div
       ref={ref}
       className={className}
       style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(32px)",
-        transition: `opacity 0.8s cubic-bezier(.16,1,.3,1) ${delay}s, transform 0.8s cubic-bezier(.16,1,.3,1) ${delay}s`,
+        opacity: 1,
+        transform: settled ? "translateY(0)" : "translateY(10px)",
+        transition: reduced
+          ? undefined
+          : `transform 0.55s cubic-bezier(.16,1,.3,1) ${delay}s`,
       }}
     >
       {children}
@@ -69,251 +82,305 @@ function Reveal({
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   GlowDivider — 1px gradient section separator
-   ═══════════════════════════════════════════════════════════════════ */
 function GlowDivider() {
-  return (
-    <div
-      style={{
-        height: 1,
-        background:
-          "linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent)",
-        maxWidth: "80rem",
-        margin: "0 auto",
-      }}
-    />
-  );
+  return <div className="lr-divider" aria-hidden="true" />;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   Static data derived from businessCase.ts
+   Homepage content
    ═══════════════════════════════════════════════════════════════════ */
-const heroSupportingParagraph =
-  "Unlike point solutions, ICDU works alongside existing AI environments without replacing them. The architecture is protected under U.S. provisional patent filings and ready for pilot validation.";
-
-const pipelineStages = [
+const glanceStages = [
   {
-    num: "01",
-    name: "Define",
-    color: "var(--accent-blue)",
-    desc: "Encode your AI's purpose as a structured, versioned ICDU spec — not a freeform prompt. Intent is explicit, testable, and version-controlled like code.",
+    id: "intent",
+    name: "Intent",
+    detail:
+      "Capture what the work must achieve — purpose, audience, constraints, and success criteria — before any model runs.",
   },
   {
-    num: "02",
-    name: "Gate",
-    color: "var(--accent-green)",
-    desc: "Safety, scope, and sensitivity checks fire before the model call. Injection attacks blocked. Data access constrained to declared fields only.",
+    id: "contract",
+    name: "ICDU Contract",
+    detail:
+      "Encode that intent as a versioned governed contract: what the system should do, what it may use, and what must pass.",
   },
   {
-    num: "03",
-    name: "Execute",
-    color: "var(--accent-amber)",
-    desc: "The AI runs within intent-bound, gate-verified parameters. Fewer unnecessary cycles. Higher first-pass accuracy. Lower compute and energy cost.",
+    id: "execute",
+    name: "AI Execution",
+    detail:
+      "Your existing AI tools run the task inside those bounds — no rip-and-replace, no freeform prompt drift.",
   },
   {
-    num: "04",
-    name: "Audit",
-    color: "var(--accent-red)",
-    desc: "A full immutable trace written for every execution — inputs, outputs, gate results, model version, and timestamps. Regulator-ready out of the box.",
+    id: "gate",
+    name: "Readiness Gate",
+    detail:
+      "Outputs are scored against the contract before release. Failures escalate or block; successes promote with confidence.",
+  },
+  {
+    id: "evidence",
+    name: "Evidence",
+    detail:
+      "Every run leaves an immutable record — inputs, gates, model version, and outcome — ready for review or audit.",
   },
 ];
 
 const withoutIcduItems = [
   {
-    title: "Prompt injection risk",
-    desc: "No input validation before model invocation — malicious inputs can redirect AI behavior or exfiltrate data.",
+    title: "Inconsistent judgment",
+    desc: "Each prompt is a one-off. Quality depends on who wrote it, when they wrote it, and which model answered.",
   },
   {
-    title: "No audit trail",
-    desc: "Incident response is impossible without intent logs. You can't reconstruct what the AI was supposed to do when it fails.",
+    title: "Silent drift",
+    desc: "Model updates and prompt tweaks change behavior without notice. Customers find the failures first.",
   },
   {
-    title: "Silent model drift",
-    desc: "Upstream model updates silently break AI behaviour. You find out from a customer, not your monitoring stack.",
+    title: "Rework loops",
+    desc: "Vague asks drive retries, hallucinations, and human cleanup — burning compute and calendar time.",
   },
   {
-    title: "Regulatory exposure",
-    desc: "EU AI Act, GDPR Art. 22, and SEC AI disclosures are in force. Non-compliance: fines up to €35M or 7% of global turnover.",
+    title: "No defensibility",
+    desc: "When something goes wrong, there is no record of what the AI was supposed to do or what checks ran.",
   },
 ];
 
 const withIcduItems = [
   {
-    title: "Intent encoding",
-    desc: "Every AI action is defined as a versioned, testable ICDU spec. Intent is explicit, auditable, and rollback-able like code.",
+    title: "Repeatable organizational judgment",
+    desc: "Best-practice intent is encoded once, versioned, and reused — so every run reflects how your org wants work done.",
   },
   {
-    title: "Pre-execution safety gates",
-    desc: "Scope, sensitivity, and injection checks fire before the model call — catching failures before they happen.",
+    title: "Bound execution",
+    desc: "AI operates inside declared scope, data access, and success criteria — not open-ended improvisation.",
   },
   {
-    title: "Immutable audit logs",
-    desc: "Cryptographically signed execution traces for every AI decision — inputs, outputs, gates, model version, timestamps.",
+    title: "Fewer wasted cycles",
+    desc: "Clear contracts raise first-pass quality and cut unnecessary inference loops, energy, and cleanup.",
   },
   {
-    title: "Compliance-ready artifacts",
-    desc: "ICDU artifacts map directly to EU AI Act Art. 9, 12, 13, NIST AI RMF, and ISO/IEC 42001 — no custom instrumentation.",
+    title: "Provable readiness",
+    desc: "Gates and signed traces show what was intended, what passed, and what was released — on every task.",
   },
 ];
 
-const strainCards = [
+const valuePillars = [
   {
-    title: "Data center capacity",
-    desc: "Up to 75% fewer compute cycles means far less infrastructure required. ICDU reduces AI infrastructure overhead through improved cycle time efficiency.",
+    title: "Better work",
+    outcome:
+      "Outputs match the standard your experts would hold — clearer, more consistent, more useful on the first pass.",
+    mechanism:
+      "Mechanism: versioned ICDU contracts encode success criteria, tone, and constraints so models execute against a shared definition of done.",
+    accent: "var(--accent-blue)",
   },
   {
-    title: "Energy demand",
-    desc: "The US faces critical shortages in power generation for AI. Reduced inference overhead directly lowers power draw per workload.",
+    title: "Less waste",
+    outcome:
+      "Fewer retries, less rework, and lower compute for the same volume of AI-assisted tasks.",
+    mechanism:
+      "Mechanism: readiness gates catch weak or out-of-scope results before release, cutting iterative inference and human cleanup loops.",
+    accent: "var(--accent-amber)",
   },
   {
-    title: "Compute cost",
-    desc: "With up to 80% efficiency improvement, ICDU significantly lowers the cost of every AI job you run — at any scale.",
-  },
-  {
-    title: "Reliability & governance",
-    desc: "Errors and inaccuracies decreased by up to 75% — reducing rework, remediation, and the legal liability that follows AI failures.",
-  },
-];
-
-const useCaseCards = [
-  {
-    category: "FINANCIAL SERVICES",
-    title: "Auditable AI decisions",
-    desc: "Loan approvals, fraud detection, and trading signals with full regulatory trace. Every model decision is defensible to regulators and customers.",
-  },
-  {
-    category: "HEALTHCARE",
-    title: "Clinical decision support",
-    desc: "Intent-bound AI recommendations with clinician oversight gates built in. Patient safety and regulatory compliance by architecture, not policy.",
-  },
-  {
-    category: "LEGAL & COMPLIANCE",
-    title: "Contract & risk analysis",
-    desc: "AI that operates within defined legal parameters and logs every reasoning step. Complete defensibility for any AI-assisted legal work.",
-  },
-  {
-    category: "ENTERPRISE SAAS",
-    title: "AI feature governance",
-    desc: "Ship AI-powered product features with safety and compliance built into the release pipeline — not retrofitted after an incident.",
-  },
-  {
-    category: "GOVERNMENT",
-    title: "Accountable public AI",
-    desc: "Transparent, auditable AI operations meeting public accountability standards. Every decision explainable to oversight bodies and citizens.",
-  },
-  {
-    category: "INSURANCE",
-    title: "Underwriting & claims AI",
-    desc: "Structured intent ensures AI outputs are explainable to regulators and customers alike. Reduces dispute risk and litigation exposure.",
+    title: "Provable control",
+    outcome:
+      "Every promoted result comes with a record of intent, checks, and outcome — without turning delivery into a compliance project.",
+    mechanism:
+      "Mechanism: immutable execution evidence is written as work completes, so governance rides along with usefulness.",
+    accent: "var(--accent-green)",
   },
 ];
 
-const icduChecklist = [
-  "Improved first-pass task accuracy",
-  "Reduced iterative inference cycles",
-  "More efficient compute & energy use",
-  "Structured output governance & audit",
-  "Works with any AI model provider",
-  "SDK-first integration in hours, not months",
+const scenario = {
+  industry: "Enterprise operations",
+  task: "A customer-support team uses AI to draft policy-sensitive replies to high-value accounts.",
+  risk: "Without structure, replies invent policy, miss required disclosures, or tone-shift by agent and model version — creating rework, escalations, and audit gaps.",
+  adds: [
+    "Intent contract: approved sources, required disclosures, tone, and success criteria",
+    "Readiness gate: IAS / PAS / AS thresholds before a reply can be sent",
+    "Evidence: signed trace of inputs, gate scores, model version, and release decision",
+  ],
+  result:
+    "The team ships consistent, reviewable replies that reflect company judgment — and can show exactly why a response was promoted.",
+};
+
+const rolePaths = [
+  {
+    title: "Leadership",
+    desc: "See how ICDU improves quality, reduces waste, and clarifies ROI without replacing your AI stack.",
+    href: "/journey/executive",
+    cta: "Leadership journey",
+  },
+  {
+    title: "Governance & Risk",
+    desc: "Map readiness gates and evidence to the controls, frameworks, and audit questions you already own.",
+    href: "/journey/ciso",
+    cta: "Governance journey",
+  },
+  {
+    title: "Technical teams",
+    desc: "Integrate the Define → Gate → Execute → Audit path into existing models, SDKs, and CI/CD.",
+    href: "/journey/developer",
+    cta: "Technical journey",
+  },
 ];
 
-const icduDifferentiators = [
+const evidenceItems = [
   {
-    title: "Structured intent, not prompt engineering",
-    desc: "Versioned ICDU specs replace freeform prompts — testable, auditable, and rollback-able",
+    value: "75%",
+    label: "Fewer iterative inference cycles in governed runs",
+    kind: "Pilot target",
   },
   {
-    title: "Pipeline-native architecture",
-    desc: "Integrates into existing MLOps and CI/CD — not another tool engineers work around",
+    value: "75%",
+    label: "Reduction in AI errors and inaccuracies under gated evaluation",
+    kind: "Benchmark result",
   },
   {
-    title: "Measurable safety, not keyword filters",
-    desc: "Quantitative thresholds with compliance artifacts — every gate is verifiable and auditable",
+    value: "$4.1M",
+    label: "Average cost of a public AI output incident",
+    kind: "Sourced statistic",
+    source: "IBM, 2024",
   },
   {
-    title: "Compliance-ready from day one",
-    desc: "Maps to EU AI Act, NIST AI RMF, and ISO/IEC 42001 — no custom instrumentation required",
+    value: "€35M",
+    label: "Max EU AI Act fine — or 7% of global turnover",
+    kind: "Sourced statistic",
+    source: "EU AI Act, Art. 99",
   },
 ];
 
+const pilotSteps = [
+  {
+    week: "Week 1",
+    title: "Select the workflow",
+    desc: "Pick one high-value AI-assisted task and encode its intent as an ICDU contract.",
+  },
+  {
+    week: "Weeks 2–3",
+    title: "Wire the gates",
+    desc: "Connect readiness scoring and evidence to your existing model path — no rip-and-replace.",
+  },
+  {
+    week: "Weeks 3–4",
+    title: "Run side-by-side",
+    desc: "Compare ungoverned vs. ICDU-governed output quality, rework, and auditability.",
+  },
+  {
+    week: "Weeks 4–6",
+    title: "Validate the pilot",
+    desc: "Review evidence packs with stakeholders and decide on a production path.",
+  },
+];
 
 /* ═══════════════════════════════════════════════════════════════════
-   CSS — theme tokens + component classes
+   Glance flow — explanatory visual with restrained stage motion
+   ═══════════════════════════════════════════════════════════════════ */
+function GlanceFlow() {
+  const reduced = usePrefersReducedMotion();
+  const { ref, visible } = useInView(0.25);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (!visible || reduced || paused) return;
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % glanceStages.length);
+    }, 2800);
+    return () => window.clearInterval(id);
+  }, [visible, reduced, paused]);
+
+  const stage = glanceStages[active];
+
+  return (
+    <div
+      ref={ref}
+      className="lr-glance"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="lr-glance-rail" role="list">
+        {glanceStages.map((s, i) => {
+          const isActive = i === active;
+          const isPast = i < active;
+          return (
+            <button
+              key={s.id}
+              type="button"
+              role="listitem"
+              className={`lr-glance-node${isActive ? " is-active" : ""}${isPast ? " is-past" : ""}`}
+              onClick={() => setActive(i)}
+              aria-current={isActive ? "step" : undefined}
+            >
+              <span className="lr-glance-index">{String(i + 1).padStart(2, "0")}</span>
+              <span className="lr-glance-name">{s.name}</span>
+              {i < glanceStages.length - 1 ? (
+                <span className="lr-glance-connector" aria-hidden="true">
+                  <span
+                    className="lr-glance-connector-fill"
+                    style={{
+                      transform:
+                        isPast || (isActive && visible)
+                          ? "scaleX(1)"
+                          : "scaleX(0)",
+                    }}
+                  />
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="lr-glance-panel" key={stage.id}>
+        <div className="lr-glance-panel-label">How it works</div>
+        <h3 className="lr-glance-panel-title">{stage.name}</h3>
+        <p className="lr-glance-panel-body">{stage.detail}</p>
+        <div className="lr-glance-progress" aria-hidden="true">
+          {glanceStages.map((s, i) => (
+            <span
+              key={s.id}
+              className={`lr-glance-dot${i === active ? " is-active" : ""}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CSS
    ═══════════════════════════════════════════════════════════════════ */
 const pageCSS = `
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=Instrument+Serif:ital@0;1&family=Sora:wght@300;400;500;600;700&display=swap');
-
-html { scroll-behavior: smooth; }
-
-/* ── Light theme tokens (default) ── */
 .lr-root {
-  --lr-bg: #fafaf9;
-  --lr-fg: #1a1a1a;
-  --lr-fg-muted: #525252;
-  --lr-fg-faint: #737373;
-  --lr-fg-ghost: #a3a3a3;
-  --lr-fg-whisper: #d4d4d4;
-  --lr-surface: rgba(255,255,255,0.6);
-  --lr-surface-hover: rgba(255,255,255,0.9);
-  --lr-border: rgba(0,0,0,0.06);
-  --lr-border-hover: rgba(0,0,0,0.12);
-  --lr-glow-blue: rgba(37,99,235,0.08);
-  --lr-glow-green: rgba(5,150,105,0.08);
-  --lr-nav-bg: rgba(250,250,249,0.8);
-  --accent-blue: #2563eb;
-  --accent-green: #059669;
-  --accent-amber: #d97706;
-  --accent-red: #dc2626;
-  --lr-tag-border: rgba(0,0,0,0.08);
-  --lr-tag-fg: #525252;
-  --lr-red-muted: rgba(220,38,38,0.1);
-  --lr-grain-opacity: 0.02;
-  --lr-btn-primary: #2563eb;
-  --lr-btn-primary-hover: #1d4ed8;
+  --lr-bg: var(--icdu-bg);
+  --lr-fg: var(--icdu-fg);
+  --lr-fg-muted: var(--icdu-fg-muted);
+  --lr-fg-faint: var(--icdu-fg-faint);
+  --lr-fg-ghost: var(--icdu-fg-ghost);
+  --lr-fg-whisper: var(--icdu-fg-whisper);
+  --lr-surface: var(--icdu-surface);
+  --lr-surface-hover: var(--icdu-surface-hover);
+  --lr-border: var(--icdu-border);
+  --lr-border-hover: var(--icdu-border-hover);
+  --lr-glow-blue: var(--icdu-glow-blue);
+  --lr-glow-green: var(--icdu-glow-green);
+  --accent-blue: var(--icdu-blue);
+  --accent-green: var(--icdu-green);
+  --accent-amber: var(--icdu-amber);
+  --accent-red: var(--icdu-red);
+  --lr-grain-opacity: var(--icdu-grain-opacity);
+  --lr-btn-primary: var(--icdu-blue);
+  --lr-btn-primary-hover: var(--icdu-blue-hover);
   --lr-btn-fg: #ffffff;
-  --lr-ghost-border: rgba(0,0,0,0.12);
-  --lr-ghost-border-hover: rgba(0,0,0,0.2);
-  --lr-ghost-hover-bg: rgba(0,0,0,0.04);
+  --lr-ghost-border: var(--icdu-border-hover);
+  --lr-ghost-border-hover: var(--icdu-fg-ghost);
+  --lr-ghost-hover-bg: var(--elevate-1);
+  --lr-ease: cubic-bezier(.16,1,.3,1);
 
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   color: var(--lr-fg);
   background: var(--lr-bg);
   min-height: 100vh;
 }
 
-/* ── Dark theme overrides ── */
-.dark .lr-root {
-  --lr-bg: #0a0a0a;
-  --lr-fg: #fafafa;
-  --lr-fg-muted: #a3a3a3;
-  --lr-fg-faint: #737373;
-  --lr-fg-ghost: #525252;
-  --lr-fg-whisper: #2a2a2a;
-  --lr-surface: rgba(255,255,255,0.04);
-  --lr-surface-hover: rgba(255,255,255,0.08);
-  --lr-border: rgba(255,255,255,0.06);
-  --lr-border-hover: rgba(255,255,255,0.12);
-  --lr-glow-blue: rgba(59,130,246,0.1);
-  --lr-glow-green: rgba(16,185,129,0.1);
-  --lr-nav-bg: rgba(10,10,10,0.8);
-  --accent-blue: #3b82f6;
-  --accent-green: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-red: #ef4444;
-  --lr-tag-border: rgba(255,255,255,0.08);
-  --lr-tag-fg: #a3a3a3;
-  --lr-red-muted: rgba(239,68,68,0.1);
-  --lr-grain-opacity: 0.03;
-  --lr-btn-primary: #3b82f6;
-  --lr-btn-primary-hover: #2563eb;
-  --lr-btn-fg: #ffffff;
-  --lr-ghost-border: rgba(255,255,255,0.12);
-  --lr-ghost-border-hover: rgba(255,255,255,0.25);
-  --lr-ghost-hover-bg: rgba(255,255,255,0.06);
-}
-
-/* ── Grain overlay ── */
 .lr-grain-overlay {
   position: fixed;
   inset: 0;
@@ -324,29 +391,64 @@ html { scroll-behavior: smooth; }
   opacity: var(--lr-grain-opacity);
 }
 
-/* ── Section wrapper ── */
 .lr-section {
-  padding: clamp(3rem, 8vw, 7rem) clamp(1.25rem, 4vw, 3rem);
+  padding: clamp(2.75rem, 7vw, 5.5rem) clamp(1.25rem, 4vw, 3rem);
   max-width: 80rem;
   margin: 0 auto;
 }
 
-/* ── Buttons ── */
-.lr-btn-primary {
+.lr-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent);
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.lr-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-bottom: 0.75rem;
+}
+
+.lr-heading {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.85rem, 3.8vw, 3.15rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  font-weight: 400;
+}
+
+.lr-lead {
+  font-size: clamp(0.975rem, 1.2vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--lr-fg-muted);
+  max-width: 42rem;
+  margin: 0;
+}
+
+.lr-btn-primary,
+.lr-btn-ghost {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.75rem;
-  background: var(--lr-btn-primary);
-  color: var(--lr-btn-fg);
-  border: none;
   border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
   text-decoration: none;
+  transition: background 0.2s var(--lr-ease), border-color 0.2s var(--lr-ease), transform 0.2s var(--lr-ease);
+}
+
+.lr-btn-primary {
+  background: var(--lr-btn-primary);
+  color: var(--lr-btn-fg);
+  border: none;
 }
 .lr-btn-primary:hover {
   background: var(--lr-btn-primary-hover);
@@ -354,20 +456,9 @@ html { scroll-behavior: smooth; }
 }
 
 .lr-btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
   background: transparent;
   color: var(--lr-fg);
   border: 1px solid var(--lr-ghost-border);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-  text-decoration: none;
 }
 .lr-btn-ghost:hover {
   border-color: var(--lr-ghost-border-hover);
@@ -375,43 +466,17 @@ html { scroll-behavior: smooth; }
   transform: translateY(-1px);
 }
 
-/* ── Stat bar ── */
-.lr-stat-bar {
+.lr-cta-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 2.5rem clamp(1.25rem, 4vw, 3rem);
-}
-.lr-stat-item {
-  flex: 1 1 auto;
-  min-width: 140px;
-  text-align: center;
-  padding: 1rem 1.5rem;
-}
-.lr-stat-item + .lr-stat-item {
-  border-left: 1px solid var(--lr-border);
-}
-.lr-stat-sublabel {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-blue);
-  margin-top: 0.5rem;
-}
-@media (max-width: 639px) {
-  .lr-stat-item { min-width: 50%; }
-  .lr-stat-item + .lr-stat-item { border-left: none; }
+  gap: 1rem;
 }
 
-/* ── Compare columns ── */
 .lr-compare-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-  margin-top: 2.5rem;
+  margin-top: 2.25rem;
 }
 @media (min-width: 768px) {
   .lr-compare-grid {
@@ -425,22 +490,18 @@ html { scroll-behavior: smooth; }
   padding: 1.75rem;
   background: var(--lr-surface);
 }
-.lr-compare-col--without {
-  border-color: rgba(220, 38, 38, 0.2);
-}
-.lr-compare-col--with {
-  border-color: rgba(5, 150, 105, 0.2);
-}
+.lr-compare-col--without { border-color: rgba(220, 38, 38, 0.22); }
+.lr-compare-col--with { border-color: rgba(5, 150, 105, 0.22); }
 .lr-compare-heading {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 1.25rem;
 }
 .lr-compare-item + .lr-compare-item {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
   border-top: 1px solid var(--lr-border);
 }
 .lr-compare-item-title {
@@ -455,285 +516,412 @@ html { scroll-behavior: smooth; }
   margin: 0;
 }
 
-/* ── Two-column sections ── */
-.lr-two-col {
+/* Glance flow */
+.lr-glance {
+  margin-top: 2.5rem;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
+  gap: 1.75rem;
 }
-@media (min-width: 768px) {
-  .lr-two-col {
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+@media (min-width: 900px) {
+  .lr-glance {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2.5rem;
+    align-items: stretch;
   }
 }
-
-/* ── Market bars ── */
-.lr-market-bars {
+.lr-glance-rail {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-.lr-market-bar-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.lr-market-bar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1rem;
-  font-size: 0.8125rem;
-}
-.lr-market-bar-track {
-  height: 0.5rem;
-  background: var(--lr-border);
-  border-radius: 9999px;
+  gap: 0;
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  background: var(--lr-surface);
   overflow: hidden;
 }
-.lr-market-bar-fill {
-  height: 100%;
-  background: var(--accent-blue);
-  border-radius: 9999px;
-  transition: width 1s cubic-bezier(.16,1,.3,1);
+.lr-glance-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 1.15rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--lr-border);
+  color: var(--lr-fg-faint);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 0.25s var(--lr-ease), color 0.25s var(--lr-ease);
 }
-
-/* ── Regulatory tailwinds ── */
-.lr-tailwind-list {
+.lr-glance-node:last-child { border-bottom: none; }
+.lr-glance-node:hover { color: var(--lr-fg); background: var(--lr-surface-hover); }
+.lr-glance-node.is-active {
+  color: var(--lr-fg);
+  background: var(--lr-glow-blue);
+}
+.lr-glance-node.is-past .lr-glance-index { color: var(--accent-blue); }
+.lr-glance-index {
+  font-family: var(--font-editorial);
+  font-size: 1.25rem;
+  color: var(--lr-fg-ghost);
+  transition: color 0.25s var(--lr-ease);
+}
+.lr-glance-node.is-active .lr-glance-index { color: var(--accent-blue); }
+.lr-glance-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lr-glance-connector {
+  display: none;
+}
+.lr-glance-panel {
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  background: var(--lr-surface);
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
+  justify-content: center;
+  min-height: 14rem;
+  animation: lr-panel-in 0.45s var(--lr-ease);
+}
+.lr-glance-panel-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lr-fg-ghost);
+  margin-bottom: 0.75rem;
+}
+.lr-glance-panel-title {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+.lr-glance-panel-body {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--lr-fg-muted);
+  margin: 0;
+}
+.lr-glance-progress {
+  display: flex;
+  gap: 0.4rem;
   margin-top: 1.5rem;
 }
-.lr-tailwind-item {
+.lr-glance-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  background: var(--lr-fg-whisper);
+  transition: background 0.25s, transform 0.25s;
+}
+.lr-glance-dot.is-active {
+  background: var(--accent-blue);
+  transform: scale(1.25);
+}
+
+@keyframes lr-panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pillars */
+.lr-pillar-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+@media (min-width: 768px) {
+  .lr-pillar-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.lr-pillar {
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  background: var(--lr-surface);
+  transition: border-color 0.3s var(--lr-ease), background 0.3s var(--lr-ease);
+}
+.lr-pillar:hover {
+  border-color: var(--lr-border-hover);
+  background: var(--lr-surface-hover);
+}
+.lr-pillar-title {
+  font-family: var(--font-editorial);
+  font-size: 1.5rem;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+.lr-pillar-outcome {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--lr-fg-muted);
+  margin: 0 0 1rem;
+}
+.lr-pillar-mechanism {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--lr-fg-faint);
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--lr-border);
+}
+
+/* Scenario */
+.lr-scenario {
+  margin-top: 2.25rem;
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  background: var(--lr-surface);
+  overflow: hidden;
+}
+.lr-scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .lr-scenario-grid { grid-template-columns: 1fr 1fr; }
+}
+.lr-scenario-block {
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid var(--lr-border);
+}
+@media (min-width: 768px) {
+  .lr-scenario-block:nth-child(odd) { border-right: 1px solid var(--lr-border); }
+  .lr-scenario-block:nth-last-child(-n+2) { border-bottom: none; }
+}
+.lr-scenario-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lr-fg-ghost);
+  margin-bottom: 0.5rem;
+}
+.lr-scenario-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--lr-fg-muted);
+  margin: 0;
+}
+.lr-scenario-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.875rem 1rem;
-  border: 1px solid var(--lr-border);
-  border-radius: 0.5rem;
-  background: var(--lr-surface);
+  gap: 0.65rem;
 }
-.lr-tailwind-tag {
-  font-size: 0.75rem;
+.lr-scenario-list li {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--lr-fg-muted);
+  padding-left: 1rem;
+  position: relative;
+}
+.lr-scenario-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 9999px;
+  background: var(--accent-blue);
+}
+.lr-scenario-footer {
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid var(--lr-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--lr-glow-blue);
+}
+
+/* Roles */
+.lr-role-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 2.25rem;
+}
+@media (min-width: 768px) {
+  .lr-role-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.lr-role-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--lr-border);
+  border-radius: 0.75rem;
+  background: var(--lr-surface);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.3s var(--lr-ease), background 0.3s var(--lr-ease), transform 0.2s var(--lr-ease);
+}
+.lr-role-card:hover {
+  border-color: var(--lr-border-hover);
+  background: var(--lr-surface-hover);
+  transform: translateY(-2px);
+}
+.lr-role-title {
+  font-family: var(--font-editorial);
+  font-size: 1.35rem;
+  margin: 0;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+.lr-role-desc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--lr-fg-muted);
+  margin: 0;
+  flex: 1;
+}
+.lr-role-cta {
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--accent-blue);
 }
-.lr-tailwind-desc {
-  font-size: 0.8125rem;
-  color: var(--lr-fg-muted);
-  line-height: 1.5;
-}
 
-/* ── Use case cards ── */
-.lr-use-grid {
+/* Evidence */
+.lr-evidence-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
-}
-.lr-use-card {
-  background: var(--lr-surface);
-  border: 1px solid var(--lr-border);
-  border-radius: 0.75rem;
-  padding: 1.75rem;
-  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-}
-.lr-use-card:hover {
-  background: var(--lr-surface-hover);
-  border-color: var(--lr-border-hover);
-  box-shadow: 0 0 24px var(--lr-glow-green);
-}
-.lr-use-category {
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--accent-green);
-  margin-bottom: 0.75rem;
-}
-
-/* ── Checklist ── */
-.lr-checklist {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-.lr-checklist li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--lr-fg-muted);
-}
-.lr-checklist li::before {
-  content: "✓";
-  color: var(--accent-green);
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-/* ── Status card ── */
-.lr-status-card {
-  border: 1px solid var(--lr-border);
-  border-radius: 0.75rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-.lr-status-notice {
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: var(--lr-fg-muted);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background: var(--lr-glow-blue);
-  border: 1px solid var(--lr-border);
-}
-
-/* ── Pipeline rows ── */
-.lr-pipeline-row {
-  display: grid;
-  grid-template-columns: 3rem 1fr;
-  gap: 1rem 1.5rem;
-  padding: 1.5rem 0.5rem;
-  border-top: 1px solid var(--lr-border);
-  transition: background 0.3s;
-  border-radius: 0.5rem;
-}
-.lr-pipeline-row:hover {
-  background: var(--lr-surface);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2.25rem;
 }
 @media (min-width: 768px) {
-  .lr-pipeline-row {
-    grid-template-columns: 4rem 1fr;
-    gap: 0 2rem;
-    padding: 2rem 0.75rem;
-  }
+  .lr-evidence-grid { grid-template-columns: repeat(4, 1fr); }
 }
-
-/* ── Capability cards ── */
-.lr-cap-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
-}
-.lr-cap-card {
-  background: var(--lr-surface);
+.lr-evidence-card {
   border: 1px solid var(--lr-border);
   border-radius: 0.75rem;
-  padding: 1.75rem;
-  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-}
-.lr-cap-card:hover {
-  background: var(--lr-surface-hover);
-  border-color: var(--lr-border-hover);
-  box-shadow: 0 0 24px var(--lr-glow-blue);
-}
-
-/* ── Domain rows ── */
-.lr-domain-row {
-  display: flex;
-  align-items: baseline;
-  gap: 1.5rem;
-  padding: 1.25rem 0.5rem;
-  border-top: 1px solid var(--lr-border);
-  transition: background 0.3s, padding-left 0.3s;
-  cursor: default;
-}
-.lr-domain-row:last-child {
-  border-bottom: 1px solid var(--lr-border);
-}
-.lr-domain-row:hover {
+  padding: 1.35rem 1.25rem;
   background: var(--lr-surface);
-  padding-left: 1rem;
+  text-align: center;
 }
-.lr-domain-name {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-  letter-spacing: -0.01em;
-  color: var(--lr-fg);
-  flex-shrink: 0;
-  min-width: 10rem;
+.lr-evidence-value {
+  font-family: var(--font-editorial);
+  font-size: clamp(1.6rem, 2.5vw, 2.15rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
 }
-.lr-domain-detail {
-  font-size: 0.875rem;
+.lr-evidence-label {
+  font-size: 0.75rem;
+  line-height: 1.45;
   color: var(--lr-fg-faint);
-  transition: color 0.3s;
+  margin: 0 0 0.75rem;
 }
-.lr-domain-row:hover .lr-domain-detail {
-  color: var(--lr-fg-muted);
-}
-@media (max-width: 639px) {
-  .lr-domain-row {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .lr-domain-name {
-    min-width: unset;
-  }
-}
-
-/* ── Benchmark cards ── */
-.lr-bench-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-.lr-bench-card {
-  background: var(--lr-red-muted);
+.lr-evidence-kind {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
   border: 1px solid var(--lr-border);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  transition: border-color 0.3s;
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
 }
-.lr-bench-card:hover {
-  border-color: var(--accent-red);
+.lr-evidence-source {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.65rem;
+  color: var(--lr-fg-ghost);
 }
 
-/* ── About grid ── */
-.lr-about-grid {
+/* Pilot */
+.lr-pilot-note {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lr-fg-ghost);
+  margin-bottom: 1.5rem;
+}
+.lr-pilot-rail {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 0;
+  border-top: 1px solid var(--lr-border);
 }
 @media (min-width: 768px) {
-  .lr-about-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+  .lr-pilot-rail { grid-template-columns: repeat(4, 1fr); }
+}
+.lr-pilot-step {
+  padding: 1.5rem 1.25rem 1.5rem 0;
+  border-bottom: 1px solid var(--lr-border);
+}
+@media (min-width: 768px) {
+  .lr-pilot-step {
+    border-bottom: none;
+    border-right: 1px solid var(--lr-border);
+    padding: 1.75rem 1.5rem 0 0;
   }
+  .lr-pilot-step:last-child { border-right: none; padding-right: 0; }
 }
-
-/* ── Tags ── */
-.lr-tag {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid var(--lr-tag-border);
-  border-radius: 9999px;
+.lr-pilot-week {
   font-size: 0.75rem;
-  color: var(--lr-tag-fg);
-  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-bottom: 0.5rem;
+}
+.lr-pilot-title {
+  font-weight: 600;
+  font-size: 0.975rem;
+  margin: 0 0 0.4rem;
+}
+.lr-pilot-desc {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--lr-fg-muted);
+  margin: 0;
 }
 
-/* ── Keyframes ── */
 @keyframes lr-bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
 }
+
+@media (max-width: 639px) {
+  .lr-scroll-cue { display: none !important; }
+  .lr-hero-credit { margin-top: 1.75rem !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lr-root *,
+  .lr-root *::before,
+  .lr-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .lr-glance-panel { animation: none; }
+}
 `;
 
 /* ═══════════════════════════════════════════════════════════════════
-   Overview — Living Resume Landing Page
+   Overview — Buyer-first homepage
    ═══════════════════════════════════════════════════════════════════ */
 export default function Overview() {
   useSEO({
     title: "ICDU — AI That Executes With Intent",
     description:
-      "ICDU is a bolt-on structured execution layer that aligns model behavior with human intent while reducing compute, energy, and operational overhead.",
+      "ICDU is the readiness control plane for AI-generated work. Turn every AI task into a governed contract — better work, less waste, provable control.",
   });
 
   useEffect(() => {
@@ -741,8 +929,8 @@ export default function Overview() {
   }, []);
 
   const [scrollY, setScrollY] = useState(0);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const heroRef = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -750,20 +938,22 @@ export default function Overview() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleHeroMouse = useCallback((e: React.MouseEvent) => {
-    const rect = heroRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    setMousePos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  }, []);
+  const heroGlowStyle = (left: number, top: number, size: string, glow: string): CSSProperties => ({
+    position: "absolute",
+    width: size,
+    height: size,
+    borderRadius: "50%",
+    background: glow,
+    filter: "blur(80px)",
+    left: `${left}%`,
+    top: `${top}%`,
+    transform: "translate(-50%, -50%)",
+  });
 
   return (
     <div className="lr-root">
       <style>{pageCSS}</style>
 
-      {/* ── Grain texture overlay ── */}
       <svg className="lr-grain-overlay" aria-hidden="true">
         <filter id="lr-grain">
           <feTurbulence
@@ -776,12 +966,9 @@ export default function Overview() {
         <rect width="100%" height="100%" filter="url(#lr-grain)" />
       </svg>
 
-      {/* ════════════════════════════════════════════════════════════
-          HERO — full viewport, mouse-reactive ambient glow
-          ════════════════════════════════════════════════════════════ */}
+      {/* ── 1. Premium hero — visible immediately ── */}
       <section
         ref={heroRef}
-        onMouseMove={handleHeroMouse}
         style={{
           position: "relative",
           minHeight: "calc(100vh - 3.5rem)",
@@ -794,152 +981,114 @@ export default function Overview() {
           overflow: "hidden",
         }}
       >
-        {/* Ambient glow orbs */}
         <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            overflow: "hidden",
-            pointerEvents: "none",
-          }}
+          style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}
+          aria-hidden="true"
         >
-          <div
-            style={{
-              position: "absolute",
-              width: "40vw",
-              height: "40vw",
-              borderRadius: "50%",
-              background: "var(--lr-glow-blue)",
-              filter: "blur(80px)",
-              left: `${mousePos.x}%`,
-              top: `${mousePos.y}%`,
-              transform: "translate(-50%, -50%)",
-              transition: "left 1.2s ease-out, top 1.2s ease-out",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              width: "30vw",
-              height: "30vw",
-              borderRadius: "50%",
-              background: "var(--lr-glow-green)",
-              filter: "blur(60px)",
-              left: `${100 - mousePos.x}%`,
-              top: `${100 - mousePos.y}%`,
-              transform: "translate(-50%, -50%)",
-              transition: "left 1.5s ease-out, top 1.5s ease-out",
-            }}
-          />
+          <div style={heroGlowStyle(28, 32, "42vw", "var(--lr-glow-blue)")} />
+          <div style={heroGlowStyle(72, 68, "32vw", "var(--lr-glow-green)")} />
         </div>
 
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-blue)",
-              marginBottom: "1.5rem",
-            }}
-          >
-            PATENT-PENDING AI EVALUATION PIPELINE
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <h1
-            style={{
-              fontFamily: "'Sora', sans-serif",
-              fontSize: "clamp(2.5rem, 7vw, 6rem)",
-              fontWeight: 600,
-              lineHeight: 1.05,
-              letterSpacing: "-0.045em",
-              margin: "0 0 1.5rem",
-              maxWidth: "50rem",
-            }}
-          >
-            AI that executes with intent,
-            <br />
-            <span
-              style={{
-                fontWeight: 600,
-                color: "var(--accent-blue)",
-              }}
-            >
-              not guesswork.
-            </span>
-          </h1>
-        </Reveal>
-
-        <Reveal delay={0.2}>
-          <p
-            style={{
-              fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-muted)",
-              maxWidth: "42rem",
-              margin: "0 auto 1.25rem",
-            }}
-          >
-            {executiveMessages.gapStatement}
-          </p>
-          <p
-            style={{
-              fontSize: "clamp(0.875rem, 1.1vw, 1rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-faint)",
-              maxWidth: "42rem",
-              margin: "0 auto 2.5rem",
-            }}
-          >
-            {heroSupportingParagraph}
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.3}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem",
-              justifyContent: "center",
-            }}
-          >
-            <a href="/journey" className="lr-btn-primary">
-              Explore the Pipeline{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-            <a href="/business-case" className="lr-btn-ghost">
-              Start a Conversation
-            </a>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.4}>
-          <div
-            style={{
-              fontSize: "0.625rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--lr-fg-ghost)",
-              marginTop: "3rem",
-            }}
-          >
-            By Overture Systems Solutions
-          </div>
-        </Reveal>
-
-        {/* Scroll indicator — fades on scroll */}
         <div
           style={{
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "var(--accent-blue)",
+            marginBottom: "1.5rem",
+          }}
+        >
+          Patent-pending AI readiness control plane
+        </div>
+
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(2.5rem, 7vw, 6rem)",
+            fontWeight: 600,
+            lineHeight: 1.05,
+            letterSpacing: "-0.045em",
+            margin: "0 0 1.5rem",
+            maxWidth: "50rem",
+          }}
+        >
+          AI that executes with intent,
+          <br />
+          <span style={{ color: "var(--accent-blue)" }}>not guesswork.</span>
+        </h1>
+
+        <p
+          style={{
+            fontSize: "clamp(1.05rem, 1.6vw, 1.3rem)",
+            lineHeight: 1.55,
+            fontWeight: 500,
+            color: "var(--lr-fg)",
+            maxWidth: "40rem",
+            margin: "0 auto 1rem",
+          }}
+        >
+          ICDU is the readiness control plane for AI-generated work.
+        </p>
+
+        <p
+          style={{
+            fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)",
+            lineHeight: 1.7,
+            color: "var(--lr-fg-muted)",
+            maxWidth: "42rem",
+            margin: "0 auto 1rem",
+          }}
+        >
+          ICDU turns every AI task into a governed contract—defining what the
+          system should do, what it may use, what must pass, and what gets
+          recorded.
+        </p>
+
+        <p
+          style={{
+            fontSize: "clamp(0.875rem, 1.1vw, 1rem)",
+            lineHeight: 1.7,
+            color: "var(--lr-fg-faint)",
+            maxWidth: "40rem",
+            margin: "0 auto 2.5rem",
+          }}
+        >
+          Make your organization&apos;s best judgment repeatable across every
+          AI-assisted task, without replacing the AI tools you already use.
+        </p>
+
+        <div className="lr-cta-row" style={{ justifyContent: "center" }}>
+          <Link href="/demos" className="lr-btn-primary">
+            See ICDU in Action <span aria-hidden="true">→</span>
+          </Link>
+          <a href={WALKTHROUGH_URL} className="lr-btn-ghost">
+            Scope a Pilot
+          </a>
+        </div>
+
+        <div
+          className="lr-hero-credit"
+          style={{
+            fontSize: "0.75rem",
+            letterSpacing: "0.16em",
+            textTransform: "uppercase",
+            color: "var(--lr-fg-faint)",
+            marginTop: "2.5rem",
+          }}
+        >
+          By Overture Systems Solutions
+        </div>
+
+        <div
+          className="lr-scroll-cue"
+          style={{
             position: "absolute",
-            bottom: "2rem",
+            bottom: "1.5rem",
             left: "50%",
             transform: "translateX(-50%)",
             opacity: Math.max(0, 1 - scrollY / 200),
-            transition: "opacity 0.3s",
+            transition: reduced ? undefined : "opacity 0.3s",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -948,9 +1097,9 @@ export default function Overview() {
         >
           <div
             style={{
-              fontSize: "0.625rem",
+              fontSize: "0.75rem",
               letterSpacing: "0.1em",
-              color: "var(--lr-fg-ghost)",
+              color: "var(--lr-fg-faint)",
               textTransform: "uppercase",
             }}
           >
@@ -961,97 +1110,55 @@ export default function Overview() {
               width: 1,
               height: "2rem",
               background: "var(--lr-fg-ghost)",
-              animation: "lr-bounce 2s ease-in-out infinite",
+              animation: reduced ? undefined : "lr-bounce 2s ease-in-out infinite",
             }}
           />
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════════
-          STAT BAR — 4 key metrics with vertical dividers
-          ════════════════════════════════════════════════════════════ */}
-      <Reveal>
-        <div className="lr-stat-bar">
-          {efficiencyStats.map((stat) => (
-            <div key={stat.sublabel} className="lr-stat-item">
-              <div
-                style={{
-                  fontFamily: "'Instrument Serif', serif",
-                  fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontSize: "0.75rem",
-                  color: "var(--lr-fg-faint)",
-                  marginTop: "0.25rem",
-                  lineHeight: 1.4,
-                }}
-              >
-                {stat.label}
-              </div>
-              <div className="lr-stat-sublabel">{stat.sublabel}</div>
-            </div>
-          ))}
-        </div>
-      </Reveal>
+      <GlowDivider />
+
+      {/* ── 2. ICDU in One Glance ── */}
+      <section className="lr-section" id="how-it-works">
+        <Reveal>
+          <div className="lr-label">ICDU in One Glance</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">From intent to evidence — without guesswork.</h2>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="lr-lead">
+            Every AI-assisted task follows the same readiness path: define the
+            contract, execute inside it, gate the result, keep the proof.
+          </p>
+        </Reveal>
+        <Reveal delay={0.15}>
+          <GlanceFlow />
+        </Reveal>
+      </section>
 
       <GlowDivider />
 
-      {/* ════════════════════════════════════════════════════════════
-          THE PROBLEM
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section">
+      {/* ── 3. Before / With ICDU ── */}
+      <section className="lr-section" id="comparison">
         <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-blue)",
-              marginBottom: "1rem",
-            }}
-          >
-            The Problem
-          </div>
+          <div className="lr-label">The Difference</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">Inconsistent work vs. repeatable judgment.</h2>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Prompting is not governance.
-          </h2>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <p
-            style={{
-              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-muted)",
-              maxWidth: "44rem",
-            }}
-          >
-            {executiveMessages.costOfInaction}
+          <p className="lr-lead">
+            Prompting alone produces different answers for the same job.
+            ICDU makes your organization&apos;s best judgment the default —
+            run after run.
           </p>
         </Reveal>
 
         <div className="lr-compare-grid">
-          <Reveal delay={0.25}>
+          <Reveal delay={0.15}>
             <div className="lr-compare-col lr-compare-col--without">
-              <div
-                className="lr-compare-heading"
-                style={{ color: "var(--accent-red)" }}
-              >
+              <div className="lr-compare-heading" style={{ color: "var(--accent-red)" }}>
                 Without ICDU
               </div>
               {withoutIcduItems.map((item) => (
@@ -1062,12 +1169,9 @@ export default function Overview() {
               ))}
             </div>
           </Reveal>
-          <Reveal delay={0.35}>
+          <Reveal delay={0.25}>
             <div className="lr-compare-col lr-compare-col--with">
-              <div
-                className="lr-compare-heading"
-                style={{ color: "var(--accent-green)" }}
-              >
+              <div className="lr-compare-heading" style={{ color: "var(--accent-green)" }}>
                 With ICDU
               </div>
               {withIcduItems.map((item) => (
@@ -1083,71 +1187,30 @@ export default function Overview() {
 
       <GlowDivider />
 
-      {/* ════════════════════════════════════════════════════════════
-          PIPELINE — 4 numbered stages
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section" id="pipeline">
+      {/* ── 4. Three value pillars ── */}
+      <section className="lr-section" id="outcomes">
         <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-green)",
-              marginBottom: "1rem",
-            }}
-          >
-            The Pipeline
-          </div>
+          <div className="lr-label">What You Get</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">Three balanced outcomes.</h2>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "2.5rem",
-            }}
-          >
-            How It Works
-          </h2>
+          <p className="lr-lead">
+            Governance matters — but ICDU earns its place by improving the work
+            itself: quality, efficiency, and usefulness together.
+          </p>
         </Reveal>
 
-        <div>
-          {pipelineStages.map((stage, i) => (
-            <Reveal key={stage.num} delay={0.1 * i}>
-              <div className="lr-pipeline-row">
-                <div
-                  style={{
-                    fontFamily: "'Instrument Serif', serif",
-                    fontSize: "1.5rem",
-                    color: stage.color,
-                    fontWeight: 400,
-                    paddingTop: "0.125rem",
-                  }}
-                >
-                  {stage.num}
-                </div>
-                <div>
-                  <div style={{ marginBottom: "0.75rem" }}>
-                    <span style={{ fontWeight: 600, fontSize: "1.0625rem" }}>
-                      {stage.name}
-                    </span>
-                    <span
-                      style={{
-                        color: "var(--lr-fg-ghost)",
-                        margin: "0 0.625rem",
-                      }}
-                    >
-                      ·
-                    </span>
-                    <span style={{ color: "var(--lr-fg-muted)" }}>
-                      {stage.desc}
-                    </span>
-                  </div>
-                </div>
+        <div className="lr-pillar-grid">
+          {valuePillars.map((pillar, i) => (
+            <Reveal key={pillar.title} delay={0.08 * i}>
+              <div className="lr-pillar">
+                <h3 className="lr-pillar-title" style={{ color: pillar.accent }}>
+                  {pillar.title}
+                </h3>
+                <p className="lr-pillar-outcome">{pillar.outcome}</p>
+                <p className="lr-pillar-mechanism">{pillar.mechanism}</p>
               </div>
             </Reveal>
           ))}
@@ -1156,434 +1219,194 @@ export default function Overview() {
 
       <GlowDivider />
 
-      {/* ════════════════════════════════════════════════════════════
-          WHY THIS MATTERS
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section">
+      {/* ── 5. Concrete business scenario ── */}
+      <section className="lr-section" id="scenario">
         <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-amber)",
-              marginBottom: "1rem",
-            }}
-          >
-            Why This Matters
-          </div>
+          <div className="lr-label">In Practice</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">One workflow. Clearer results.</h2>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "1rem",
-            }}
-          >
-            AI infrastructure is under serious strain.
-          </h2>
+          <p className="lr-lead">{scenario.industry}</p>
         </Reveal>
+
         <Reveal delay={0.15}>
-          <p
-            style={{
-              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-muted)",
-              maxWidth: "44rem",
-              marginBottom: "2.5rem",
-            }}
-          >
-            Data center capacity, power delivery, and compute costs are all under
-            mounting pressure as AI adoption accelerates. ICDU directly addresses
-            each constraint.
+          <div className="lr-scenario">
+            <div className="lr-scenario-grid">
+              <div className="lr-scenario-block">
+                <div className="lr-scenario-kicker">The task</div>
+                <p className="lr-scenario-text">{scenario.task}</p>
+              </div>
+              <div className="lr-scenario-block">
+                <div className="lr-scenario-kicker">What can go wrong</div>
+                <p className="lr-scenario-text">{scenario.risk}</p>
+              </div>
+              <div className="lr-scenario-block">
+                <div className="lr-scenario-kicker">What ICDU adds</div>
+                <ul className="lr-scenario-list">
+                  {scenario.adds.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="lr-scenario-block">
+                <div className="lr-scenario-kicker">The result</div>
+                <p className="lr-scenario-text">{scenario.result}</p>
+              </div>
+            </div>
+            <div className="lr-scenario-footer">
+              <p className="lr-scenario-text" style={{ maxWidth: "32rem" }}>
+                Walk the same path in the live demos — builder, judge, rubric,
+                and stress engine.
+              </p>
+              <Link href="/demos" className="lr-btn-primary">
+                Open the Interactive Demo <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      <GlowDivider />
+
+      {/* ── 6. Role-based entry points ── */}
+      <section className="lr-section" id="roles">
+        <Reveal>
+          <div className="lr-label">Start Where You Sit</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">Role-based paths into ICDU.</h2>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="lr-lead">
+            Choose a concise journey — not a persona grid. Each path focuses on
+            the decisions your team actually owns.
           </p>
         </Reveal>
 
-        <div className="lr-two-col">
-          <div>
-            {strainCards.map((card, i) => (
-              <Reveal key={card.title} delay={0.08 * i}>
-                <div className="lr-cap-card" style={{ marginBottom: "1rem" }}>
-                  <h3
-                    style={{
-                      fontFamily: "'Instrument Serif', serif",
-                      fontSize: "1.125rem",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    {card.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: "0.875rem",
-                      lineHeight: 1.6,
-                      color: "var(--lr-fg-muted)",
-                      margin: 0,
-                    }}
-                  >
-                    {card.desc}
-                  </p>
-                </div>
-              </Reveal>
+        <div className="lr-role-grid">
+          {rolePaths.map((role, i) => (
+            <Reveal key={role.title} delay={0.08 * i}>
+              <Link href={role.href} className="lr-role-card">
+                <h3 className="lr-role-title">{role.title}</h3>
+                <p className="lr-role-desc">{role.desc}</p>
+                <span className="lr-role-cta">
+                  {role.cta} <span aria-hidden="true">→</span>
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <GlowDivider />
+
+      {/* ── 7. Evidence ── */}
+      <section className="lr-section" id="evidence">
+        <Reveal>
+          <div className="lr-label">Evidence</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">Strong numbers — clearly labeled.</h2>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="lr-lead">
+            We separate pilot targets, benchmark results, and sourced market
+            statistics so buyers can weigh them appropriately.
+          </p>
+        </Reveal>
+
+        <div className="lr-evidence-grid">
+          {evidenceItems.map((item, i) => (
+            <Reveal key={item.label} delay={0.06 * i}>
+              <div className="lr-evidence-card">
+                <div className="lr-evidence-value">{item.value}</div>
+                <p className="lr-evidence-label">{item.label}</p>
+                <span className="lr-evidence-kind">{item.kind}</span>
+                {item.source ? (
+                  <span className="lr-evidence-source">{item.source}</span>
+                ) : null}
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.3}>
+          <div style={{ marginTop: "1.75rem" }}>
+            <Link href="/faq" className="lr-btn-ghost">
+              Evidence &amp; Research <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
+      <GlowDivider />
+
+      {/* ── 8. Pilot path ── */}
+      <section className="lr-section" id="pilot">
+        <Reveal>
+          <div className="lr-label">Pilot Path</div>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <h2 className="lr-heading">From selected workflow to validated pilot.</h2>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <span className="lr-pilot-note">Estimated timeline: 4–6 weeks</span>
+          <p className="lr-lead" style={{ marginTop: "0.5rem" }}>
+            A practical path for one high-value AI-assisted workflow — scoped,
+            measurable, and designed to produce evidence your stakeholders can
+            review.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <div className="lr-pilot-rail">
+            {pilotSteps.map((step) => (
+              <div key={step.week} className="lr-pilot-step">
+                <div className="lr-pilot-week">{step.week}</div>
+                <h3 className="lr-pilot-title">{step.title}</h3>
+                <p className="lr-pilot-desc">{step.desc}</p>
+              </div>
             ))}
           </div>
-
-          <Reveal delay={0.2}>
-            <div>
-              <div
-                style={{
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--lr-fg-ghost)",
-                  marginBottom: "1rem",
-                }}
-              >
-                Market Opportunity
-              </div>
-              <div className="lr-market-bars">
-                {marketBars.map((bar) => (
-                  <div key={bar.label} className="lr-market-bar-row">
-                    <div className="lr-market-bar-header">
-                      <span>{bar.label}</span>
-                      <span style={{ fontWeight: 600 }}>{bar.value}</span>
-                    </div>
-                    <div className="lr-market-bar-track">
-                      <div
-                        className="lr-market-bar-fill"
-                        style={{ width: `${bar.width * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div
-                style={{
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--lr-fg-ghost)",
-                  marginTop: "2rem",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Regulatory Tailwinds
-              </div>
-              <div className="lr-tailwind-list">
-                {regulatoryTailwinds.map((item) => (
-                  <div key={item.tag} className="lr-tailwind-item">
-                    <span className="lr-tailwind-tag">{item.tag}</span>
-                    <span className="lr-tailwind-desc">{item.desc}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
+        </Reveal>
       </section>
 
       <GlowDivider />
 
-      {/* ════════════════════════════════════════════════════════════
-          USE CASES
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section" id="use-cases">
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-green)",
-              marginBottom: "1rem",
-            }}
-          >
-            Use Cases
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "2.5rem",
-            }}
-          >
-            Built for High-Stakes AI
-          </h2>
-        </Reveal>
-
-        <div className="lr-use-grid">
-          {useCaseCards.map((card, i) => (
-            <Reveal key={card.category} delay={0.06 * i}>
-              <div className="lr-use-card">
-                <div className="lr-use-category">{card.category}</div>
-                <h3
-                  style={{
-                    fontFamily: "'Instrument Serif', serif",
-                    fontSize: "1.25rem",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  {card.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.875rem",
-                    lineHeight: 1.6,
-                    color: "var(--lr-fg-muted)",
-                    margin: 0,
-                  }}
-                >
-                  {card.desc}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          WHAT ICDU DOES
-          ════════════════════════════════════════════════════════════ */}
-      <section className="lr-section" id="capabilities">
-        <Reveal>
-          <div
-            style={{
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent-blue)",
-              marginBottom: "1rem",
-            }}
-          >
-            What ICDU Does
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "1rem",
-            }}
-          >
-            A bolt-on layer. No rip-and-replace.
-          </h2>
-        </Reveal>
-        <Reveal delay={0.15}>
-          <p
-            style={{
-              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-muted)",
-              maxWidth: "44rem",
-              marginBottom: "2.5rem",
-            }}
-          >
-            ICDU operates alongside existing AI systems — improving how they
-            execute without replacing the models already in use. Integration is
-            fast, non-disruptive, and model-agnostic.
-          </p>
-        </Reveal>
-
-        <div className="lr-two-col">
-          <Reveal delay={0.2}>
-            <ul className="lr-checklist">
-              {icduChecklist.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={0.3}>
-            <div className="lr-status-card">
-              <div
-                style={{
-                  fontSize: "0.6875rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--lr-fg-ghost)",
-                }}
-              >
-                Protection &amp; Status
-              </div>
-              <div className="lr-status-notice">
-                Architecture developed and protected under U.S. provisional patent
-                filings. Positioned for real-world pilot validation.
-              </div>
-              {icduDifferentiators.map((item) => (
-                <div key={item.title}>
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      fontSize: "0.9375rem",
-                      marginBottom: "0.25rem",
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.8125rem",
-                      color: "var(--lr-fg-faint)",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {item.desc}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <GlowDivider />
-
-      {/* ════════════════════════════════════════════════════════════
-          CTA
-          ════════════════════════════════════════════════════════════ */}
+      {/* ── 9. Final conversion CTA ── */}
       <section
         className="lr-section"
         id="contact"
         style={{ textAlign: "center" }}
       >
         <Reveal>
-          <h2
-            style={{
-              fontFamily: "'Instrument Serif', serif",
-              fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              marginBottom: "1rem",
-            }}
-          >
-            Ready to see the opportunity?
+          <h2 className="lr-heading" style={{ maxWidth: "36rem", marginInline: "auto" }}>
+            Ready to make AI work more useful — and more defensible?
           </h2>
         </Reveal>
         <Reveal delay={0.1}>
-          <p
-            style={{
-              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-              lineHeight: 1.7,
-              color: "var(--lr-fg-muted)",
-              maxWidth: "36rem",
-              margin: "0 auto 1.25rem",
-            }}
-          >
-            Request the investor deck, schedule a live walkthrough, or explore
-            the pipeline interactively.
+          <p className="lr-lead" style={{ marginInline: "auto", marginBottom: "2rem" }}>
+            Walk through a live readiness path, or explore the interactive demos
+            with your own workflow in mind.
           </p>
         </Reveal>
         <Reveal delay={0.15}>
-          <p
-            style={{
-              fontSize: "clamp(0.975rem, 1.2vw, 1.125rem)",
-              lineHeight: 1.7,
-              fontWeight: 600,
-              maxWidth: "36rem",
-              margin: "0 auto 2.5rem",
-            }}
-          >
-            If you are going to use AI, you cannot afford not to have ICDU as
-            part of your solution.
-          </p>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem",
-              justifyContent: "center",
-            }}
-          >
-            <a href="mailto:brian@osscontact.com" className="lr-btn-primary">
-              Get in Touch
+          <div className="lr-cta-row" style={{ justifyContent: "center" }}>
+            <a href={WALKTHROUGH_URL} className="lr-btn-primary">
+              Book a Walkthrough
             </a>
-            <a
-              href="https://icdu.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="lr-btn-ghost"
-            >
-              icdu.ai
-            </a>
+            <Link href="/demos" className="lr-btn-ghost">
+              Explore the Live Demo
+            </Link>
           </div>
         </Reveal>
       </section>
 
       <GlowDivider />
 
-      {/* ════════════════════════════════════════════════════════════
-          FOOTER
-          ════════════════════════════════════════════════════════════ */}
-      <footer
-        style={{
-          padding: "2rem clamp(1.25rem, 4vw, 3rem)",
-          maxWidth: "80rem",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-          }}
-        >
-          <div
-            style={{
-              width: "1.5rem",
-              height: "1.5rem",
-              background: "var(--accent-blue)",
-              borderRadius: "0.25rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              fontSize: "0.5rem",
-              fontWeight: 700,
-            }}
-          >
-            IC
-          </div>
-          <span
-            style={{ fontSize: "0.8125rem", color: "var(--lr-fg-muted)" }}
-          >
-            ICDU — Overture Systems Solutions
-          </span>
-        </div>
-        <div
-          style={{ fontSize: "0.6875rem", color: "var(--lr-fg-ghost)", textAlign: "right", maxWidth: "28rem" }}
-        >
-          Architecture developed and protected under U.S. provisional patent
-          filings. Positioned for real-world pilot validation. By Overture
-          Systems Solutions.
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

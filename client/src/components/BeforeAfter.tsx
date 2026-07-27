@@ -35,11 +35,11 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
         <div className="p-2 sm:p-3 rounded-md bg-destructive/10 border border-destructive/20">
           <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2">
             <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
-            <span className="text-[10px] sm:text-xs font-semibold text-destructive">Before ICDU</span>
+            <span className="text-xs sm:text-sm font-semibold text-destructive">Before ICDU</span>
           </div>
           <ul className="space-y-0.5 sm:space-y-1">
             {beforePoints.slice(0, 3).map((point, i) => (
-              <li key={i} className="text-[9px] sm:text-xs text-muted-foreground flex items-center gap-1">
+              <li key={i} className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
                 <span className="w-1 h-1 bg-destructive/50 rounded-full flex-shrink-0" />
                 {point.text}
               </li>
@@ -49,11 +49,11 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
         <div className="p-2 sm:p-3 rounded-md bg-emerald-500/10 border border-emerald-500/20">
           <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2">
             <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-[10px] sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400">With ICDU</span>
+            <span className="text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400">With ICDU</span>
           </div>
           <ul className="space-y-0.5 sm:space-y-1">
             {afterPoints.slice(0, 3).map((point, i) => (
-              <li key={i} className="text-[9px] sm:text-xs text-muted-foreground flex items-center gap-1">
+              <li key={i} className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1">
                 <span className="w-1 h-1 bg-emerald-500/50 rounded-full flex-shrink-0" />
                 {point.text}
               </li>
@@ -73,7 +73,7 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
           </div>
           <div>
             <h3 className="font-semibold text-sm sm:text-base text-destructive">Before ICDU</h3>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Unstructured AI deployment</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Unstructured AI deployment</p>
           </div>
         </div>
         <ul className="space-y-2 sm:space-y-3">
@@ -82,7 +82,7 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
             return (
               <li key={i} className="flex items-start gap-2 sm:gap-3">
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive/70 mt-0.5 flex-shrink-0" />
-                <span className="text-[11px] sm:text-sm text-muted-foreground">{point.text}</span>
+                <span className="text-sm text-muted-foreground">{point.text}</span>
               </li>
             );
           })}
@@ -96,7 +96,7 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
           </div>
           <div>
             <h3 className="font-semibold text-sm sm:text-base text-emerald-600 dark:text-emerald-400">With ICDU</h3>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Structured AI governance</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Structured AI governance</p>
           </div>
         </div>
         <ul className="space-y-2 sm:space-y-3">
@@ -105,7 +105,7 @@ export function BeforeAfter({ compact = false }: BeforeAfterProps) {
             return (
               <li key={i} className="flex items-start gap-2 sm:gap-3">
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
-                <span className="text-[11px] sm:text-sm text-muted-foreground">{point.text}</span>
+                <span className="text-sm text-muted-foreground">{point.text}</span>
               </li>
             );
           })}

@@ -105,11 +105,11 @@ export function RubricPanel() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
               <div className="min-w-0">
                 <span className="font-medium text-xs sm:text-sm">{dimension.label}</span>
-                <p className="text-[10px] sm:text-xs text-muted-foreground truncate sm:whitespace-normal">{dimension.description}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground truncate sm:whitespace-normal">{dimension.description}</p>
               </div>
               <Badge 
                 className={cn(
-                  "text-white min-w-[70px] sm:min-w-[90px] justify-center text-[10px] sm:text-xs flex-shrink-0 self-start sm:self-center",
+                  "text-white min-w-[70px] sm:min-w-[90px] justify-center text-xs sm:text-sm flex-shrink-0 self-start sm:self-center",
                   getScoreColor(scores[dimension.id])
                 )}
               >
@@ -131,7 +131,7 @@ export function RubricPanel() {
                   <span 
                     key={n} 
                     className={cn(
-                      "text-[10px] sm:text-xs",
+                      "text-xs sm:text-sm",
                       scores[dimension.id] === n 
                         ? "text-foreground font-medium" 
                         : "text-muted-foreground"
@@ -172,12 +172,12 @@ export function RubricPanel() {
               <span className="text-muted-foreground text-xs sm:text-sm">/ 5</span>
             </div>
           </div>
-          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             Average across all {hitlRubricDimensions.length} dimensions
           </p>
         </div>
 
-        <p className="text-[10px] sm:text-xs text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Escalate if content appears unsafe or misleading. Keep comments specific and behavior-based.
         </p>
       </div>

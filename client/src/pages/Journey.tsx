@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { useLocation, useRoute } from "wouter";
-import { PersonaSelector } from "@/components/PersonaSelector";
+import {
+  RoleTrackSelector,
+  type Persona,
+} from "@/components/RoleTrackSelector";
 import { JourneyStepper, type PersonaJourney } from "@/components/JourneyStepper";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Map } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
+import { BrandPage, PageHero, SecondaryCTA } from "@/components/brand";
 import personasData from "@/data/personas.json";
 import journeysData from "@/data/journeys.json";
+import { cn } from "@/lib/utils";
 
 type JourneysData = Record<string, PersonaJourney>;
 
+const personas = personasData as Persona[];
 const journeys = journeysData as JourneysData;
 
 export default function Journey() {
@@ -19,22 +23,26 @@ export default function Journey() {
   const [, params] = useRoute("/journey/:personaId");
   const personaId = params?.personaId || null;
 
-  const selectedPersona = personasData.find((p) => p.id === personaId);
+  const selectedPersona = personas.find((p) => p.id === personaId);
   const personaJourney = personaId ? journeys[personaId] : null;
-  const defaultTabId =
-    personaJourney?.tabs[0]?.id ??
-    selectedPersona?.recommendedStartingSection ??
-    null;
+  const firstTabId = personaJourney?.tabs[0]?.id ?? null;
 
-  const [currentTabId, setCurrentTabId] = useState<string | null>(defaultTabId);
+  const [currentTabId, setCurrentTabId] = useState<string | null>(null);
+
+  const activeTabId =
+    personaJourney &&
+    currentTabId &&
+    personaJourney.tabs.some((t) => t.id === currentTabId)
+      ? currentTabId
+      : firstTabId;
 
   useSEO({
     title: selectedPersona
       ? `${selectedPersona.name} Journey | ICDU`
       : "Choose Your Role | ICDU Journey",
     description: selectedPersona
-      ? `Explore the ICDU journey for ${selectedPersona.name}s — architecture, security, compliance, and ROI tailored to your role.`
-      : "Select your role to explore ICDU through a personalized tabbed journey — CTO, CISO, Developer, Compliance Officer, or CFO.",
+      ? `Explore the ICDU journey for ${selectedPersona.name} — situation, what changes, how it works, evidence, and recommended next steps.`
+      : "Choose a Leadership, Governance & Risk, or Technical path to explore ICDU through a guided five-step journey.",
   });
 
   useEffect(() => {
@@ -42,10 +50,10 @@ export default function Journey() {
   }, []);
 
   useEffect(() => {
-    if (personaJourney?.tabs[0]) {
-      setCurrentTabId(personaJourney.tabs[0].id);
+    if (firstTabId) {
+      setCurrentTabId(firstTabId);
     }
-  }, [personaId, personaJourney]);
+  }, [personaId, firstTabId]);
 
   const handleSelectPersona = (id: string) => {
     setLocation(`/journey/${id}`);
@@ -53,80 +61,99 @@ export default function Journey() {
 
   if (!personaId) {
     return (
-      <div className="min-h-screen py-4 sm:py-12">
-        <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
-          <div className="text-center mb-4 sm:mb-12">
-            <Badge variant="secondary" className="mb-2 sm:mb-4 text-[10px] sm:text-sm">
-              <Map className="h-3 w-3 sm:h-4 sm:w-4 inline mr-1" />
-              Role-Based Journey
-            </Badge>
-            <h1 className="text-lg sm:text-3xl font-bold mb-2 sm:mb-4">Choose Your Role</h1>
-            <p className="text-[11px] sm:text-base text-muted-foreground max-w-2xl mx-auto">
-              Select a persona to explore ICDU through tabbed content tailored to your
-              priorities — from technical architecture to financial ROI.
-            </p>
-          </div>
+      <BrandPage>
+        <PageHero
+          label="For Your Role"
+          title="Choose your path"
+          description="Pick a track that matches how you evaluate AI — then walk a focused five-step journey ending in a clear next action."
+          displayTitle={false}
+        />
 
-          <PersonaSelector
-            personas={personasData}
-            selectedPersona={null}
-            onSelectPersona={handleSelectPersona}
-          />
-        </div>
-      </div>
+        <RoleTrackSelector
+          personas={personas}
+          onSelectPersona={handleSelectPersona}
+        />
+      </BrandPage>
     );
   }
 
-  if (!selectedPersona || !personaJourney || !currentTabId) {
+  if (!selectedPersona || !personaJourney || !activeTabId) {
     return (
-      <div className="min-h-screen py-12">
-        <div className="container px-4 mx-auto max-w-7xl text-center">
-          <h1 className="text-2xl font-bold mb-4">Persona not found</h1>
-          <Button onClick={() => setLocation("/journey")} data-testid="button-back-to-personas">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Personas
-          </Button>
+      <BrandPage>
+        <div className="text-center">
+          <h1 className="icdu-section-heading mb-4">Role not found</h1>
+          <SecondaryCTA
+            type="button"
+            onClick={() => setLocation("/journey")}
+            data-testid="button-back-to-personas"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to roles
+          </SecondaryCTA>
         </div>
-      </div>
+      </BrandPage>
     );
   }
 
   return (
-    <div className="min-h-screen py-3 sm:py-8">
-      <div className="container px-3 sm:px-4 mx-auto max-w-7xl">
-        <div className="flex items-center justify-between gap-2 sm:gap-4 mb-2 sm:mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
+    <BrandPage>
+      <div className="mx-auto max-w-4xl">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
+          <SecondaryCTA
+            type="button"
             onClick={() => setLocation("/journey")}
-            className="gap-1 sm:gap-2 h-7 sm:h-9 px-2 sm:px-3"
             data-testid="button-change-persona"
+            className="!px-0 !border-0 !bg-transparent hover:!bg-transparent text-[color:var(--icdu-fg-muted)]"
           >
-            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-[10px] sm:text-sm">All roles</span>
-          </Button>
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            All roles
+          </SecondaryCTA>
 
-          <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 sm:px-2">
+          <label className="flex items-center gap-2 text-xs text-[color:var(--icdu-fg-faint)]">
+            <span className="hidden sm:inline">Switch role</span>
+            <select
+              value={personaId}
+              onChange={(e) => handleSelectPersona(e.target.value)}
+              className={cn(
+                "rounded-md border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)]",
+                "px-2.5 py-1.5 text-xs font-medium text-[color:var(--icdu-fg)]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              )}
+              aria-label="Switch role"
+              data-testid="role-switcher"
+            >
+              {personas.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <header className="mb-6 sm:mb-8">
+          <div className="icdu-section-label mb-2">
+            {selectedPersona.track === "leadership"
+              ? "Leadership"
+              : selectedPersona.track === "governance"
+                ? "Governance & Risk"
+                : "Technical"}
+          </div>
+          <h1 className="font-editorial text-3xl sm:text-4xl tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2">
             {selectedPersona.name}
-          </Badge>
-        </div>
-
-        <div className="mb-3 sm:mb-6">
-          <PersonaSelector
-            personas={personasData}
-            selectedPersona={personaId}
-            onSelectPersona={handleSelectPersona}
-            compact
-          />
-        </div>
+          </h1>
+          <p className="text-sm sm:text-base text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 max-w-2xl">
+            {selectedPersona.valueProposition}
+          </p>
+        </header>
 
         <JourneyStepper
           journey={personaJourney}
-          currentTabId={currentTabId}
+          currentTabId={activeTabId}
           onTabChange={setCurrentTabId}
           personaId={personaId}
         />
       </div>
-    </div>
+    </BrandPage>
   );
 }

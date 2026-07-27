@@ -1,33 +1,206 @@
 {
-  "cto": {
+  "cfo": {
     "groups": [
       {
-        "label": "Context",
+        "label": "Journey",
         "tabIds": [
-          "challenge",
-          "architecture"
-        ]
-      },
-      {
-        "label": "How it works",
-        "tabIds": [
-          "pipeline",
-          "integration"
-        ]
-      },
-      {
-        "label": "Value",
-        "tabIds": [
-          "roi",
+          "situation",
+          "changes",
+          "how",
+          "evidence",
           "next"
         ]
       }
     ],
     "tabs": [
       {
-        "id": "challenge",
-        "title": "The challenge",
-        "sectionTag": "CTO · THE CHALLENGE",
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "CFO · YOUR SITUATION",
+        "h2": "The cost of ungoverned AI is quantifiable",
+        "lead": "Regulatory fines, incident remediation, and compute waste compound into material financial exposure — with no offsetting governance investment.",
+        "blocks": [
+          {
+            "type": "stats",
+            "items": [
+              {
+                "value": "€35M",
+                "label": "max EU AI Act fine per violation"
+              },
+              {
+                "value": "$4.1M",
+                "label": "avg enterprise AI incident cost"
+              },
+              {
+                "value": "3.2×",
+                "label": "remediation vs prevention cost multiplier"
+              },
+              {
+                "value": "38%",
+                "label": "CAGR in AI governance market"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "CFO · WHAT ICDU CHANGES",
+        "h2": "Every day without governance increases risk",
+        "lead": "Enterprises deploying AI without structured execution face compounding costs — incidents, rework, regulatory penalties, and lost customer trust.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Incident remediation",
+                "desc": "$4.1M average per enterprise AI incident — legal, PR, engineering rework, and customer compensation."
+              },
+              {
+                "title": "Regulatory penalties",
+                "desc": "€35M or 7% of global turnover under EU AI Act."
+              },
+              {
+                "title": "Compute waste",
+                "desc": "Ungoverned AI runs unnecessary inference cycles — up to 75% more compute than intent-bound execution."
+              },
+              {
+                "title": "Revenue at risk",
+                "desc": "One opaque AI decision can cost millions — with no audit trail to defend it."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "CFO · HOW IT WORKS",
+        "h2": "Transparent, execution-based pricing",
+        "lead": "Pay for gated executions, not seats. Scale from sandbox to enterprise with predictable unit economics.",
+        "blocks": [
+          {
+            "type": "table",
+            "headers": [
+              "Tier",
+              "Executions/mo",
+              "Price",
+              "Includes"
+            ],
+            "rows": [
+              [
+                "Sandbox",
+                "5,000",
+                "Free",
+                "Full gate suite, audit logs, SDK access"
+              ],
+              [
+                "Starter",
+                "50,000",
+                "Flat monthly",
+                "Production gates, SIEM export, email support"
+              ],
+              [
+                "Growth",
+                "500,000",
+                "Flat monthly",
+                "Custom gate rules, GRC integration, priority support"
+              ],
+              [
+                "Enterprise",
+                "Unlimited",
+                "Annual contract",
+                "Dedicated SLA, on-prem option, compliance packages"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "CFO · EVIDENCE AND VALUE",
+        "h2": "Four-vector ROI model",
+        "lead": "ICDU returns value across risk avoidance, engineering efficiency, compliance cost reduction, and revenue protection.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Risk avoidance",
+                "desc": "Prevent incidents before they reach production. 3.2× cheaper than remediation."
+              },
+              {
+                "title": "Engineering efficiency",
+                "desc": "75% reduction in iterative inference cycles. 80% compute efficiency improvement."
+              },
+              {
+                "title": "Compliance cost reduction",
+                "desc": "Automated evidence generation replaces manual audit assembly."
+              },
+              {
+                "title": "Revenue protection",
+                "desc": "Deploy AI in regulated verticals with confidence and audit readiness."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": "Recommended Next Step",
+        "sectionTag": "CFO · RECOMMENDED NEXT STEP",
+        "h2": "Ready to see the financial case?",
+        "lead": "Request the investor deck, schedule a live walkthrough, or explore the ROI framework with our team.",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "If you are going to use AI, you cannot afford not to have ICDU as part of your solution."
+          },
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Investor deck",
+                "desc": "Market opportunity, financial model, and competitive positioning."
+              },
+              {
+                "title": "Live walkthrough",
+                "desc": "See gate execution, audit logs, and compliance artifacts in action."
+              },
+              {
+                "title": "ROI workshop",
+                "desc": "Build a custom ROI model for your organization with our team."
+              }
+            ]
+          }
+        ],
+        "cta": {
+          "label": "Scope a Pilot",
+          "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+        }
+      }
+    ]
+  },
+  "cto": {
+    "groups": [
+      {
+        "label": "Journey",
+        "tabIds": [
+          "situation",
+          "changes",
+          "how",
+          "evidence",
+          "next"
+        ]
+      }
+    ],
+    "tabs": [
+      {
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "CTO · YOUR SITUATION",
         "h2": "Your AI stack is scaling faster than your governance",
         "lead": "Most enterprises deploy AI through unstructured prompts with no pre-execution validation, no version control on intent, and no audit trail when things go wrong.",
         "blocks": [
@@ -69,16 +242,12 @@
             "type": "paragraph",
             "text": "ICDU replaces hope-based deployment with a structured execution layer — intent is encoded, gated, and audited before and after every model call."
           }
-        ],
-        "cta": {
-          "label": "Discuss technical fit",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "architecture",
-        "title": "Architecture fit",
-        "sectionTag": "CTO · ARCHITECTURE FIT",
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "CTO · WHAT ICDU CHANGES",
         "h2": "A stateless execution layer that sits alongside your stack",
         "lead": "ICDU integrates as an API-first, model-agnostic middleware layer. No rip-and-replace. No UI dependency. No vendor lock-in on models.",
         "blocks": [
@@ -105,16 +274,12 @@
             "title": "What ICDU is not",
             "body": "ICDU is not a foundation model, not a prompt library, not a monitoring dashboard, and not a replacement for your existing AI stack. It is a structured execution and governance layer that makes what you already have deployable, auditable, and efficient."
           }
-        ],
-        "cta": {
-          "label": "Review architecture docs",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "pipeline",
-        "title": "Safety pipeline",
-        "sectionTag": "CTO · SAFETY PIPELINE",
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "CTO · HOW IT WORKS",
         "h2": "Define → Gate → Execute → Audit",
         "lead": "Every AI action follows the same four-step pipeline — from intent encoding through pre-execution gates to immutable audit logs.",
         "blocks": [
@@ -144,55 +309,12 @@
               }
             ]
           }
-        ],
-        "cta": {
-          "label": "See pipeline in action",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "integration",
-        "title": "Integration path",
-        "sectionTag": "CTO · INTEGRATION PATH",
-        "h2": "SDK-first integration in hours, not months",
-        "lead": "ICDU wraps existing AI calls with minimal code changes. Deploy gates in development, enforce in staging, and audit in production.",
-        "blocks": [
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "title": "Week 1 — Sandbox",
-                "desc": "Install SDK, wrap one high-risk AI call, inspect gate output and audit logs."
-              },
-              {
-                "title": "Week 2–3 — Pilot",
-                "desc": "Expand to 2–3 production-adjacent workflows. Configure gate thresholds per use case."
-              },
-              {
-                "title": "Week 4+ — Production",
-                "desc": "Enforce gates in CI/CD. Immutable audit logs flow to your SIEM or compliance store."
-              }
-            ]
-          },
-          {
-            "type": "checklist",
-            "items": [
-              "REST API and Python/TypeScript SDKs available",
-              "Webhook hooks for gate failures and audit events",
-              "CI/CD plugins for gate assertion in test pipelines",
-              "Compatible with Kubernetes, serverless, and monolith deployments"
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Request integration guide",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "roi",
-        "title": "Technical ROI",
-        "sectionTag": "CTO · TECHNICAL ROI",
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "CTO · EVIDENCE AND VALUE",
         "h2": "Measurable efficiency at the infrastructure layer",
         "lead": "ICDU reduces unnecessary inference cycles, prevents incidents before they reach production, and eliminates ad-hoc remediation sprints.",
         "blocks": [
@@ -230,16 +352,12 @@
               }
             ]
           }
-        ],
-        "cta": {
-          "label": "Build the business case",
-          "href": "/business-case"
-        }
+        ]
       },
       {
         "id": "next",
-        "title": "Next steps",
-        "sectionTag": "CTO · NEXT STEPS",
+        "title": "Recommended Next Step",
+        "sectionTag": "CTO · RECOMMENDED NEXT STEP",
         "h2": "From evaluation to pilot in 30 days",
         "lead": "ICDU is protected under U.S. provisional patent filings and ready for real-world pilot validation with enterprise AI teams.",
         "blocks": [
@@ -266,8 +384,8 @@
           }
         ],
         "cta": {
-          "label": "Start a conversation",
-          "href": "/business-case"
+          "label": "Scope a Pilot",
+          "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
         }
       }
     ]
@@ -275,32 +393,21 @@
   "ciso": {
     "groups": [
       {
-        "label": "Context",
+        "label": "Journey",
         "tabIds": [
-          "threat",
-          "controls"
-        ]
-      },
-      {
-        "label": "Capabilities",
-        "tabIds": [
-          "audit",
-          "compliance"
-        ]
-      },
-      {
-        "label": "Posture",
-        "tabIds": [
-          "zero-trust",
-          "evaluation"
+          "situation",
+          "changes",
+          "how",
+          "evidence",
+          "next"
         ]
       }
     ],
     "tabs": [
       {
-        "id": "threat",
-        "title": "Threat landscape",
-        "sectionTag": "CISO · THREAT LANDSCAPE",
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "CISO · YOUR SITUATION",
         "h2": "AI is your largest unmanaged attack surface",
         "lead": "Every ungoverned AI endpoint is a potential vector for data exfiltration, prompt injection, and undetectable policy violations.",
         "blocks": [
@@ -321,16 +428,12 @@
               }
             ]
           }
-        ],
-        "cta": {
-          "label": "Assess your AI attack surface",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "controls",
-        "title": "Security controls",
-        "sectionTag": "CISO · SECURITY CONTROLS",
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "CISO · WHAT ICDU CHANGES",
         "h2": "Pre-execution gates as your AI security perimeter",
         "lead": "ICDU enforces six security controls on every AI invocation — before the model is ever called.",
         "blocks": [
@@ -374,16 +477,12 @@
               ]
             ]
           }
-        ],
-        "cta": {
-          "label": "Review control matrix",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "audit",
-        "title": "Audit & logging",
-        "sectionTag": "CISO · AUDIT & LOGGING",
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "CISO · HOW IT WORKS",
         "h2": "Cryptographically signed execution traces",
         "lead": "Every AI decision produces an immutable audit record — inputs, outputs, gate results, model version, and timestamps.",
         "blocks": [
@@ -400,17 +499,34 @@
               "Retention policies configurable per compliance tier",
               "Sub-second query by execution_id, icdu_id, or time range"
             ]
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Verify before execute",
+                "desc": "No model call without passing pre-execution gates."
+              },
+              {
+                "title": "Least-privilege data access",
+                "desc": "ICDU scope declarations constrain which fields the model can access."
+              },
+              {
+                "title": "Continuous verification",
+                "desc": "Anomaly detection flags behavioral drift from declared intent."
+              },
+              {
+                "title": "Assume breach",
+                "desc": "Immutable audit logs enable forensic reconstruction after an incident."
+              }
+            ]
           }
-        ],
-        "cta": {
-          "label": "Request audit log sample",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "compliance",
-        "title": "Compliance mapping",
-        "sectionTag": "CISO · COMPLIANCE MAPPING",
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "CISO · EVIDENCE AND VALUE",
         "h2": "Framework-ready artifacts out of the box",
         "lead": "ICDU artifacts map directly to major AI governance frameworks — no custom instrumentation required.",
         "blocks": [
@@ -454,50 +570,12 @@
               ]
             ]
           }
-        ],
-        "cta": {
-          "label": "Download compliance mapping",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "zero-trust",
-        "title": "Zero-trust AI",
-        "sectionTag": "CISO · ZERO-TRUST AI",
-        "h2": "Never trust an AI output — verify every execution",
-        "lead": "Apply zero-trust principles to AI: verify intent before execution, validate output after, and log everything immutably.",
-        "blocks": [
-          {
-            "type": "list",
-            "items": [
-              {
-                "title": "Verify before execute",
-                "desc": "No model call without passing pre-execution gates."
-              },
-              {
-                "title": "Least-privilege data access",
-                "desc": "ICDU scope declarations constrain which fields the model can access."
-              },
-              {
-                "title": "Continuous verification",
-                "desc": "Anomaly detection flags behavioral drift from declared intent."
-              },
-              {
-                "title": "Assume breach",
-                "desc": "Immutable audit logs enable forensic reconstruction after an incident."
-              }
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Zero-trust AI assessment",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "evaluation",
-        "title": "Evaluation path",
-        "sectionTag": "CISO · EVALUATION PATH",
+        "id": "next",
+        "title": "Recommended Next Step",
+        "sectionTag": "CISO · RECOMMENDED NEXT STEP",
         "h2": "Security evaluation in 30 days",
         "lead": "Validate ICDU security controls against your threat model and compliance requirements before production deployment.",
         "blocks": [
@@ -524,8 +602,214 @@
           }
         ],
         "cta": {
-          "label": "Start a conversation",
-          "href": "/business-case"
+          "label": "Review Evidence",
+          "href": "/faq"
+        }
+      }
+    ]
+  },
+  "compliance": {
+    "groups": [
+      {
+        "label": "Journey",
+        "tabIds": [
+          "situation",
+          "changes",
+          "how",
+          "evidence",
+          "next"
+        ]
+      }
+    ],
+    "tabs": [
+      {
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "COMPLIANCE · YOUR SITUATION",
+        "h2": "AI regulation is no longer optional",
+        "lead": "Enforcement timelines are active. Fines are material. And most enterprises cannot demonstrate what their AI systems are doing or why.",
+        "blocks": [
+          {
+            "type": "stats",
+            "items": [
+              {
+                "value": "2026",
+                "label": "EU AI Act enforcement for high-risk AI"
+              },
+              {
+                "value": "€35M",
+                "label": "max fine or 7% global turnover"
+              },
+              {
+                "value": "60+",
+                "label": "jurisdictions with active AI regulation"
+              },
+              {
+                "value": "100%",
+                "label": "execution coverage required for audit readiness"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "COMPLIANCE · WHAT ICDU CHANGES",
+        "h2": "Pre-mapped to major AI governance frameworks",
+        "lead": "ICDU artifacts align to regulatory requirements out of the box — reducing custom compliance engineering.",
+        "blocks": [
+          {
+            "type": "table",
+            "headers": [
+              "Framework",
+              "Coverage",
+              "Key Requirements Met"
+            ],
+            "rows": [
+              [
+                "EU AI Act",
+                "Full",
+                "Art. 9 risk assessment, Art. 12 logging, Art. 13 transparency"
+              ],
+              [
+                "NIST AI RMF",
+                "Full",
+                "GOVERN, MAP, MEASURE, MANAGE functions"
+              ],
+              [
+                "ISO/IEC 42001",
+                "Full",
+                "AIMS, risk treatment, monitoring, continual improvement"
+              ],
+              [
+                "GDPR Art. 22",
+                "Full",
+                "Automated decision logic, right to explanation"
+              ],
+              [
+                "SOC 2",
+                "Partial",
+                "Access controls, audit logging, change management"
+              ],
+              [
+                "SEC AI Disclosures",
+                "Partial",
+                "Material risk documentation, incident reporting"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "COMPLIANCE · HOW IT WORKS",
+        "h2": "Audit-ready artifacts on every execution",
+        "lead": "ICDU automatically produces the documentation regulators and auditors require — no manual assembly, no gaps.",
+        "blocks": [
+          {
+            "type": "checklist",
+            "items": [
+              "Intent specification with version history",
+              "Pre-execution gate results with timestamps",
+              "Model version and configuration at time of execution",
+              "Input/output hashes for integrity verification",
+              "Cryptographic signatures on audit records",
+              "Risk classification metadata per ICDU spec"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "COMPLIANCE · EVIDENCE AND VALUE",
+        "h2": "Continuous compliance reporting",
+        "lead": "Dashboard and export views for compliance teams — gate pass rates, risk classifications, and audit completeness metrics.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Executive summary reports",
+                "desc": "Monthly compliance posture overview for board and audit committee."
+              },
+              {
+                "title": "Gate failure analysis",
+                "desc": "Trending on injection attempts, scope violations, and sensitivity flags."
+              },
+              {
+                "title": "Regulatory inquiry response",
+                "desc": "One-click export of execution traces for any time period or use case."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "headers": [
+              "Tier",
+              "Criteria",
+              "Gate Strictness",
+              "Retention"
+            ],
+            "rows": [
+              [
+                "Critical",
+                "Regulated decisions (finance, health, legal)",
+                "Maximum",
+                "7 years"
+              ],
+              [
+                "High",
+                "Customer-facing AI with liability exposure",
+                "Strict",
+                "5 years"
+              ],
+              [
+                "Medium",
+                "Internal AI with business impact",
+                "Standard",
+                "3 years"
+              ],
+              [
+                "Low",
+                "Experimental / sandbox AI",
+                "Basic",
+                "1 year"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": "Recommended Next Step",
+        "sectionTag": "COMPLIANCE · RECOMMENDED NEXT STEP",
+        "h2": "From gap assessment to audit-ready in 90 days",
+        "lead": "A structured path to AI compliance readiness using ICDU as your evidence generation layer.",
+        "blocks": [
+          {
+            "type": "timeline",
+            "steps": [
+              {
+                "title": "Days 1–30: Gap assessment",
+                "desc": "Inventory AI systems, map to frameworks, identify evidence gaps."
+              },
+              {
+                "title": "Days 31–60: ICDU pilot",
+                "desc": "Deploy on highest-risk workflows. Validate artifact generation."
+              },
+              {
+                "title": "Days 61–90: Full rollout",
+                "desc": "Expand coverage, configure reporting, prepare for regulatory inquiry."
+              }
+            ]
+          }
+        ],
+        "cta": {
+          "label": "Review Evidence",
+          "href": "/faq"
         }
       }
     ]
@@ -533,32 +817,21 @@
   "developer": {
     "groups": [
       {
-        "label": "Context",
+        "label": "Journey",
         "tabIds": [
-          "problem",
-          "icdu"
-        ]
-      },
-      {
-        "label": "Build",
-        "tabIds": [
-          "quickstart",
-          "gates",
-          "testing"
-        ]
-      },
-      {
-        "label": "Resources",
-        "tabIds": [
-          "sdk"
+          "situation",
+          "changes",
+          "how",
+          "evidence",
+          "next"
         ]
       }
     ],
     "tabs": [
       {
-        "id": "problem",
-        "title": "Why prompts break",
-        "sectionTag": "DEVELOPER · WHY PROMPTS BREAK",
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "DEVELOPER · YOUR SITUATION",
         "h2": "Prompts are not contracts",
         "lead": "Freeform prompts are strings, not specs. They break silently when models update, contexts shift, or inputs contain injection payloads.",
         "blocks": [
@@ -579,16 +852,12 @@
               }
             ]
           }
-        ],
-        "cta": {
-          "label": "See the ICDU model",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "icdu",
-        "title": "What is an ICDU",
-        "sectionTag": "DEVELOPER · WHAT IS AN ICDU",
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "DEVELOPER · WHAT ICDU CHANGES",
         "h2": "A typed, versioned execution spec",
         "lead": "An ICDU (Intent-Conscious Data Unit) is a structured object that defines what your AI should do, what data it can access, and what gates must pass.",
         "blocks": [
@@ -597,16 +866,12 @@
             "language": "python",
             "code": "from icdu import ICDU\nfrom icdu.types import Intent, Scope, GateConfig\n\nspec = ICDU(\n    id=\"support-triage-v1\",\n    version=\"1.2.0\",\n    intent=Intent(\n        text=\"Classify support ticket urgency\",\n        success_criteria=[\"accurate\", \"actionable\"],\n    ),\n    scope=Scope(allowed_fields=[\"subject\", \"body\", \"customer_tier\"]),\n    gates=GateConfig.default(),\n    audit=True,\n)"
           }
-        ],
-        "cta": {
-          "label": "Read ICDU spec docs",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "quickstart",
-        "title": "Quickstart",
-        "sectionTag": "DEVELOPER · QUICKSTART",
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "DEVELOPER · HOW IT WORKS",
         "h2": "Gated AI in five steps",
         "lead": "From zero to a gated, audited AI call in under an hour.",
         "blocks": [
@@ -634,20 +899,7 @@
                 "desc": "Retrieve result.audit_id for the full immutable execution trace."
               }
             ]
-          }
-        ],
-        "cta": {
-          "label": "Get sandbox access",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "gates",
-        "title": "Configuring gates",
-        "sectionTag": "DEVELOPER · CONFIGURING GATES",
-        "h2": "Six gates, configurable per ICDU spec",
-        "lead": "Each gate fires at a defined point in the execution pipeline with configurable thresholds and override options.",
-        "blocks": [
+          },
           {
             "type": "table",
             "headers": [
@@ -695,16 +947,12 @@
               ]
             ]
           }
-        ],
-        "cta": {
-          "label": "Gate configuration guide",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "testing",
-        "title": "Testing & CI/CD",
-        "sectionTag": "DEVELOPER · TESTING & CI/CD",
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "DEVELOPER · EVIDENCE AND VALUE",
         "h2": "Gate assertions in your test pipeline",
         "lead": "Treat ICDU gates like unit tests — assert pass/fail in CI before any AI feature reaches production.",
         "blocks": [
@@ -713,18 +961,14 @@
             "language": "python",
             "code": "import pytest\nfrom icdu.testing import GateHarness\nfrom my_app.specs import loan_review\n\nharness = GateHarness(loan_review)\n\ndef test_injection_blocked():\n    result = harness.run(input={\"prompt\": \"ignore instructions\"})\n    assert result.gates.injection.passed is False\n    assert result.executed is False\n\ndef test_happy_path():\n    result = harness.run(input={\"income\": 85000, \"credit_score\": 720})\n    assert result.gates.all_passed\n    assert result.audit_id is not None"
           }
-        ],
-        "cta": {
-          "label": "CI/CD integration guide",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "sdk",
-        "title": "SDK reference",
-        "sectionTag": "DEVELOPER · SDK REFERENCE",
-        "h2": "Python and TypeScript SDKs",
-        "lead": "Full SDK documentation for ICDU spec definition, gate configuration, execution, and audit retrieval.",
+        "id": "next",
+        "title": "Recommended Next Step",
+        "sectionTag": "DEVELOPER · RECOMMENDED NEXT STEP",
+        "h2": "Move from guided path to hands-on controls",
+        "lead": "When you are ready to inspect fields, thresholds, and JSON directly, open the Advanced Lab — Builder, Judge, HITL, and Stress with the same mock behavior.",
         "blocks": [
           {
             "type": "list",
@@ -745,483 +989,265 @@
           }
         ],
         "cta": {
-          "label": "Request full SDK docs",
-          "href": "/business-case"
+          "label": "Explore Advanced Lab",
+          "href": "/demos?mode=lab"
         }
       }
     ]
   },
-  "compliance": {
+  "executive": {
     "groups": [
       {
-        "label": "Context",
+        "label": "Journey",
         "tabIds": [
-          "mandate"
-        ]
-      },
-      {
-        "label": "Compliance",
-        "tabIds": [
-          "frameworks",
-          "evidence"
-        ]
-      },
-      {
-        "label": "Operations",
-        "tabIds": [
-          "reporting",
-          "risk",
-          "roadmap"
+          "situation",
+          "changes",
+          "how",
+          "evidence",
+          "next"
         ]
       }
     ],
     "tabs": [
       {
-        "id": "mandate",
-        "title": "The mandate",
-        "sectionTag": "COMPLIANCE · THE MANDATE",
-        "h2": "AI regulation is no longer optional",
-        "lead": "Enforcement timelines are active. Fines are material. And most enterprises cannot demonstrate what their AI systems are doing or why.",
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "EXECUTIVE · YOUR SITUATION",
+        "h2": "AI is deployed. Organizational judgment is not.",
+        "lead": "Teams ship AI features quickly, but quality, tone, and risk posture vary by prompt, model, and person. Leadership cannot see which workflows are ready — only which ones are loud.",
         "blocks": [
           {
             "type": "stats",
             "items": [
               {
-                "value": "2026",
-                "label": "EU AI Act enforcement for high-risk AI"
+                "value": "70–85%",
+                "label": "of AI projects miss expected outcomes"
               },
               {
-                "value": "€35M",
-                "label": "max fine or 7% global turnover"
-              },
-              {
-                "value": "60+",
-                "label": "jurisdictions with active AI regulation"
-              },
-              {
-                "value": "100%",
-                "label": "execution coverage required for audit readiness"
-              }
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Assess compliance readiness",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "frameworks",
-        "title": "Frameworks covered",
-        "sectionTag": "COMPLIANCE · FRAMEWORKS COVERED",
-        "h2": "Pre-mapped to major AI governance frameworks",
-        "lead": "ICDU artifacts align to regulatory requirements out of the box — reducing custom compliance engineering.",
-        "blocks": [
-          {
-            "type": "table",
-            "headers": [
-              "Framework",
-              "Coverage",
-              "Key Requirements Met"
-            ],
-            "rows": [
-              [
-                "EU AI Act",
-                "Full",
-                "Art. 9 risk assessment, Art. 12 logging, Art. 13 transparency"
-              ],
-              [
-                "NIST AI RMF",
-                "Full",
-                "GOVERN, MAP, MEASURE, MANAGE functions"
-              ],
-              [
-                "ISO/IEC 42001",
-                "Full",
-                "AIMS, risk treatment, monitoring, continual improvement"
-              ],
-              [
-                "GDPR Art. 22",
-                "Full",
-                "Automated decision logic, right to explanation"
-              ],
-              [
-                "SOC 2",
-                "Partial",
-                "Access controls, audit logging, change management"
-              ],
-              [
-                "SEC AI Disclosures",
-                "Partial",
-                "Material risk documentation, incident reporting"
-              ]
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Download framework mapping",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "evidence",
-        "title": "Evidence generation",
-        "sectionTag": "COMPLIANCE · EVIDENCE GENERATION",
-        "h2": "Audit-ready artifacts on every execution",
-        "lead": "ICDU automatically produces the documentation regulators and auditors require — no manual assembly, no gaps.",
-        "blocks": [
-          {
-            "type": "checklist",
-            "items": [
-              "Intent specification with version history",
-              "Pre-execution gate results with timestamps",
-              "Model version and configuration at time of execution",
-              "Input/output hashes for integrity verification",
-              "Cryptographic signatures on audit records",
-              "Risk classification metadata per ICDU spec"
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Request evidence sample pack",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "reporting",
-        "title": "Reporting",
-        "sectionTag": "COMPLIANCE · REPORTING",
-        "h2": "Continuous compliance reporting",
-        "lead": "Dashboard and export views for compliance teams — gate pass rates, risk classifications, and audit completeness metrics.",
-        "blocks": [
-          {
-            "type": "list",
-            "items": [
-              {
-                "title": "Executive summary reports",
-                "desc": "Monthly compliance posture overview for board and audit committee."
-              },
-              {
-                "title": "Gate failure analysis",
-                "desc": "Trending on injection attempts, scope violations, and sensitivity flags."
-              },
-              {
-                "title": "Regulatory inquiry response",
-                "desc": "One-click export of execution traces for any time period or use case."
-              }
-            ]
-          }
-        ],
-        "cta": {
-          "label": "See reporting demo",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "risk",
-        "title": "Risk classification",
-        "sectionTag": "COMPLIANCE · RISK CLASSIFICATION",
-        "h2": "Automated risk tier assignment",
-        "lead": "Every ICDU spec carries a risk classification that drives gate strictness, audit retention, and reporting requirements.",
-        "blocks": [
-          {
-            "type": "table",
-            "headers": [
-              "Tier",
-              "Criteria",
-              "Gate Strictness",
-              "Retention"
-            ],
-            "rows": [
-              [
-                "Critical",
-                "Regulated decisions (finance, health, legal)",
-                "Maximum",
-                "7 years"
-              ],
-              [
-                "High",
-                "Customer-facing AI with liability exposure",
-                "Strict",
-                "5 years"
-              ],
-              [
-                "Medium",
-                "Internal AI with business impact",
-                "Standard",
-                "3 years"
-              ],
-              [
-                "Low",
-                "Experimental / sandbox AI",
-                "Basic",
-                "1 year"
-              ]
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Risk classification guide",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "roadmap",
-        "title": "Compliance roadmap",
-        "sectionTag": "COMPLIANCE · COMPLIANCE ROADMAP",
-        "h2": "From gap assessment to audit-ready in 90 days",
-        "lead": "A structured path to AI compliance readiness using ICDU as your evidence generation layer.",
-        "blocks": [
-          {
-            "type": "timeline",
-            "steps": [
-              {
-                "title": "Days 1–30: Gap assessment",
-                "desc": "Inventory AI systems, map to frameworks, identify evidence gaps."
-              },
-              {
-                "title": "Days 31–60: ICDU pilot",
-                "desc": "Deploy on highest-risk workflows. Validate artifact generation."
-              },
-              {
-                "title": "Days 61–90: Full rollout",
-                "desc": "Expand coverage, configure reporting, prepare for regulatory inquiry."
-              }
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Start a conversation",
-          "href": "/business-case"
-        }
-      }
-    ]
-  },
-  "cfo": {
-    "groups": [
-      {
-        "label": "Risk",
-        "tabIds": [
-          "exposure",
-          "cost"
-        ]
-      },
-      {
-        "label": "Investment",
-        "tabIds": [
-          "pricing",
-          "roi",
-          "budget",
-          "conversation"
-        ]
-      }
-    ],
-    "tabs": [
-      {
-        "id": "exposure",
-        "title": "Financial exposure",
-        "sectionTag": "CFO · FINANCIAL EXPOSURE",
-        "h2": "The cost of ungoverned AI is quantifiable",
-        "lead": "Regulatory fines, incident remediation, and compute waste compound into material financial exposure — with no offsetting governance investment.",
-        "blocks": [
-          {
-            "type": "stats",
-            "items": [
-              {
-                "value": "€35M",
-                "label": "max EU AI Act fine per violation"
-              },
-              {
-                "value": "$4.1M",
-                "label": "avg enterprise AI incident cost"
+                "value": "42%",
+                "label": "of companies abandoned most AI initiatives in 2025"
               },
               {
                 "value": "3.2×",
-                "label": "remediation vs prevention cost multiplier"
-              },
-              {
-                "value": "38%",
-                "label": "CAGR in AI governance market"
+                "label": "cost of remediation vs. prevention"
               }
             ]
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Inconsistent work product",
+                "desc": "The same customer, legal, or ops task produces different answers depending on who prompted and which model answered."
+              },
+              {
+                "title": "Opaque readiness",
+                "desc": "Leaders lack a shared definition of “good enough to promote” — so adoption stalls or risk accumulates quietly."
+              },
+              {
+                "title": "Pilot sprawl",
+                "desc": "Experiments multiply without a repeatable path from promising demo to governed production workflow."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "ICDU exists so your organization’s best judgment becomes the default for AI-assisted work — measurable, reusable, and reviewable — without replacing the AI tools already in use."
           }
-        ],
-        "cta": {
-          "label": "Quantify your exposure",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "cost",
-        "title": "Cost of inaction",
-        "sectionTag": "CFO · COST OF INACTION",
-        "h2": "Every day without governance increases risk",
-        "lead": "Enterprises deploying AI without structured execution face compounding costs — incidents, rework, regulatory penalties, and lost customer trust.",
+        "id": "changes",
+        "title": "What ICDU Changes",
+        "sectionTag": "EXECUTIVE · WHAT ICDU CHANGES",
+        "h2": "From improvisation to repeatable organizational performance",
+        "lead": "ICDU turns each AI-assisted task into a governed contract: what the system should do, what it may use, what must pass, and what gets recorded.",
         "blocks": [
           {
             "type": "list",
             "items": [
               {
-                "title": "Incident remediation",
-                "desc": "$4.1M average per enterprise AI incident — legal, PR, engineering rework, and customer compensation."
+                "title": "Better work",
+                "desc": "Outputs match the standard your experts would hold — clearer, more consistent, more useful on the first pass."
               },
               {
-                "title": "Regulatory penalties",
-                "desc": "€35M or 7% of global turnover under EU AI Act."
+                "title": "Less waste",
+                "desc": "Fewer retries, less rework, and lower compute for the same volume of AI-assisted tasks."
               },
               {
-                "title": "Compute waste",
-                "desc": "Ungoverned AI runs unnecessary inference cycles — up to 75% more compute than intent-bound execution."
-              },
-              {
-                "title": "Revenue at risk",
-                "desc": "One opaque AI decision can cost millions — with no audit trail to defend it."
+                "title": "Provable control",
+                "desc": "Every promoted result comes with intent, checks, and outcome evidence — without turning delivery into a compliance project."
               }
             ]
-          }
-        ],
-        "cta": {
-          "label": "Build the cost-of-inaction model",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "pricing",
-        "title": "Pricing model",
-        "sectionTag": "CFO · PRICING MODEL",
-        "h2": "Transparent, execution-based pricing",
-        "lead": "Pay for gated executions, not seats. Scale from sandbox to enterprise with predictable unit economics.",
-        "blocks": [
+          },
           {
-            "type": "table",
-            "headers": [
-              "Tier",
-              "Executions/mo",
-              "Price",
-              "Includes"
-            ],
-            "rows": [
-              [
-                "Sandbox",
-                "5,000",
-                "Free",
-                "Full gate suite, audit logs, SDK access"
-              ],
-              [
-                "Starter",
-                "50,000",
-                "Flat monthly",
-                "Production gates, SIEM export, email support"
-              ],
-              [
-                "Growth",
-                "500,000",
-                "Flat monthly",
-                "Custom gate rules, GRC integration, priority support"
-              ],
-              [
-                "Enterprise",
-                "Unlimited",
-                "Annual contract",
-                "Dedicated SLA, on-prem option, compliance packages"
-              ]
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Request pricing details",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "roi",
-        "title": "ROI framework",
-        "sectionTag": "CFO · ROI FRAMEWORK",
-        "h2": "Four-vector ROI model",
-        "lead": "ICDU returns value across risk avoidance, engineering efficiency, compliance cost reduction, and revenue protection.",
-        "blocks": [
-          {
-            "type": "list",
-            "items": [
-              {
-                "title": "Risk avoidance",
-                "desc": "Prevent incidents before they reach production. 3.2× cheaper than remediation."
-              },
-              {
-                "title": "Engineering efficiency",
-                "desc": "75% reduction in iterative inference cycles. 80% compute efficiency improvement."
-              },
-              {
-                "title": "Compliance cost reduction",
-                "desc": "Automated evidence generation replaces manual audit assembly."
-              },
-              {
-                "title": "Revenue protection",
-                "desc": "Deploy AI in regulated verticals with confidence and audit readiness."
-              }
-            ]
-          }
-        ],
-        "cta": {
-          "label": "Download ROI calculator",
-          "href": "/business-case"
-        }
-      },
-      {
-        "id": "budget",
-        "title": "Budget justification",
-        "sectionTag": "CFO · BUDGET JUSTIFICATION",
-        "h2": "Line-item justification for AI governance spend",
-        "lead": "Frame ICDU as risk mitigation infrastructure — comparable to cybersecurity spend, with measurable ROI and regulatory mandate alignment.",
-        "blocks": [
+            "type": "callout",
+            "variant": "info",
+            "title": "What does not change",
+            "body": "You keep your models, agents, and channels. ICDU is a readiness control plane that sits alongside them — so adoption improves because the work gets better, not because teams learn a new chat UI."
+          },
           {
             "type": "checklist",
             "items": [
-              "Compare ICDU annual cost vs single AI incident ($4.1M avg)",
-              "Factor in compute savings from 75% fewer inference cycles",
-              "Include compliance cost reduction vs manual evidence assembly",
-              "Reference EU AI Act enforcement timeline (2026)",
-              "Align to existing cybersecurity and GRC budget lines"
+              "Shared definition of done per workflow",
+              "Promotion decisions with thresholds, not gut feel",
+              "Evidence packs leaders can review in a pilot readout"
             ]
           }
-        ],
-        "cta": {
-          "label": "Get budget justification template",
-          "href": "/business-case"
-        }
+        ]
       },
       {
-        "id": "conversation",
-        "title": "Start conversation",
-        "sectionTag": "CFO · START CONVERSATION",
-        "h2": "Ready to see the financial case?",
-        "lead": "Request the investor deck, schedule a live walkthrough, or explore the ROI framework with our team.",
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "EXECUTIVE · HOW IT WORKS",
+        "h2": "A simple operating rhythm for AI-assisted work",
+        "lead": "Every priority workflow follows the same path: encode intent, execute inside it, gate the result, keep the proof.",
         "blocks": [
           {
-            "type": "paragraph",
-            "text": "If you are going to use AI, you cannot afford not to have ICDU as part of your solution."
+            "type": "flow",
+            "steps": [
+              {
+                "label": "Select workflow"
+              },
+              {
+                "label": "Encode intent"
+              },
+              {
+                "label": "Run AI"
+              },
+              {
+                "label": "Readiness gate"
+              },
+              {
+                "label": "Evidence readout"
+              }
+            ]
           },
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "Intent as operating standard",
+                "desc": "Capture purpose, principles, allowed context, and success criteria once — then reuse across teams and model updates."
+              },
+              {
+                "title": "Readiness before release",
+                "desc": "Scoring turns “looks good” into a promote / escalate / block decision tied to your contract."
+              },
+              {
+                "title": "Pilot-sized change",
+                "desc": "Start with one high-value workflow. Validate quality, waste reduction, and evidence in an estimated 4–6 weeks — then scale what works."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "This is how leadership drives adoption: pick the workflow that matters, make judgment explicit, and measure readiness the same way every time."
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence and Value",
+        "sectionTag": "EXECUTIVE · EVIDENCE AND VALUE",
+        "h2": "What a successful pilot proves",
+        "lead": "A strong ICDU pilot does not invent a new AI stack — it proves that governed execution improves work quality, reduces waste, and produces defensibility on a workflow you already care about.",
+        "blocks": [
+          {
+            "type": "stats",
+            "items": [
+              {
+                "value": "75%",
+                "label": "fewer iterative inference cycles (pilot target)"
+              },
+              {
+                "value": "75%",
+                "label": "fewer errors under gated evaluation (benchmark target)"
+              },
+              {
+                "value": "4–6 wks",
+                "label": "estimated path to validated pilot"
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "headers": [
+              "Leadership question",
+              "What the pilot shows"
+            ],
+            "rows": [
+              [
+                "Is the work better?",
+                "Side-by-side quality vs. unstructured prompting on one workflow"
+              ],
+              [
+                "Is waste down?",
+                "Fewer retries, escalations, and cleanup loops"
+              ],
+              [
+                "Can we defend it?",
+                "Contract + gate decision + execution evidence pack"
+              ],
+              [
+                "Can we scale it?",
+                "Reusable intent pattern for the next 2–3 workflows"
+              ]
+            ]
+          },
+          {
+            "type": "callout",
+            "variant": "info",
+            "title": "How to read the numbers",
+            "body": "Treat efficiency figures as pilot targets or benchmark results unless labeled as sourced market statistics. The executive decision should rest on observed workflow outcomes in your environment."
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": "Recommended Next Step",
+        "sectionTag": "EXECUTIVE · RECOMMENDED NEXT STEP",
+        "h2": "Scope one pilot that leadership can actually run",
+        "lead": "Pick a high-visibility AI-assisted workflow, name the owner, and walk through readiness with a concrete success readout.",
+        "blocks": [
           {
             "type": "timeline",
             "steps": [
               {
-                "title": "Investor deck",
-                "desc": "Market opportunity, financial model, and competitive positioning."
+                "title": "This week",
+                "desc": "Choose one workflow where inconsistent AI output already costs trust, time, or risk."
               },
               {
-                "title": "Live walkthrough",
-                "desc": "See gate execution, audit logs, and compliance artifacts in action."
+                "title": "Week 1–2",
+                "desc": "Encode intent with the operating owner; agree success criteria and promotion thresholds."
               },
               {
-                "title": "ROI workshop",
-                "desc": "Build a custom ROI model for your organization with our team."
+                "title": "Weeks 2–4",
+                "desc": "Run side-by-side: unstructured vs. ICDU-governed. Capture quality, rework, and evidence."
+              },
+              {
+                "title": "Weeks 4–6",
+                "desc": "Executive readout: keep, expand, or redesign — with proof, not slides alone."
               }
             ]
+          },
+          {
+            "type": "checklist",
+            "items": [
+              "Named workflow owner and executive sponsor",
+              "Success criteria written as observable outcomes",
+              "Pilot readout date on the calendar"
+            ]
+          },
+          {
+            "type": "callout",
+            "title": "Leadership CTA",
+            "body": "Scope a pilot walkthrough with the ICDU team — bring one workflow and leave with a readiness plan."
           }
         ],
         "cta": {
-          "label": "Start a conversation",
-          "href": "/business-case"
+          "label": "Scope a Pilot",
+          "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
         }
       }
     ]

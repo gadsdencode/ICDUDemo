@@ -12,6 +12,11 @@ import Demos from "@/pages/Demos";
 import FAQ from "@/pages/FAQ";
 import BusinessCase from "@/pages/BusinessCase";
 import FineTune from "@/pages/FineTune";
+import Resources from "@/pages/Resources";
+import Research from "@/pages/Research";
+import Licensing from "@/pages/Licensing";
+import Investor from "@/pages/Investor";
+import Developers from "@/pages/Developers";
 
 function Router() {
   return (
@@ -23,6 +28,11 @@ function Router() {
       <Route path="/fine-tune" component={FineTune} />
       <Route path="/business-case" component={BusinessCase} />
       <Route path="/faq" component={FAQ} />
+      <Route path="/resources" component={Resources} />
+      <Route path="/research" component={Research} />
+      <Route path="/licensing" component={Licensing} />
+      <Route path="/investor" component={Investor} />
+      <Route path="/developers" component={Developers} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -33,7 +43,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="icdu-theme">
         <TooltipProvider>
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen bg-background text-foreground font-sans">
             <Navigation />
             <main>
               <Router />

@@ -1,80 +1,46 @@
 [
   {
-    "id": "cto",
-    "name": "CTO",
-    "tagline": "Architecture, integration, and technical ROI",
-    "icon": "Cpu",
+    "id": "executive",
+    "name": "Executive / AI Leader",
+    "track": "leadership",
+    "tagline": "Make organizational judgment repeatable across every AI-assisted workflow",
+    "valueProposition": "Improve AI work quality, adoption, and pilot outcomes without replacing the tools your teams already use.",
+    "learnings": [
+      "How to pick a high-value pilot workflow",
+      "What readiness looks like for leadership",
+      "How to scale what works"
+    ],
+    "estimatedMinutes": 8,
+    "icon": "Briefcase",
     "primaryConcerns": [
-      "Model-agnostic integration",
-      "Pipeline architecture",
-      "Compute efficiency",
-      "Production safety gates"
+      "Organizational performance",
+      "Repeatability & adoption",
+      "Pilot selection",
+      "Business outcomes"
     ],
     "successMetrics": [
-      "Reduced inference cycles",
-      "Faster integration time",
-      "Incident prevention rate"
+      "Workflow readiness rate",
+      "Pilot time-to-readout",
+      "Adoption of governed paths"
     ],
-    "recommendedStartingSection": "challenge"
-  },
-  {
-    "id": "ciso",
-    "name": "CISO",
-    "tagline": "Security controls, audit, and compliance posture",
-    "icon": "Shield",
-    "primaryConcerns": [
-      "Prompt injection & shadow AI",
-      "Immutable audit trails",
-      "Regulatory mapping",
-      "Zero-trust AI operations"
-    ],
-    "successMetrics": [
-      "Gate pass rates",
-      "Audit log completeness",
-      "Compliance coverage"
-    ],
-    "recommendedStartingSection": "threat"
-  },
-  {
-    "id": "developer",
-    "name": "Developer",
-    "tagline": "SDK integration, gates, and CI/CD testing",
-    "icon": "Code2",
-    "primaryConcerns": [
-      "Prompt fragility",
-      "Pre-execution validation",
-      "Gate configuration",
-      "Test harness patterns"
-    ],
-    "successMetrics": [
-      "First-pass accuracy",
-      "Test coverage",
-      "Deployment confidence"
-    ],
-    "recommendedStartingSection": "problem"
-  },
-  {
-    "id": "compliance",
-    "name": "Compliance Officer",
-    "tagline": "Frameworks, evidence, and regulatory readiness",
-    "icon": "Scale",
-    "primaryConcerns": [
-      "EU AI Act enforcement",
-      "Evidence generation",
-      "Risk classification",
-      "Audit-ready reporting"
-    ],
-    "successMetrics": [
-      "Framework coverage",
-      "Execution trace completeness",
-      "Reporting cycle time"
-    ],
-    "recommendedStartingSection": "mandate"
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Scope a Pilot",
+      "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+    }
   },
   {
     "id": "cfo",
     "name": "CFO",
-    "tagline": "Financial exposure, pricing, and ROI justification",
+    "track": "leadership",
+    "tagline": "Quantify AI risk exposure and justify governance as measurable ROI",
+    "valueProposition": "Turn ungoverned AI cost and incident exposure into a clear investment case with pilot-sized next steps.",
+    "learnings": [
+      "Where financial exposure hides today",
+      "How ICDU changes cost and risk",
+      "How to justify a pilot budget"
+    ],
+    "estimatedMinutes": 8,
     "icon": "BarChart3",
     "primaryConcerns": [
       "Regulatory fines",
@@ -87,6 +53,130 @@
       "Cost per execution",
       "Compliance cost reduction"
     ],
-    "recommendedStartingSection": "exposure"
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Scope a Pilot",
+      "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+    }
+  },
+  {
+    "id": "cto",
+    "name": "CTO",
+    "track": "leadership",
+    "tagline": "Add a readiness layer beside your stack — no rip-and-replace",
+    "valueProposition": "See how ICDU integrates as model-agnostic middleware that improves reliability and efficiency at the architecture layer.",
+    "learnings": [
+      "Where ungoverned prompts break production",
+      "How the Define → Gate → Execute → Audit path fits",
+      "What a technical pilot looks like"
+    ],
+    "estimatedMinutes": 9,
+    "icon": "Cpu",
+    "primaryConcerns": [
+      "Model-agnostic integration",
+      "Pipeline architecture",
+      "Compute efficiency",
+      "Production safety gates"
+    ],
+    "successMetrics": [
+      "Reduced inference cycles",
+      "Faster integration time",
+      "Incident prevention rate"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Scope a Pilot",
+      "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+    }
+  },
+  {
+    "id": "ciso",
+    "name": "CISO",
+    "track": "governance",
+    "tagline": "Close the unmanaged AI attack surface with gates and evidence",
+    "valueProposition": "Map prompt injection, shadow AI, and audit gaps to pre-execution controls and immutable traces.",
+    "learnings": [
+      "The AI threat landscape you already own",
+      "Which controls fire before model calls",
+      "How evidence maps to security posture"
+    ],
+    "estimatedMinutes": 9,
+    "icon": "Shield",
+    "primaryConcerns": [
+      "Prompt injection & shadow AI",
+      "Immutable audit trails",
+      "Regulatory mapping",
+      "Zero-trust AI operations"
+    ],
+    "successMetrics": [
+      "Gate pass rates",
+      "Audit log completeness",
+      "Compliance coverage"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Review Evidence",
+      "href": "/faq"
+    }
+  },
+  {
+    "id": "compliance",
+    "name": "Compliance Officer",
+    "track": "governance",
+    "tagline": "Produce audit-ready AI evidence without custom instrumentation",
+    "valueProposition": "Connect ICDU artifacts to frameworks, reporting cycles, and risk classification with a clear evidence path.",
+    "learnings": [
+      "Regulatory mandate pressure points",
+      "Framework coverage out of the box",
+      "What an evidence pack contains"
+    ],
+    "estimatedMinutes": 9,
+    "icon": "Scale",
+    "primaryConcerns": [
+      "EU AI Act enforcement",
+      "Evidence generation",
+      "Risk classification",
+      "Audit-ready reporting"
+    ],
+    "successMetrics": [
+      "Framework coverage",
+      "Execution trace completeness",
+      "Reporting cycle time"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Review Evidence",
+      "href": "/faq"
+    }
+  },
+  {
+    "id": "developer",
+    "name": "Developer / Engineering Lead",
+    "track": "technical",
+    "tagline": "Replace fragile prompts with versioned contracts and testable gates",
+    "valueProposition": "Learn the ICDU shape, gate configuration, and CI patterns — then open the Advanced Lab for hands-on controls.",
+    "learnings": [
+      "Why prompts break in production",
+      "How to configure gates",
+      "How to test readiness in CI"
+    ],
+    "estimatedMinutes": 10,
+    "icon": "Code2",
+    "primaryConcerns": [
+      "Prompt fragility",
+      "Pre-execution validation",
+      "Gate configuration",
+      "Test harness patterns"
+    ],
+    "successMetrics": [
+      "First-pass accuracy",
+      "Test coverage",
+      "Deployment confidence"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Explore Advanced Lab",
+      "href": "/demos?mode=lab"
+    }
   }
 ]

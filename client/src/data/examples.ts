@@ -160,42 +160,47 @@ export const glossaryTerms = [
 export const faqItems = [
   {
     question: "What is ICDU?",
-    answer: "ICDU (Intent-Conscious Data Unit) is a structured training/evaluation record format that encodes user intent, governing principles, persona, and context. It's part of a comprehensive AI safety and evaluation pipeline."
+    answer:
+      "ICDU (Intent-Conscious Data Unit) is a structured record format that encodes user intent, governing principles, persona, and context for AI-assisted work. It sits inside a readiness path — Define → Gate → Execute → Audit — so outputs can be reviewed against explicit criteria.",
   },
   {
     question: "What components are included in the ICDU system?",
-    answer: "The ICDU system consists of four main components: (1) ICDU - the structured data unit format, (2) AI Judge - quantitative evaluator scoring outputs, (3) HITL Nuance Grader - qualitative human-in-the-loop evaluator, and (4) Scenario-Perturbation Stress Engine - generates controlled variations for testing."
+    answer:
+      "Four main pieces: (1) the ICDU record format, (2) AI Judge scoring with promote / escalate / block gates, (3) HITL Nuance Grader for qualitative dimensions, and (4) a Scenario-Perturbation Stress Engine for stability and consistency checks.",
   },
   {
     question: "Can I use ICDU commercially?",
-    answer: "Commercial use requires a license. Non-commercial evaluation uses such as academic research, internal testing without revenue impact, benchmarking and comparison, and due diligence are permitted."
+    answer:
+      "Commercial use requires a license. Non-commercial evaluation — academic research, internal testing without revenue impact, benchmarking, and diligence — is permitted. See https://icdu.ai/licensing for details.",
   },
   {
     question: "What counts as commercial use?",
-    answer: "Commercial use includes: deployment in a production system, use in a paid or monetized product or service, internal use that supports revenue-generating operations, model training or fine-tuning for commercial delivery, and offering ICDU-based evaluation as a service."
+    answer:
+      "Examples include production deployment, use in a paid product or service, internal use that supports revenue-generating operations, model training or fine-tuning for commercial delivery, and offering ICDU-based evaluation as a service.",
   },
   {
     question: "Is ICDU patented?",
-    answer: "Yes. ICDU is protected by one or more patent-pending applications in the United States (PCT planned). Publication of this repository does not grant a license to practice any patented method."
+    answer:
+      "ICDU is protected by one or more patent-pending applications in the United States, with PCT planned. Public materials on this site do not grant a license to practice any patented method.",
   },
   {
     question: "How does the AI Judge work?",
-    answer: "The AI Judge produces quantitative scores across three dimensions: Intent-Alignment Score (IAS), Principle-Adherence Score (PAS), and Application Score (AS). Based on configurable thresholds, it makes gate decisions: PROMOTE (meets all thresholds), ESCALATE (needs human review), or BLOCK (fails critical thresholds)."
+    answer:
+      "The Judge scores outputs on Intent-Alignment (IAS), Principle-Adherence (PAS), and Application (AS). Configurable thresholds drive gate decisions: PROMOTE, ESCALATE for human review, or BLOCK when critical thresholds fail.",
   },
   {
     question: "What is the purpose of the Stress Engine?",
-    answer: "The Scenario-Perturbation Stress Engine generates controlled variations of scenarios (changing role, tone, constraints, channel) to systematically test AI behavior. It measures stability, fairness, refusal consistency, and hallucination patterns across variations."
+    answer:
+      "It applies controlled scenario variations (role, tone, constraints, channel) to test whether behavior stays stable and policy-aligned under realistic change — not just on a single happy-path prompt.",
   },
   {
     question: "What regulatory requirements does ICDU help address?",
-    answer: "ICDU's built-in audit trails, governance IDs, and structured evaluation gates help satisfy requirements from the EU AI Act (risk assessments, audit trails, human oversight), GDPR (transparency in algorithmic decisions), US state laws like the Colorado AI Act and Texas AI law, and proposed federal legislation like the AI LEAD Act."
-  },
-  {
-    question: "What is the financial risk of deploying AI without structured evaluation?",
-    answer: "In 2024, $67.4B in global losses were attributed to AI hallucinations. 70–85% of AI projects fail to meet expected outcomes. Per-employee hallucination mitigation costs approximately $14,200/year. The EU AI Act carries fines up to €35M or 7% of global turnover per violation. Gartner projects over $10B in AI remediation costs by mid-2026."
+    answer:
+      "Intent contracts, gate decisions, and execution traces support evidence needs associated with frameworks such as the EU AI Act, GDPR automated-decision transparency expectations, and NIST AI RMF-style govern/measure loops. Mapping depth depends on your workflow and counsel.",
   },
   {
     question: "How does ICDU compare to standard benchmarks like MMLU or HumanEval?",
-    answer: "Standard benchmarks measure model capability in isolation — MMLU tests knowledge, HumanEval tests code generation. They don't verify intent alignment, principle adherence, or stability under real-world perturbations. ICDU adds structured intent encoding, automated safety gates, human rubric scoring, and systematic perturbation testing — answering not just 'is this model capable?' but 'is it safe and stable enough to deploy?'"
-  }
+    answer:
+      "Capability benchmarks measure whether a model can answer knowledge or coding tasks. They do not verify that a production workflow followed your intent, principles, or promotion rules. ICDU answers readiness for a specific governed use — not raw model capability in isolation.",
+  },
 ];

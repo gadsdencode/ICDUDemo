@@ -182,7 +182,7 @@ export function ICDUBuilder() {
               size="sm"
               variant="outline"
               onClick={regenerateId}
-              className="gap-1 h-7 sm:h-8 text-[10px] sm:text-xs px-2 sm:px-3"
+              className="gap-1 h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
               data-testid="button-regenerate-id"
             >
               <RefreshCw className="h-3 w-3" />
@@ -192,7 +192,7 @@ export function ICDUBuilder() {
               size="sm"
               variant="outline"
               onClick={handleCopy}
-              className="gap-1 h-7 sm:h-8 text-[10px] sm:text-xs px-2 sm:px-3"
+              className="gap-1 h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
               data-testid="button-copy-json"
             >
               {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
@@ -203,11 +203,11 @@ export function ICDUBuilder() {
 
         <div className="space-y-4 sm:space-y-5">
           <div className="p-2.5 sm:p-3 rounded-md bg-muted/50 border">
-            <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-2">Governance</div>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-[10px] sm:text-xs">
+            <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-2">Governance</div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
               <div>
                 <span className="text-muted-foreground">ID:</span>
-                <span className="ml-1 font-mono text-[9px] sm:text-[10px] break-all">{icdu.icdu_id.slice(0, 20)}...</span>
+                <span className="ml-1 font-mono text-xs sm:text-xs break-all">{icdu.icdu_id.slice(0, 20)}...</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Version:</span>
@@ -226,7 +226,7 @@ export function ICDUBuilder() {
 
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <div className="space-y-1.5">
-              <Label className="text-[10px] sm:text-xs">Owner Team</Label>
+              <Label className="text-xs sm:text-sm">Owner Team</Label>
               <Select
                 value={icdu.owner_team}
                 onValueChange={(v) => setIcdu({ ...icdu, owner_team: v })}
@@ -243,7 +243,7 @@ export function ICDUBuilder() {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] sm:text-xs">Policy Set</Label>
+              <Label className="text-xs sm:text-sm">Policy Set</Label>
               <Select
                 value={icdu.policy_set_id}
                 onValueChange={(v) => setIcdu({ ...icdu, policy_set_id: v })}
@@ -261,7 +261,7 @@ export function ICDUBuilder() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-[10px] sm:text-xs">Evaluation Profile</Label>
+            <Label className="text-xs sm:text-sm">Evaluation Profile</Label>
             <Select
               value={icdu.evaluation_profile_id}
               onValueChange={(v) => setIcdu({ ...icdu, evaluation_profile_id: v })}
@@ -279,10 +279,10 @@ export function ICDUBuilder() {
           </div>
 
           <div className="space-y-1.5 p-2.5 sm:p-3 rounded-md bg-muted/30 border">
-            <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-2">Trace (Lineage)</div>
+            <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-2">Trace (Lineage)</div>
             <div className="space-y-2">
               <div className="space-y-1">
-                <Label className="text-[9px] sm:text-[10px]">Parent ICDU ID</Label>
+                <Label className="text-xs sm:text-xs">Parent ICDU ID</Label>
                 <Input
                   placeholder="e.g., icdu-abc123... (leave empty if new)"
                   value={icdu.trace.parent_icdu_id}
@@ -292,12 +292,12 @@ export function ICDUBuilder() {
                       trace: { ...icdu.trace, parent_icdu_id: e.target.value },
                     })
                   }
-                  className="h-7 sm:h-8 text-[10px] sm:text-xs"
+                  className="h-7 sm:h-8 text-xs sm:text-sm"
                   data-testid="input-parent-icdu-id"
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-[9px] sm:text-[10px]">Change Note</Label>
+                <Label className="text-xs sm:text-xs">Change Note</Label>
                 <Input
                   placeholder="e.g., Updated principles for Q2 compliance"
                   value={icdu.trace.change_note}
@@ -307,7 +307,7 @@ export function ICDUBuilder() {
                       trace: { ...icdu.trace, change_note: e.target.value },
                     })
                   }
-                  className="h-7 sm:h-8 text-[10px] sm:text-xs"
+                  className="h-7 sm:h-8 text-xs sm:text-sm"
                   data-testid="input-trace-change-note"
                 />
               </div>
@@ -359,7 +359,7 @@ export function ICDUBuilder() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {icdu.intent.success_criteria.map((criteria, i) => (
-                <Badge key={i} variant="secondary" className="gap-1 text-[10px] sm:text-xs">
+                <Badge key={i} variant="secondary" className="gap-1 text-xs sm:text-sm">
                   {criteria}
                   <button
                     onClick={() => removeItem("success_criteria", i)}
@@ -401,7 +401,7 @@ export function ICDUBuilder() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {icdu.principles.map((principle, i) => (
-                <Badge key={i} variant="secondary" className="gap-1 text-[10px] sm:text-xs">
+                <Badge key={i} variant="secondary" className="gap-1 text-xs sm:text-sm">
                   {principle}
                   <button
                     onClick={() => removeItem("principles", i)}
@@ -492,7 +492,7 @@ export function ICDUBuilder() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {icdu.context.constraints.map((constraint, i) => (
-                <Badge key={i} variant="secondary" className="gap-1 text-[10px] sm:text-xs">
+                <Badge key={i} variant="secondary" className="gap-1 text-xs sm:text-sm">
                   {constraint}
                   <button
                     onClick={() => removeItem("constraints", i)}
@@ -514,16 +514,16 @@ export function ICDUBuilder() {
             <Code className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             <h3 className="font-semibold text-sm sm:text-base">JSON Output</h3>
           </div>
-          <Badge variant="outline" className="text-[10px] sm:text-xs">Contract Record</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">Contract Record</Badge>
         </div>
         <div className="relative">
-          <pre className="p-3 sm:p-4 rounded-md bg-background border text-[9px] sm:text-xs font-mono overflow-auto max-h-[500px] sm:max-h-[600px]">
+          <pre className="icdu-code-panel p-3 sm:p-4 rounded-md bg-background border font-mono">
             {JSON.stringify(icdu, null, 2)}
           </pre>
         </div>
         <div className="mt-3 sm:mt-4 p-2.5 sm:p-3 rounded-md bg-blue-500/10 border border-blue-500/20">
-          <div className="text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">Governance Fields</div>
-          <ul className="text-[9px] sm:text-xs text-muted-foreground space-y-0.5">
+          <div className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">Governance Fields</div>
+          <ul className="text-xs sm:text-sm text-muted-foreground space-y-0.5">
             <li>icdu_id: Unique identifier for this record</li>
             <li>version: Semantic versioning for changes</li>
             <li>policy_set_id: Links to organizational policies</li>

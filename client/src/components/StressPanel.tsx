@@ -258,14 +258,14 @@ export function StressPanel() {
         <div className="flex items-center gap-2">
           <FlaskConical className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           <h3 className="font-semibold text-sm sm:text-base">Stress Engine</h3>
-          <Badge variant="outline" className="text-[10px] sm:text-xs">Presets</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">Presets</Badge>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={reset}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-[10px] sm:text-xs"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
             data-testid="button-reset-stress"
           >
             <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -275,7 +275,7 @@ export function StressPanel() {
             size="sm"
             onClick={runStressTest}
             disabled={isRunning || selectedPerturbations.length === 0}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-[10px] sm:text-xs"
+            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
             data-testid="button-run-stress"
           >
             <Play className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -305,9 +305,9 @@ export function StressPanel() {
                 >
                   <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   <div className="min-w-0">
-                    <div className="font-medium text-[10px] sm:text-xs">{preset.name}</div>
+                    <div className="font-medium text-xs sm:text-sm">{preset.name}</div>
                     <div className={cn(
-                      "text-[9px] sm:text-[10px] mt-0.5",
+                      "text-xs sm:text-xs mt-0.5",
                       isActive ? "text-primary-foreground/80" : "text-muted-foreground"
                     )}>
                       {preset.description}
@@ -329,7 +329,7 @@ export function StressPanel() {
                   key={p.id}
                   onClick={() => togglePerturbation(p)}
                   className={cn(
-                    "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md border text-[10px] sm:text-xs transition-all",
+                    "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md border text-xs sm:text-sm transition-all",
                     isSelected
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-card border-border hover-elevate"
@@ -342,7 +342,7 @@ export function StressPanel() {
               );
             })}
           </div>
-          <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 text-[9px] sm:text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500" /> Tone
             </div>
@@ -371,13 +371,13 @@ export function StressPanel() {
           <>
             <div className="grid grid-cols-2 gap-2 sm:gap-4">
               <Card className="p-2.5 sm:p-4 bg-muted/50">
-                <div className="text-[10px] sm:text-sm text-muted-foreground">Avg Stability</div>
+                <div className="text-sm text-muted-foreground">Avg Stability</div>
                 <div className="text-lg sm:text-2xl font-semibold mt-0.5 sm:mt-1">
                   {(stabilityAvg * 100).toFixed(0)}%
                 </div>
               </Card>
               <Card className="p-2.5 sm:p-4 bg-muted/50">
-                <div className="text-[10px] sm:text-sm text-muted-foreground">Results</div>
+                <div className="text-sm text-muted-foreground">Results</div>
                 <div className="text-lg sm:text-2xl font-semibold mt-0.5 sm:mt-1 flex items-center gap-1.5 sm:gap-2">
                   <span className="text-emerald-500">{passCount}</span>
                   <span className="text-muted-foreground text-sm">/</span>
@@ -392,9 +392,9 @@ export function StressPanel() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-[10px] sm:text-xs">Perturbation</TableHead>
-                    <TableHead className="text-center text-[10px] sm:text-xs w-16">Status</TableHead>
-                    <TableHead className="text-[10px] sm:text-xs hidden sm:table-cell">Insight</TableHead>
+                    <TableHead className="text-xs sm:text-sm">Perturbation</TableHead>
+                    <TableHead className="text-center text-xs sm:text-sm w-16">Status</TableHead>
+                    <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Insight</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -406,16 +406,16 @@ export function StressPanel() {
                           <div className="flex items-center gap-1.5 sm:gap-2">
                             <Badge 
                               className={cn(
-                                "text-white text-[8px] sm:text-[10px] px-1 sm:px-1.5",
+                                "text-white text-xs sm:text-xs px-1 sm:px-1.5",
                                 typeColors[r.perturbation.type]
                               )}
                             >
                               {r.perturbation.type.slice(0, 4)}
                             </Badge>
-                            <span className="text-[10px] sm:text-xs">{r.perturbation.label}</span>
+                            <span className="text-xs sm:text-sm">{r.perturbation.label}</span>
                           </div>
                           <div className="sm:hidden mt-1">
-                            <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
                               <Lightbulb className="h-2.5 w-2.5" />
                               {r.insight}
                             </div>
@@ -424,7 +424,7 @@ export function StressPanel() {
                         <TableCell className="text-center py-2">
                           <div className="flex items-center justify-center gap-1">
                             <StatusIcon className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", statusConfig[r.status].color)} />
-                            <span className={cn("text-[10px] sm:text-xs font-medium", statusConfig[r.status].color)}>
+                            <span className={cn("text-xs sm:text-sm font-medium", statusConfig[r.status].color)}>
                               {statusConfig[r.status].label}
                             </span>
                           </div>
@@ -450,7 +450,7 @@ export function StressPanel() {
                 </div>
                 <ul className="space-y-1">
                   {results.filter(r => r.status !== "pass").slice(0, 3).map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[10px] sm:text-xs text-muted-foreground">
+                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
                       <span className="w-1 h-1 mt-1.5 bg-amber-500 rounded-full flex-shrink-0" />
                       {r.insight}
                     </li>
@@ -465,7 +465,7 @@ export function StressPanel() {
           <div className="text-center py-6 sm:py-8 text-muted-foreground">
             <FlaskConical className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-3 opacity-20" />
             <p className="text-xs sm:text-sm">Select a preset or individual perturbations to test</p>
-            <p className="text-[10px] sm:text-xs mt-1">Test robustness across controlled changes</p>
+            <p className="text-xs sm:text-sm mt-1">Test robustness across controlled changes</p>
           </div>
         )}
       </div>
