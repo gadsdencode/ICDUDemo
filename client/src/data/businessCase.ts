@@ -241,8 +241,8 @@ export const sourcesLine = "Sources: AllAboutAI 2025, Forrester 2025, S&P Global
 export const businessCaseTabs = [
   { id: "financial-risk", label: "Financial Risk" },
   { id: "roi-calculator", label: "ROI Calculator" },
-  { id: "stakeholder-arguments", label: "Stakeholder Arguments" },
-  { id: "objection-handling", label: "Objection Handling" },
+  { id: "value-by-role", label: "Value by Role" },
+  { id: "common-concerns", label: "Common Concerns" },
   { id: "next-steps", label: "Next Steps" },
 ] as const;
 
@@ -366,7 +366,7 @@ export const stakeholderArguments = [
       "3.2× cheaper to prevent incidents than remediate them",
       "Execution-based pricing — pay for gated calls, not seats",
       "Compute savings from 75% fewer inference cycles",
-      "Use the ROI calculator with your org's actual parameters",
+      "Model ROI against your org's actual parameters",
     ],
   },
   {
@@ -383,42 +383,42 @@ export const stakeholderArguments = [
   },
 ];
 
-export const objectionHandling = [
+export const commonConcerns = [
   {
-    question: "We already have monitoring tools",
+    question: "How is this different from monitoring we already have?",
     answer:
       "Monitoring observes outputs after the fact. ICDU gates inputs before the model is called and produces intent-bound audit artifacts regulators expect. Observability tells you something went wrong; ICDU prevents it and proves what you intended.",
   },
   {
-    question: "Our models are fine — we haven't had an incident",
+    question: "We haven't had an incident — why act now?",
     answer:
       "Absence of evidence isn't evidence of absence. 67% of AI incidents trace to ungoverned prompts, and upstream model updates silently change behavior. ICDU makes intent explicit and testable so you detect drift before customers or regulators do.",
   },
   {
-    question: "This adds latency to our AI calls",
+    question: "Will this add latency to AI calls?",
     answer:
       "Pre-execution gates add single-digit milliseconds — far less than the latency of an unnecessary retry loop caused by an ungoverned prompt failure. Net effect: fewer total calls and lower p99 latency under production load.",
   },
   {
-    question: "We can build this internally",
+    question: "Could we build equivalent controls internally?",
     answer:
       "Building intent encoding, six gate types, immutable audit logging, and compliance framework mapping is 12–18 months of platform engineering — plus ongoing maintenance as regulations evolve. ICDU is patent-pending, production-ready, and integrates in one sprint.",
   },
   {
-    question: "We're not in a regulated industry",
+    question: "Does this matter if we aren't in a regulated industry?",
     answer:
       "SEC AI disclosures, state-level AI laws, and customer contractual requirements are expanding beyond traditional regulated sectors. Any enterprise deploying customer-facing AI carries reputational and legal exposure — governance is becoming table stakes, not optional.",
   },
   {
-    question: "The budget isn't there this quarter",
+    question: "What if budget isn't available this quarter?",
     answer:
-      "The sandbox tier is free for 5,000 executions. A single prevented incident ($4.1M average) pays for years of ICDU. Frame this as risk mitigation infrastructure — comparable to cybersecurity spend — with measurable ROI and a payback period measurable in months.",
+      "The sandbox tier is free for 5,000 executions. A single prevented incident ($4.1M average) pays for years of ICDU. Treat it as risk-mitigation infrastructure — comparable to cybersecurity spend — with measurable ROI and a payback period measured in months.",
   },
 ];
 
 export const nextStepsPanel = {
   heading: "How most organizations move forward",
-  lead: "The path from internal business case to live deployment typically takes 4–6 weeks. Here's what that looks like, and what to request at each stage.",
+  lead: "From evaluation to production typically takes 4–6 weeks. Below is a practical path — owners, milestones, and what to validate at each stage.",
   stats: [
     { value: "3–5 days", label: "to first deployment" },
     { value: "4–6 wks", label: "sign-off to compliance-ready" },
@@ -426,7 +426,7 @@ export const nextStepsPanel = {
     { value: "1 sprint", label: "typical integration" },
   ],
   timeline: [
-    { stage: "Now", action: "Share this business case with your buying committee", who: "Champion" },
+    { stage: "Now", action: "Align stakeholders on risk exposure and ROI assumptions", who: "Leadership" },
     { stage: "Week 1", action: "Request sandbox access and run first ICDU", who: "Engineering" },
     { stage: "Week 1–2", action: "CTO/CISO architecture and security review", who: "CTO / CSO" },
     { stage: "Week 2", action: "Run ROI model with your org's actual parameters", who: "CFO / Finance" },

@@ -24,7 +24,7 @@ import {
   calculateRoi,
   formatBusinessCurrency,
   stakeholderArguments,
-  objectionHandling,
+  commonConcerns,
   nextStepsPanel,
 } from "@/data/businessCase";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
@@ -228,7 +228,7 @@ export default function BusinessCase() {
   useSEO({
     title: "Business Case | ICDU",
     description:
-      "Build the financial case for structured AI governance — risk exposure, ROI calculator, stakeholder arguments, and a 4–6 week deployment path.",
+      "The financial case for structured AI governance — risk exposure, ROI modeling, value by role, and a 4–6 week path to deployment.",
   });
 
   useEffect(() => {
@@ -246,7 +246,7 @@ export default function BusinessCase() {
             The Case for Structured AI Governance
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
-            Financial risk, ROI modeling, stakeholder arguments, and a clear path from
+            Financial risk, ROI modeling, value by role, and a clear path from
             evaluation to deployment.
           </p>
         </div>
@@ -296,16 +296,16 @@ export default function BusinessCase() {
             <RoiCalculatorPanel />
           </TabsContent>
 
-          {/* Panel 3: Stakeholder Arguments */}
-          <TabsContent value="stakeholder-arguments" className="mt-0">
+          {/* Panel 3: Value by Role */}
+          <TabsContent value="value-by-role" className="mt-0">
             <section className="space-y-6">
               <div>
                 <h2 className="text-lg sm:text-2xl font-bold mb-2">
-                  Stakeholder Arguments
+                  Value by Role
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-3xl">
-                  Role-specific talking points for your buying committee — tailored to
-                  what each executive cares about most.
+                  What structured AI governance delivers for each executive who owns
+                  architecture, security, cost, or legal exposure.
                 </p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
@@ -337,19 +337,19 @@ export default function BusinessCase() {
             </section>
           </TabsContent>
 
-          {/* Panel 4: Objection Handling */}
-          <TabsContent value="objection-handling" className="mt-0">
+          {/* Panel 4: Common Concerns */}
+          <TabsContent value="common-concerns" className="mt-0">
             <section className="space-y-6">
               <div>
-                <h2 className="text-lg sm:text-2xl font-bold mb-2">Objection Handling</h2>
+                <h2 className="text-lg sm:text-2xl font-bold mb-2">Common Concerns</h2>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-3xl">
-                  Common pushback and how to respond — use these in committee meetings,
-                  procurement reviews, and budget conversations.
+                  Direct answers to the questions that typically come up when evaluating
+                  structured AI governance — monitoring, latency, build-vs-buy, and budget.
                 </p>
               </div>
               <Accordion type="single" collapsible className="w-full">
-                {objectionHandling.map((item, i) => (
-                  <AccordionItem key={item.question} value={`objection-${i}`}>
+                {commonConcerns.map((item, i) => (
+                  <AccordionItem key={item.question} value={`concern-${i}`}>
                     <AccordionTrigger className="text-left text-xs sm:text-sm">
                       {item.question}
                     </AccordionTrigger>
