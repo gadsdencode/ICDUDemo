@@ -62,7 +62,7 @@ function buildWhitepaper(): { mime: string; content: string } {
   lines.push("## Licensing");
   lines.push("");
   lines.push(
-    "ICDU is protected by one or more patent-pending applications in the United States (PCT planned). Commercial use requires a license; non-commercial evaluation, academic research, and benchmarking are permitted.",
+    "ICDU is patented technology in the United States (PCT planned). Commercial use requires a license; non-commercial evaluation, academic research, and benchmarking are permitted.",
   );
   lines.push("");
   return { mime: "text/markdown;charset=utf-8", content: lines.join("\n") };

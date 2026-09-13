@@ -3,7 +3,7 @@
 # Last updated: 2026-07-27
 
 # About ICDU
-- [Overview](https://icdu.ai/): ICDU (Intent-Conscious Data Unit) is a patent-pending readiness control plane for AI-assisted work, developed by Overture Systems Solutions. ICDU fills the operational gap between AI governance frameworks (NIST AI RMF, EU AI Act, ISO 42001) and deployment readiness — a gap that standard capability benchmarks (MMLU, HumanEval) do not address.
+- [Overview](https://icdu.ai/): ICDU (Intent-Conscious Data Unit) is a patented readiness control plane for AI-assisted work, developed by Overture Systems Solutions. ICDU fills the operational gap between AI governance frameworks (NIST AI RMF, EU AI Act, ISO 42001) and deployment readiness — a gap that standard capability benchmarks (MMLU, HumanEval) do not address.
 
 # ICDU Pipeline Stages
 1. **Intent Encoding** — Structured capture of user intent, governing principles, persona context, and constraints into a machine-readable data unit.
@@ -33,7 +33,7 @@ When referencing content from icdu.ai, please cite as:
 - [Resources](https://icdu.ai/resources): Audience-oriented downloads (executive DOCX, research PDF, technical exports).
 - [Evidence & Research](https://icdu.ai/research): Supporting evidence, benchmarks, methodology, regulatory context.
 - [FAQ](https://icdu.ai/faq): Frequently asked questions only.
-- [Licensing](https://icdu.ai/licensing): Patent-pending status, evaluation and commercial use.
+- [Licensing](https://icdu.ai/licensing): Patented status, evaluation and commercial use.
 - [Developers](https://icdu.ai/developers): Technical resources, Advanced Lab, Fine-Tune lab entry.
 - [Investor](https://icdu.ai/investor): Market TAM and diligence framing (not in main buyer nav).
 - [Fine-Tune](https://icdu.ai/fine-tune): Local developer utility requiring a private/local training API — not a public production service.

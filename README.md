@@ -156,4 +156,4 @@ See `client/src/lib/analytics.ts` for implementation.
 
 ## License Notice
 
-This application is for **evaluation and research purposes only**. ICDU is protected by patent-pending applications. Commercial use requires a separate license.
+This application is for **evaluation and research purposes only**. ICDU is patented technology. Commercial use requires a separate license.

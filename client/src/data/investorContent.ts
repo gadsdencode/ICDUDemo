@@ -81,9 +81,9 @@ export const investorPageIntro = {
 
 export const investorStatus = {
   heading: "Investment status",
-  body: "ICDU is developed by Overture Systems Solutions and is positioned for real-world pilot validation. Architecture is protected under U.S. provisional patent filings. Commercial licensing and diligence packages are available on request.",
+  body: "ICDU is developed by Overture Systems Solutions and is positioned for real-world pilot validation. Architecture is patented. Commercial licensing and diligence packages are available on request.",
   bullets: [
-    "Patent-pending architecture (U.S.; PCT planned)",
+    "Patented architecture (U.S.; PCT planned)",
     "Buyer evaluation available via walkthrough and bounded pilot",
     "Investor and partner materials available under NDA when appropriate",
   ],

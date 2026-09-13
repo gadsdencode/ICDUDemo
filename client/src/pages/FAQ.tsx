@@ -48,7 +48,7 @@ export default function FAQ() {
         />
 
         <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 -mt-4 sm:-mt-6">
-          ICDU is patent-pending. Evaluation and research use are permitted;
+          ICDU is patented. Evaluation and research use are permitted;
           commercial use requires a license.{" "}
           <Link
             href="/licensing"

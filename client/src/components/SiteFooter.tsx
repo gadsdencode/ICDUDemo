@@ -108,8 +108,7 @@ export function SiteFooter({ className }: { className?: string }) {
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6 border-t border-[color:var(--icdu-border)]">
           <p className="text-sm text-[color:var(--icdu-fg-faint)] m-0">
-            © {new Date().getFullYear()} Overture Systems Solutions. Patent
-            pending.
+            © {new Date().getFullYear()} Overture Systems Solutions. Patented.
           </p>
           <p className="text-sm text-[color:var(--icdu-fg-faint)] m-0">
             Evaluation materials on this site do not grant a commercial license.

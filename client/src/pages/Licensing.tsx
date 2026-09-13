@@ -15,7 +15,7 @@ export default function Licensing() {
   useSEO({
     title: "Licensing | ICDU",
     description:
-      "Patent-pending status, evaluation permissions, and commercial licensing information for ICDU.",
+      "Patented status, evaluation permissions, and commercial licensing information for ICDU.",
   });
 
   useEffect(() => {
@@ -28,13 +28,13 @@ export default function Licensing() {
         <PageHero
           label="Licensing"
           title="Evaluation and commercial use"
-          description="ICDU is patent-pending. Public materials support evaluation and research; commercial use requires a license."
+          description="ICDU is patented. Public materials support evaluation and research; commercial use requires a license."
           displayTitle={false}
         />
 
         <ContentSection
           heading="Patent status"
-          description="ICDU is protected by one or more patent-pending applications in the United States. PCT filing is planned."
+          description="ICDU is patented technology in the United States. PCT filing is planned."
         >
           <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0">
             Publication of product materials, demos, and documentation on this

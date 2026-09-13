@@ -236,7 +236,7 @@ export const categorizedFaqItems: {
     category: "licensing",
     question: "Is ICDU patented?",
     answer:
-      "ICDU is protected by one or more patent-pending applications in the United States, with PCT planned. Public materials on this site do not grant a license to practice any patented method.",
+      "ICDU is patented technology in the United States, with PCT planned. Public materials on this site do not grant a license to practice any patented method.",
   },
   {
     category: "security",

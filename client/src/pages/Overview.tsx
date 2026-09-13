@@ -999,7 +999,7 @@ export default function Overview() {
             marginBottom: "1.5rem",
           }}
         >
-          Patent-pending AI readiness control plane
+          Patented AI readiness control plane
         </div>
 
         <h1

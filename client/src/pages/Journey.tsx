@@ -9,6 +9,13 @@ import { ArrowLeft } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 import { BrandPage, PageHero, SecondaryCTA } from "@/components/brand";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import personasData from "@/data/personas.json";
 import journeysData from "@/data/journeys.json";
 import { cn } from "@/lib/utils";
@@ -109,26 +116,40 @@ export default function Journey() {
             All roles
           </SecondaryCTA>
 
-          <label className="flex items-center gap-2 text-xs text-[color:var(--icdu-fg-faint)]">
-            <span className="hidden sm:inline">Switch role</span>
-            <select
-              value={personaId}
-              onChange={(e) => handleSelectPersona(e.target.value)}
-              className={cn(
-                "rounded-md border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)]",
-                "px-2.5 py-1.5 text-xs font-medium text-[color:var(--icdu-fg)]",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
-              )}
-              aria-label="Switch role"
-              data-testid="role-switcher"
-            >
-              {personas.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="flex items-center gap-2 text-xs text-[color:var(--icdu-fg-faint)]">
+            <span className="hidden sm:inline" id="role-switcher-label">
+              Switch role
+            </span>
+            <Select value={personaId} onValueChange={handleSelectPersona}>
+              <SelectTrigger
+                aria-labelledby="role-switcher-label"
+                aria-label="Switch role"
+                data-testid="role-switcher"
+                className={cn(
+                  "h-auto w-auto min-w-[10.5rem] rounded-md border-[color:var(--icdu-border)]",
+                  "bg-[color:var(--icdu-surface-solid)] px-2.5 py-1.5 text-xs font-medium",
+                  "text-[color:var(--icdu-fg)] shadow-none",
+                  "focus:ring-2 focus:ring-[color:var(--icdu-blue)] focus:ring-offset-0",
+                )}
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent
+                align="end"
+                className="z-50 border-[color:var(--icdu-border-hover)] bg-[color:var(--icdu-surface-solid)] text-[color:var(--icdu-fg)] shadow-lg"
+              >
+                {personas.map((p) => (
+                  <SelectItem
+                    key={p.id}
+                    value={p.id}
+                    className="text-xs text-[color:var(--icdu-fg)] focus:bg-[color:var(--icdu-surface-hover)] focus:text-[color:var(--icdu-fg)]"
+                  >
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <header className="mb-6 sm:mb-8">

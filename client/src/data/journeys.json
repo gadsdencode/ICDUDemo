@@ -359,7 +359,7 @@
         "title": "Recommended Next Step",
         "sectionTag": "CTO · RECOMMENDED NEXT STEP",
         "h2": "From evaluation to pilot in 30 days",
-        "lead": "ICDU is protected under U.S. provisional patent filings and ready for real-world pilot validation with enterprise AI teams.",
+        "lead": "ICDU is patented architecture and ready for real-world pilot validation with enterprise AI teams.",
         "blocks": [
           {
             "type": "timeline",
@@ -380,7 +380,7 @@
           },
           {
             "type": "paragraph",
-            "text": "Architecture developed and protected under U.S. provisional patent filings. Positioned for real-world pilot validation."
+            "text": "Architecture developed under U.S. provisional patent filings. Patented architecture, positioned for real-world pilot validation."
           }
         ],
         "cta": {
