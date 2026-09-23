@@ -534,13 +534,14 @@
   text-align: center;
 }
 .icdu-hero h1 {
-  font-family: var(--font-sans);
-  font-size: clamp(61px, 7.85vw, 108px);
-  line-height: 1.005;
-  letter-spacing: -0.074em;
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.6vw, 76px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  text-wrap: balance;
   margin: 0 auto 29px;
-  max-width: 1120px;
+  max-width: 16em;
   color: var(--icdu-fg);
 }
 .icdu-hero h1 span { display: block; }
@@ -865,7 +866,7 @@
 @media (max-width: 760px) {
   .icdu-home { padding: 0 24px; }
   .icdu-hero { padding: 57px 0 37px; }
-  .icdu-hero h1 { font-size: clamp(53px, 9.3vw, 74px); margin-bottom: 23px; }
+  .icdu-hero h1 { font-size: clamp(40px, 7.2vw, 56px); margin-bottom: 23px; }
   .icdu-hero p { font-size: 16px; max-width: 420px; }
   .icdu-chooser { padding: 24px 26px 27px; border-radius: 22px; }
   .icdu-role-options { gap: 8px; }
@@ -878,7 +879,7 @@
 @media (max-width: 440px) {
   .icdu-home { padding: 0 19px; }
   .icdu-hero { padding-top: 51px; }
-  .icdu-hero h1 { font-size: clamp(44px, 11.5vw, 52px); letter-spacing: -0.072em; margin-bottom: 21px; }
+  .icdu-hero h1 { font-size: clamp(32px, 8.8vw, 40px); letter-spacing: -0.03em; margin-bottom: 21px; }
   .icdu-hero p { font-size: 15px; max-width: 312px; }
   .icdu-chooser { padding: 22px 18px 24px; }
   .icdu-step-content { padding-top: 25px; }
