@@ -709,7 +709,7 @@
   color: var(--icdu-path-muted);
 }
 .icdu-path-pair span + span::before { content: "·"; margin-right: 8px; }
-.icdu-path-title {
+.icdu-step-content h2.icdu-path-title {
   max-width: 850px;
   margin: 0 auto 16px;
   font-size: clamp(36px, 4vw, 53px);
