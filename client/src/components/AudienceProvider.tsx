@@ -34,8 +34,11 @@ type CommitOptions = {
 type AudienceContextValue = AudienceChoice & {
   route: PersonaAudience | null;
   scenario: GuidedScenario | null;
+  /** Increments when the homepage flow is explicitly reset. */
+  resetKey: number;
   setPersonaId: (id: string | null, options?: CommitOptions) => void;
   setIndustryId: (id: string | null, options?: CommitOptions) => void;
+  resetAudience: () => void;
 };
 
 const AudienceContext = createContext<AudienceContextValue | undefined>(undefined);
@@ -80,6 +83,7 @@ function loadInitial(): AudienceChoice {
 export function AudienceProvider({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [state, setState] = useState<AudienceChoice>(loadInitial);
+  const [resetKey, setResetKey] = useState(0);
   const stateRef = useRef(state);
   stateRef.current = state;
   const popped = useRef(false);
@@ -117,6 +121,11 @@ export function AudienceProvider({ children }: { children: ReactNode }) {
     },
     [commit],
   );
+
+  const resetAudience = useCallback(() => {
+    commit({ personaId: null, industryId: null }, "none");
+    setResetKey((key) => key + 1);
+  }, [commit]);
 
   const adopt = useCallback((next: AudienceChoice, stampUrl: boolean) => {
     if (!sameAudience(stateRef.current, next)) {
@@ -160,10 +169,12 @@ export function AudienceProvider({ children }: { children: ReactNode }) {
       industryId: state.industryId,
       route: getPersonaAudience(state.personaId) ?? null,
       scenario: state.industryId ? getGuidedScenario(state.industryId) ?? null : null,
+      resetKey,
       setPersonaId,
       setIndustryId,
+      resetAudience,
     };
-  }, [state.personaId, state.industryId, setPersonaId, setIndustryId]);
+  }, [state.personaId, state.industryId, resetKey, setPersonaId, setIndustryId, resetAudience]);
 
   return <AudienceContext.Provider value={value}>{children}</AudienceContext.Provider>;
 }

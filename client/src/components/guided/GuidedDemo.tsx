@@ -132,7 +132,7 @@ export function GuidedDemo({
       <SimulationNote />
       <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-blue)] mb-1">
+          <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-1">
             Guided demo
           </div>
           <h2 className="text-base sm:text-lg font-semibold tracking-tight">
@@ -513,7 +513,7 @@ function EvidenceStep({
 
       <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5">
         <div className="flex items-center gap-2 mb-3">
-          <ShieldCheck className="h-4 w-4 text-[color:var(--icdu-blue)]" />
+          <ShieldCheck className="h-4 w-4 text-[color:var(--icdu-accent)]" />
           <span className="text-sm font-semibold">
             Readiness decision: {scenario.judge.decision}
           </span>
@@ -537,7 +537,7 @@ function EvidenceStep({
       <TechnicalRecord title="View Technical Record — Evidence Pack" data={evidencePack} />
 
       <div
-        className="rounded-md border-2 border-[color:var(--icdu-fg)] p-4"
+        className="rounded-md border-2 border-[color:var(--icdu-accent)] p-4"
         data-testid="guided-handoff"
       >
         <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--icdu-fg-faint)]">

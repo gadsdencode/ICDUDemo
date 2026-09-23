@@ -78,7 +78,7 @@ export default function Investor() {
           <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-5 sm:p-6 mb-6">
             <div
               className="font-editorial text-4xl tracking-tight"
-              style={{ color: "var(--icdu-blue)" }}
+              style={{ color: "var(--icdu-accent)" }}
             >
               {investorMarketStat.value}
             </div>
@@ -129,7 +129,7 @@ export default function Investor() {
               >
                 <div
                   className="text-xs font-semibold uppercase tracking-wide mb-1"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 >
                   {item.tag}
                 </div>

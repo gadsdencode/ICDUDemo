@@ -73,8 +73,8 @@ export function ScenarioSelector({
               aria-pressed={selected}
               className={cn(
                 "icdu-focus text-left rounded-xl border-2 border-[color:var(--icdu-fg-whisper)] bg-[color:var(--icdu-surface)] p-5 cursor-pointer transition-colors",
-                "hover:border-[color:var(--icdu-fg)]",
-                selected && "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-surface-solid)]",
+                "hover:border-[color:var(--icdu-accent)]",
+                selected && "border-[color:var(--icdu-accent)] bg-[color:var(--icdu-surface-solid)]",
               )}
               data-testid={`guided-scenario-${scenario.id}`}
             >
@@ -98,7 +98,7 @@ export function ScenarioSelector({
               <p className="text-sm leading-relaxed text-[color:var(--icdu-fg-muted)] mb-4">
                 {scenario.subtitle}
               </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--icdu-blue)]">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--icdu-accent)]">
                 {selected ? "Selected" : actionLabel} <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </button>

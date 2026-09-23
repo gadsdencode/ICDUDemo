@@ -94,9 +94,9 @@ export function PathEntrance({
 
 export function RecommendedFlag() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--icdu-fg)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--icdu-fg)]">
+    <span className="inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--icdu-accent)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--icdu-accent)]">
       <span
-        className="h-1.5 w-1.5 border border-[color:var(--icdu-fg)] bg-[color:var(--icdu-fg)]"
+        className="h-1.5 w-1.5 border border-[color:var(--icdu-accent)] bg-[color:var(--icdu-accent)]"
         aria-hidden="true"
       />
       Recommended

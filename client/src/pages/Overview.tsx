@@ -7,7 +7,7 @@ import { useSEO } from "@/lib/seo";
 
 export default function Overview() {
   useSEO({
-    title: "ICDU — Enabling AI to Execute with Intent",
+    title: "ICDU — Enabling AI to Understand Your Intent",
     description:
       "Define the task. Check the work. Keep the record. See what that means for your work.",
   });

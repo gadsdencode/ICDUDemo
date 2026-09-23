@@ -38,7 +38,7 @@ export function Navigation() {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { personaId, industryId } = useAudience();
+  const { personaId, industryId, resetAudience } = useAudience();
   const audienceChip = formatAudienceChip(personaId, industryId);
   const items = navItems.map((item) =>
     item.path === "/journey" && personaId
@@ -70,11 +70,20 @@ export function Navigation() {
     <header
       className={cn(
         "sticky top-0 z-50 w-full border-b border-[color:var(--icdu-border)] bg-[color:var(--icdu-nav-bg)] backdrop-blur-sm",
-        scrolled && "shadow-[0_8px_24px_-18px_rgba(39,35,43,0.45)]",
+        scrolled && "shadow-[0_8px_24px_-18px_rgba(24,38,53,0.45)]",
       )}
     >
       <div className="mx-auto flex min-h-[76px] max-w-[1344px] items-center justify-between gap-4 px-[19px] sm:min-h-[78px] sm:px-6 md:min-h-[94px] md:gap-6 md:px-8 lg:px-12">
-        <Link href="/" className="icdu-wordmark shrink-0" data-testid="link-home" aria-label="ICDU homepage">
+        <Link
+          href="/"
+          className="icdu-wordmark shrink-0"
+          data-testid="link-home"
+          aria-label="ICDU homepage"
+          onClick={() => {
+            resetAudience();
+            window.scrollTo(0, 0);
+          }}
+        >
           icdu
         </Link>
 

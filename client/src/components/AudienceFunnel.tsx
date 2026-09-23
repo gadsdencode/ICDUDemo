@@ -25,7 +25,7 @@ function stageFromChoice(personaId: string | null, industryId: string | null): S
 }
 
 export function AudienceFunnel() {
-  const { personaId, industryId, route, scenario, setPersonaId, setIndustryId } = useAudience();
+  const { personaId, industryId, route, scenario, resetKey, setPersonaId, setIndustryId } = useAudience();
   const [stage, setStage] = useState<Stage>(() => stageFromChoice(personaId, industryId));
   const [announcement, setAnnouncement] = useState("");
   const chooserRef = useRef<HTMLElement>(null);
@@ -34,6 +34,12 @@ export function AudienceFunnel() {
   useEffect(() => {
     setStage(stageFromChoice(personaId, industryId));
   }, [personaId, industryId]);
+
+  useEffect(() => {
+    if (resetKey === 0) return;
+    setAnnouncement("Choose your role.");
+    setStage("role");
+  }, [resetKey]);
 
   useEffect(() => {
     if (window.location.hash === "#funnel" || window.location.hash === "#chooser") {
@@ -100,7 +106,8 @@ export function AudienceFunnel() {
     }
   };
 
-  const stepLabel = stage === "result" ? "Your path" : stage === "role" ? "1 of 2" : "2 of 2";
+  const stepLabel = stage === "industry" ? "2 of 2" : null;
+  const showChooserMeta = Boolean(stepLabel) || (stage === "role" && Boolean(scenario));
 
   return (
     <div className="icdu-home">
@@ -109,8 +116,8 @@ export function AudienceFunnel() {
       </a>
       <section className="icdu-hero" aria-labelledby="home-title">
         <h1 id="home-title">
-          Enabling AI to execute
-          <span>with intent.</span>
+          Enabling AI to understand
+          <span>your intent.</span>
         </h1>
         <p data-testid="funnel-sentence">
           Define the task. Check the work. Keep the record.
@@ -135,32 +142,30 @@ export function AudienceFunnel() {
                   : "funnel-preview-role"
           }
         >
-          <div className="icdu-chooser-meta">
-            <div>
-              {stage === "role" && scenario ? (
-                <button
-                  type="button"
-                  className="icdu-context-button icdu-focus"
-                  onClick={() => showStage("industry", "Choose your industry.")}
-                >
-                  <strong>{scenario.industryShort}</strong> · Change industry
-                </button>
-              ) : stage === "industry" && role ? (
-                <button
-                  type="button"
-                  className="icdu-context-button icdu-focus"
-                  onClick={() => showStage("role", "Choose your role.")}
-                >
-                  <strong>{role.chipLabel}</strong> · Change role
-                </button>
-              ) : stage === "result" ? (
-                "Made for your perspective"
-              ) : (
-                "Find your path"
-              )}
+          {showChooserMeta ? (
+            <div className="icdu-chooser-meta">
+              <div>
+                {stage === "role" && scenario ? (
+                  <button
+                    type="button"
+                    className="icdu-context-button icdu-focus"
+                    onClick={() => showStage("industry", "Choose your industry.")}
+                  >
+                    <strong>{scenario.industryShort}</strong> · Change industry
+                  </button>
+                ) : stage === "industry" && role ? (
+                  <button
+                    type="button"
+                    className="icdu-context-button icdu-focus"
+                    onClick={() => showStage("role", "Choose your role.")}
+                  >
+                    <strong>{role.chipLabel}</strong> · Change role
+                  </button>
+                ) : null}
+              </div>
+              {stepLabel ? <span className="icdu-step-count">{stepLabel}</span> : null}
             </div>
-            <span className="icdu-step-count">{stepLabel}</span>
-          </div>
+          ) : null}
 
           <div className="icdu-step-content" data-testid="audience-funnel">
             {stage === "role" ? (

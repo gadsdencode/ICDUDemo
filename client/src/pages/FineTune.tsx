@@ -1211,14 +1211,14 @@ export default function FineTune() {
             Buyer demos and schema exploration belong on{" "}
             <a
               href="/developers"
-              className="text-[color:var(--icdu-blue)] hover:underline"
+              className="text-[color:var(--icdu-accent)] hover:underline"
             >
               Developers
             </a>{" "}
             and{" "}
             <a
               href="/demos?mode=lab"
-              className="text-[color:var(--icdu-blue)] hover:underline"
+              className="text-[color:var(--icdu-accent)] hover:underline"
             >
               Advanced Lab
             </a>

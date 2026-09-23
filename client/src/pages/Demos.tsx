@@ -102,7 +102,7 @@ export default function Demos() {
             className={cn(
               "icdu-focus inline-flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm cursor-pointer",
               mode === "guided"
-                ? "border-[color:var(--icdu-fg)] font-semibold text-[color:var(--icdu-fg)]"
+                ? "border-[color:var(--icdu-accent)] font-semibold text-[color:var(--icdu-accent)]"
                 : "border-[color:var(--icdu-fg-whisper)] font-medium text-[color:var(--icdu-fg-muted)]",
             )}
             onClick={() => selectMode("guided")}
@@ -112,7 +112,7 @@ export default function Demos() {
               className={cn(
                 "h-2 w-2 rounded-full border-2",
                 mode === "guided"
-                  ? "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-fg)]"
+                  ? "border-[color:var(--icdu-accent)] bg-[color:var(--icdu-accent)]"
                   : "border-[color:var(--icdu-fg-whisper)]",
               )}
               aria-hidden="true"
@@ -127,7 +127,7 @@ export default function Demos() {
             className={cn(
               "icdu-focus inline-flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm cursor-pointer",
               mode === "lab"
-                ? "border-[color:var(--icdu-fg)] font-semibold text-[color:var(--icdu-fg)]"
+                ? "border-[color:var(--icdu-accent)] font-semibold text-[color:var(--icdu-accent)]"
                 : "border-[color:var(--icdu-fg-whisper)] font-medium text-[color:var(--icdu-fg-muted)]",
             )}
             onClick={() => selectMode("lab")}
@@ -137,7 +137,7 @@ export default function Demos() {
               className={cn(
                 "h-2 w-2 rounded-full border-2",
                 mode === "lab"
-                  ? "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-fg)]"
+                  ? "border-[color:var(--icdu-accent)] bg-[color:var(--icdu-accent)]"
                   : "border-[color:var(--icdu-fg-whisper)]",
               )}
               aria-hidden="true"

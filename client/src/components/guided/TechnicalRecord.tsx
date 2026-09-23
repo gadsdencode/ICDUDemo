@@ -23,7 +23,7 @@ export function TechnicalRecord({
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="mt-4">
       <CollapsibleTrigger
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] px-3 py-2.5 text-left text-sm font-medium text-[color:var(--icdu-fg)] hover:bg-[color:var(--icdu-surface-hover)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]"
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] px-3 py-2.5 text-left text-sm font-medium text-[color:var(--icdu-fg)] hover:bg-[color:var(--icdu-surface-hover)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)]"
         data-testid="view-technical-record"
       >
         <span>{title}</span>

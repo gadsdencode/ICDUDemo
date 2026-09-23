@@ -44,7 +44,7 @@ export default function Developers() {
               <div className="flex items-start gap-3">
                 <FlaskConical
                   className="h-5 w-5 shrink-0 mt-0.5"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 />
                 <div>
                   <h3 className="font-semibold text-sm m-0 mb-1">
@@ -57,7 +57,7 @@ export default function Developers() {
                   </p>
                   <Link
                     href="/demos?mode=lab"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-blue)] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-accent)] hover:underline"
                   >
                     Open Advanced Lab <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
@@ -69,7 +69,7 @@ export default function Developers() {
               <div className="flex items-start gap-3">
                 <Wrench
                   className="h-5 w-5 shrink-0 mt-0.5"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 />
                 <div>
                   <h3 className="font-semibold text-sm m-0 mb-1">
@@ -86,7 +86,7 @@ export default function Developers() {
                   </p>
                   <Link
                     href="/fine-tune"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-blue)] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-accent)] hover:underline"
                   >
                     Open Fine-Tune lab <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
@@ -98,7 +98,7 @@ export default function Developers() {
               <div className="flex items-start gap-3">
                 <Code2
                   className="h-5 w-5 shrink-0 mt-0.5"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 />
                 <div>
                   <h3 className="font-semibold text-sm m-0 mb-1">
@@ -110,7 +110,7 @@ export default function Developers() {
                   </p>
                   <Link
                     href="/demos"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-blue)] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-[color:var(--icdu-accent)] hover:underline"
                   >
                     Start Guided Demo <ArrowRight className="h-3.5 w-3.5" />
                   </Link>

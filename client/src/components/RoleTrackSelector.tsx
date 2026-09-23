@@ -111,8 +111,8 @@ export function RoleTrackSelector({
                     aria-pressed={selected}
                     className={cn(
                       "icdu-focus text-left rounded-xl border-2 border-[color:var(--icdu-fg-whisper)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 cursor-pointer",
-                      "transition-colors hover:border-[color:var(--icdu-fg)]",
-                      selected && "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-surface-solid)]",
+                      "transition-colors hover:border-[color:var(--icdu-accent)]",
+                      selected && "border-[color:var(--icdu-accent)] bg-[color:var(--icdu-surface-solid)]",
                     )}
                     data-testid={`persona-card-${persona.id}`}
                   >
@@ -133,7 +133,7 @@ export function RoleTrackSelector({
                           {persona.name}
                         </h3>
                         {alias ? (
-                          <p className="text-xs font-medium text-[color:var(--icdu-blue)] mt-1 m-0">
+                          <p className="text-xs font-medium text-[color:var(--icdu-accent)] mt-1 m-0">
                             {alias}
                           </p>
                         ) : null}
@@ -165,7 +165,7 @@ export function RoleTrackSelector({
                         <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                         ~{persona.estimatedMinutes} min
                       </span>
-                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--icdu-blue)]">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--icdu-accent)]">
                         {selected ? "Selected" : actionLabel}
                         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                       </span>

@@ -91,7 +91,7 @@ export default function Research() {
               >
                 <div
                   className="text-xl sm:text-2xl font-semibold"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 >
                   {stat.value}
                 </div>
@@ -190,7 +190,7 @@ export default function Research() {
           <p className="mt-6 m-0">
             <Link
               href="/resources"
-              className="inline-flex items-center gap-1.5 text-sm text-[color:var(--icdu-blue)] hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm text-[color:var(--icdu-accent)] hover:underline"
             >
               All resources <ArrowRight className="h-3.5 w-3.5" />
             </Link>

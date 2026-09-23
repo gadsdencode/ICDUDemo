@@ -108,7 +108,7 @@ function RoiSlider({
             <TooltipTrigger asChild>
               <button
                 type="button"
-                className="text-[color:var(--icdu-fg-faint)] hover:text-[color:var(--icdu-fg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)] rounded-sm"
+                className="text-[color:var(--icdu-fg-faint)] hover:text-[color:var(--icdu-fg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)] rounded-sm"
                 aria-label={`About ${label}`}
               >
                 <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
@@ -121,7 +121,7 @@ function RoiSlider({
         </label>
         <span
           className="text-sm font-semibold tabular-nums"
-          style={{ color: "var(--icdu-blue)" }}
+          style={{ color: "var(--icdu-accent)" }}
         >
           {display}
         </span>
@@ -164,7 +164,7 @@ function RoiCalculatorPanel() {
 
   const chartConfig = {
     amount: { label: "USD" },
-    savings: { label: "Savings", color: "var(--icdu-blue)" },
+    savings: { label: "Savings", color: "var(--icdu-accent)" },
     costs: { label: "Cost", color: "var(--icdu-fg-faint)" },
   };
 
@@ -202,7 +202,7 @@ function RoiCalculatorPanel() {
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--icdu-fg)] mb-2">
             <Calculator
               className="h-4 w-4"
-              style={{ color: "var(--icdu-blue)" }}
+              style={{ color: "var(--icdu-accent)" }}
               aria-hidden="true"
             />
             Interactive value model
@@ -310,7 +310,7 @@ function RoiCalculatorPanel() {
 
         <div className="space-y-4">
           <p
-            className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 rounded-xl border border-[color:var(--icdu-blue)]/25 bg-[color:var(--icdu-blue)]/5 p-4"
+            className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 rounded-xl border border-[color:var(--icdu-accent)]/25 bg-[color:var(--icdu-accent)]/5 p-4"
             data-testid="roi-summary-sentence"
           >
             {summarySentence}
@@ -350,7 +350,7 @@ function RoiCalculatorPanel() {
               >
                 <div
                   className="text-base sm:text-xl font-semibold tabular-nums leading-tight"
-                  style={{ color: "var(--icdu-blue)" }}
+                  style={{ color: "var(--icdu-accent)" }}
                 >
                   {metric.value}
                 </div>
@@ -407,7 +407,7 @@ function RoiCalculatorPanel() {
                       key={entry.kind}
                       fill={
                         entry.kind === "savings"
-                          ? "var(--icdu-blue)"
+                          ? "var(--icdu-accent)"
                           : "var(--icdu-fg-faint)"
                       }
                     />
@@ -419,7 +419,7 @@ function RoiCalculatorPanel() {
               <span className="flex items-center gap-1.5">
                 <span
                   className="h-2.5 w-2.5 rounded-sm"
-                  style={{ background: "var(--icdu-blue)" }}
+                  style={{ background: "var(--icdu-accent)" }}
                 />
                 Savings ({formatBusinessCurrency(results.totalReturn)})
               </span>
@@ -565,7 +565,7 @@ export default function BusinessCase() {
                   </h3>
                   <span
                     className="text-xs font-semibold tabular-nums shrink-0"
-                    style={{ color: "var(--icdu-blue)" }}
+                    style={{ color: "var(--icdu-accent)" }}
                   >
                     {item.figure}
                   </span>
@@ -592,7 +592,7 @@ export default function BusinessCase() {
           id="value-model"
           className={cn(
             "scroll-mt-24",
-            recommendValueModel && "border-l-2 border-l-[color:var(--icdu-fg)] pl-4",
+            recommendValueModel && "border-l-2 border-l-[color:var(--icdu-accent)] pl-4",
           )}
         >
           {recommendValueModel ? (
@@ -627,7 +627,7 @@ export default function BusinessCase() {
                   data-testid={isMatch ? "business-case-recommended" : undefined}
                   className={cn(
                     "scroll-mt-24 border-[color:var(--icdu-border)]",
-                    isMatch && "border-l-2 border-l-[color:var(--icdu-fg)] bg-[color:var(--icdu-surface)] pl-3",
+                    isMatch && "border-l-2 border-l-[color:var(--icdu-accent)] bg-[color:var(--icdu-surface)] pl-3",
                   )}
                 >
                   <AccordionTrigger className="py-5 hover:no-underline">
@@ -653,7 +653,7 @@ export default function BusinessCase() {
                         >
                           <span
                             className="mt-1.5 h-1.5 w-1.5 rounded-full shrink-0"
-                            style={{ background: "var(--icdu-blue)" }}
+                            style={{ background: "var(--icdu-accent)" }}
                           />
                           {point}
                         </li>

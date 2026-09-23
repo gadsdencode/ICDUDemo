@@ -20,7 +20,7 @@ export function StageCoach({ scenario, step }: StageCoachProps) {
       className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5"
       data-testid="guided-stage-coach"
     >
-      <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-blue)] mb-3">
+      <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-3">
         Stage guide
       </div>
       <dl className="space-y-3.5">

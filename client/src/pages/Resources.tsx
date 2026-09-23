@@ -97,13 +97,13 @@ export default function Resources() {
         <div className="flex flex-wrap gap-3 text-sm">
           <Link
             href="/research"
-            className="inline-flex items-center gap-1.5 text-[color:var(--icdu-blue)] hover:underline"
+            className="inline-flex items-center gap-1.5 text-[color:var(--icdu-accent)] hover:underline"
           >
             Evidence & Research <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <Link
             href="/developers"
-            className="inline-flex items-center gap-1.5 text-[color:var(--icdu-blue)] hover:underline"
+            className="inline-flex items-center gap-1.5 text-[color:var(--icdu-accent)] hover:underline"
           >
             Developers <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -137,7 +137,7 @@ export default function Resources() {
               label={group.title}
               heading={group.title}
               description={group.description}
-              className={recommended ? "border-l-2 border-l-[color:var(--icdu-fg)] pl-4" : undefined}
+              className={recommended ? "border-l-2 border-l-[color:var(--icdu-accent)] pl-4" : undefined}
               data-testid={recommended ? "resources-recommended" : undefined}
             >
               {recommended ? (

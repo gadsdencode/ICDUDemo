@@ -174,7 +174,7 @@ function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
                   "rounded-lg border p-4",
                     block.variant === "warning"
                     ? "border-[color:var(--icdu-amber)]/30 bg-[color:var(--icdu-amber)]/5"
-                    : "border-[color:var(--icdu-blue)]/30 bg-[color:var(--icdu-blue)]/5",
+                    : "border-[color:var(--icdu-accent)]/30 bg-[color:var(--icdu-accent)]/5",
                 )}
               >
                 <h4 className="font-semibold text-sm text-[color:var(--icdu-fg)] mb-1 m-0">
@@ -321,9 +321,9 @@ export function JourneyStepper({
                   onClick={() => onTabChange(step.id)}
                   className={cn(
                     "w-full flex items-center justify-center sm:justify-start rounded-lg border px-2 sm:px-3 py-2.5 transition-colors cursor-pointer",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)]",
                     isActive
-                      ? "border-[color:var(--icdu-blue)] bg-[color:var(--icdu-blue)]/5"
+                      ? "border-[color:var(--icdu-accent)] bg-[color:var(--icdu-accent)]/5"
                       : isComplete
                         ? "border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] hover:border-[color:var(--icdu-border-hover)]"
                         : "border-[color:var(--icdu-border)] bg-transparent hover:border-[color:var(--icdu-border-hover)]",

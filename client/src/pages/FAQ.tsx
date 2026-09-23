@@ -52,7 +52,7 @@ export default function FAQ() {
           commercial use requires a license.{" "}
           <Link
             href="/licensing"
-            className="text-[color:var(--icdu-blue)] hover:underline font-medium"
+            className="text-[color:var(--icdu-accent)] hover:underline font-medium"
           >
             View licensing details
           </Link>
@@ -71,7 +71,7 @@ export default function FAQ() {
             onClick={() => setFilter("all")}
             className={cn(
               "shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors cursor-pointer",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)]",
               filter === "all"
                 ? "border-[color:var(--icdu-blue)] bg-[color:var(--icdu-blue)] text-white"
                 : "border-[color:var(--icdu-border)] text-[color:var(--icdu-fg-muted)] hover:border-[color:var(--icdu-border-hover)] hover:text-[color:var(--icdu-fg)]",
@@ -88,7 +88,7 @@ export default function FAQ() {
               onClick={() => setFilter(cat.id)}
               className={cn(
                 "shrink-0 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors cursor-pointer",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)]",
                 filter === cat.id
                   ? "border-[color:var(--icdu-blue)] bg-[color:var(--icdu-blue)] text-white"
                   : "border-[color:var(--icdu-border)] text-[color:var(--icdu-fg-muted)] hover:border-[color:var(--icdu-border-hover)] hover:text-[color:var(--icdu-fg)]",
@@ -127,14 +127,14 @@ export default function FAQ() {
           Looking for evidence tables or the research PDF?{" "}
           <Link
             href="/research"
-            className="text-[color:var(--icdu-blue)] hover:underline"
+            className="text-[color:var(--icdu-accent)] hover:underline"
           >
             Go to Evidence & Research
           </Link>
           . Need schemas or labs?{" "}
           <Link
             href="/developers"
-            className="text-[color:var(--icdu-blue)] hover:underline"
+            className="text-[color:var(--icdu-accent)] hover:underline"
           >
             Developers
           </Link>

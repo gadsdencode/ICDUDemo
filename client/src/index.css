@@ -4,7 +4,7 @@
 
 /* ═══════════════════════════════════════════════════════════════════
    ICDU Brand Design System
-   Editorial palette derived from the Overview homepage.
+   Ink & Cobalt palette. Canvas, ink, and cobalt stay in separate roles.
    shadcn tokens are remapped to the same hierarchy so interior pages
    inherit the brand without replacing the component framework.
    ═══════════════════════════════════════════════════════════════════ */
@@ -20,50 +20,50 @@
   --elevate-1: rgba(0, 0, 0, 0.03);
   --elevate-2: rgba(0, 0, 0, 0.08);
 
-  /* Warm ivory ground from the approved homepage */
-  --background: 36 33% 96.9%; /* #faf8f4 */
-  --foreground: 280 10% 15.3%; /* #27232b */
+  /* Ink & Cobalt canvas */
+  --background: 216 45% 97.8%; /* #F7F9FC */
+  --foreground: 211 38% 15.1%; /* #182635 */
 
-  --border: 40 5% 90%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 10%;
-  --card-border: 40 5% 92%;
+  --border: 212 23% 83.7%; /* #CCD5DF */
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 211 38% 15.1%;
+  --card-border: 212 23% 83.7%;
 
-  --sidebar: 40 8% 97%;
-  --sidebar-foreground: 0 0% 10%;
-  --sidebar-border: 40 5% 90%;
-  --sidebar-primary: 217 91% 53%;
+  --sidebar: 216 45% 97.8%;
+  --sidebar-foreground: 211 38% 15.1%;
+  --sidebar-border: 212 23% 83.7%;
+  --sidebar-primary: 221 66% 46.5%; /* #285BC5 */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 214 20% 94%;
-  --sidebar-accent-foreground: 0 0% 10%;
-  --sidebar-ring: 217 91% 53%;
+  --sidebar-accent: 214 44% 93.7%; /* #E8EEF6 */
+  --sidebar-accent-foreground: 211 38% 15.1%;
+  --sidebar-ring: 221 66% 46.5%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 10%;
-  --popover-border: 40 5% 92%;
+  --popover-foreground: 211 38% 15.1%;
+  --popover-border: 212 23% 83.7%;
 
-  /* Plum accent */
-  --primary: 280 36% 27%; /* #4c305a */
-  --primary-foreground: 36 33% 99%;
+  /* Cobalt is the action. It is not the completed-path panel. */
+  --primary: 221 66% 46.5%; /* #285BC5 */
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 40 10% 96%;
-  --secondary-foreground: 0 0% 10%;
+  --secondary: 214 44% 93.7%; /* #E8EEF6 */
+  --secondary-foreground: 211 38% 15.1%;
 
-  --muted: 40 10% 96%;
-  --muted-foreground: 0 0% 32%; /* #525252 */
+  --muted: 214 44% 93.7%;
+  --muted-foreground: 212 18% 39.6%; /* #536477 */
 
-  --accent: 40 10% 96%;
-  --accent-foreground: 0 0% 10%;
+  --accent: 214 44% 93.7%;
+  --accent-foreground: 211 38% 15.1%;
 
   --destructive: 0 72% 51%; /* #dc2626 */
   --destructive-foreground: 0 0% 100%;
 
-  --input: 40 5% 85%;
-  --ring: 288 32% 48%; /* #8755a0 */
-  --chart-1: 217 91% 53%;
+  --input: 212 23% 83.7%;
+  --ring: 221 66% 46.5%; /* #285BC5 */
+  --chart-1: 221 66% 46.5%;
   --chart-2: 160 84% 39%; /* #059669 */
   --chart-3: 32 95% 44%; /* #d97706 */
-  --chart-4: 280 65% 60%;
+  --chart-4: 190 53% 36.7%; /* #2C7F8F, distinct from cobalt and status green */
   --chart-5: 0 72% 51%;
 
   /* Typography */
@@ -86,28 +86,34 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
-  /* Brand primitives (raw values for presentation components) */
-  --icdu-bg: #faf8f4;
-  --icdu-fg: #27232b;
-  --icdu-fg-muted: #685f6a;
-  --icdu-fg-faint: #8a808c;
-  --icdu-fg-ghost: #a398a4;
-  --icdu-fg-whisper: #ded8df;
-  --icdu-surface: #fffefa;
-  --icdu-surface-solid: #fffefa;
-  --icdu-surface-hover: #f6f1ea;
-  --icdu-border: #ded8df;
-  --icdu-border-hover: #c8c0ca;
+  /* Brand primitives. Legacy names keep their roles:
+     blue = cobalt action fill (white text),
+     plum = accent used for text, hover, and active emphasis,
+     lavender = pale chooser / subtle surface. */
+  --icdu-bg: #F7F9FC;
+  --icdu-fg: #182635;
+  --icdu-fg-muted: #536477;
+  --icdu-fg-faint: #5E7084;
+  --icdu-fg-ghost: #7D8FA1;
+  --icdu-fg-whisper: #CCD5DF;
+  --icdu-surface: #FFFFFF;
+  --icdu-surface-solid: #FFFFFF;
+  --icdu-surface-hover: #E8EEF6;
+  --icdu-border: #CCD5DF;
+  --icdu-border-hover: #A9B7C6;
   --icdu-glow-blue: transparent;
   --icdu-glow-green: rgba(5, 150, 105, 0.08);
-  --icdu-nav-bg: #faf8f4;
-  --icdu-blue: #4c305a;
-  --icdu-blue-hover: #3c2448;
-  --icdu-plum: #4c305a;
-  --icdu-lavender: #eee8f1;
-  --icdu-paper: #faf8f4;
-  --icdu-cream: #fffefa;
-  --icdu-focus: #8755a0;
+  --icdu-nav-bg: #F7F9FC;
+  --icdu-blue: #285BC5;
+  --icdu-blue-hover: #1E4A9E;
+  --icdu-accent: #285BC5;
+  --icdu-plum: #285BC5;
+  --icdu-lavender: #E8EEF6;
+  --icdu-path: #173753;
+  --icdu-path-muted: #CFDDEA;
+  --icdu-paper: #F7F9FC;
+  --icdu-cream: #FFFFFF;
+  --icdu-focus: #285BC5;
   --icdu-green: #059669;
   --icdu-amber: #d97706;
   --icdu-red: #dc2626;
@@ -166,49 +172,49 @@
   --elevate-1: rgba(255, 255, 255, 0.04);
   --elevate-2: rgba(255, 255, 255, 0.09);
 
-  /* Warm dark ground paired with the ivory homepage */
-  --background: 280 12% 8.4%; /* #161318 */
-  --foreground: 36 33% 97%; /* #faf8f4 */
+  /* Dark ink surfaces with a lighter cobalt accent */
+  --background: 213 39% 9%; /* #0E1620 */
+  --foreground: 216 45% 97.8%; /* #F7F9FC */
 
-  --border: 280 8% 22%;
-  --card: 280 10% 11%;
-  --card-foreground: 36 33% 97%;
-  --card-border: 280 8% 24%;
+  --border: 208 27% 26.5%; /* #314556 */
+  --card: 210 42% 14.1%; /* #152433 */
+  --card-foreground: 216 45% 97.8%;
+  --card-border: 208 27% 26.5%;
 
-  --sidebar: 0 0% 6%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 0 0% 14%;
-  --sidebar-primary: 217 91% 60%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 0 0% 12%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 217 91% 60%;
+  --sidebar: 213 39% 9%;
+  --sidebar-foreground: 216 45% 97.8%;
+  --sidebar-border: 208 27% 26.5%;
+  --sidebar-primary: 217 76% 78.4%; /* #9EBEF2 */
+  --sidebar-primary-foreground: 213 39% 9%;
+  --sidebar-accent: 212 38% 17.6%;
+  --sidebar-accent-foreground: 216 45% 97.8%;
+  --sidebar-ring: 217 76% 78.4%;
 
-  --popover: 0 0% 7%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 0 0% 16%;
+  --popover: 210 42% 14.1%;
+  --popover-foreground: 216 45% 97.8%;
+  --popover-border: 208 27% 26.5%;
 
-  --primary: 286 28% 82%;
-  --primary-foreground: 280 14% 12%;
+  --primary: 217 76% 78.4%; /* #9EBEF2 */
+  --primary-foreground: 213 39% 9%;
 
-  --secondary: 0 0% 12%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary: 212 38% 17.6%;
+  --secondary-foreground: 216 45% 97.8%;
 
-  --muted: 0 0% 12%;
-  --muted-foreground: 0 0% 70%; /* #b3b3b3 */
+  --muted: 212 38% 17.6%;
+  --muted-foreground: 209 39% 86.5%; /* #CFDDEA */
 
-  --accent: 0 0% 12%;
-  --accent-foreground: 0 0% 98%;
+  --accent: 212 38% 17.6%;
+  --accent-foreground: 216 45% 97.8%;
 
   --destructive: 0 84% 60%; /* #ef4444 */
   --destructive-foreground: 0 0% 100%;
 
-  --input: 0 0% 18%;
-  --ring: 28 70% 87%;
-  --chart-1: 217 91% 60%;
+  --input: 208 27% 26.5%;
+  --ring: 217 76% 78.4%; /* #9EBEF2 */
+  --chart-1: 217 76% 78.4%;
   --chart-2: 160 84% 39%;
   --chart-3: 38 92% 50%;
-  --chart-4: 280 65% 60%;
+  --chart-4: 174 45% 62%;
   --chart-5: 0 84% 60%;
 
   --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.2);
@@ -220,27 +226,30 @@
   --shadow-xl: 0 16px 40px -8px rgb(0 0 0 / 0.55);
   --shadow-2xl: 0 24px 48px -12px rgb(0 0 0 / 0.6);
 
-  --icdu-bg: #161318;
-  --icdu-fg: #faf8f4;
-  --icdu-fg-muted: #c9bfc8;
-  --icdu-fg-faint: #a398a6;
-  --icdu-fg-ghost: #8d8290;
-  --icdu-fg-whisper: #3d3642;
-  --icdu-surface: #221e26;
-  --icdu-surface-solid: #2a2530;
-  --icdu-surface-hover: #342e3a;
-  --icdu-border: #3d3642;
-  --icdu-border-hover: #564c5c;
+  --icdu-bg: #0E1620;
+  --icdu-fg: #F7F9FC;
+  --icdu-fg-muted: #CFDDEA;
+  --icdu-fg-faint: #9AADC2;
+  --icdu-fg-ghost: #7A96B0;
+  --icdu-fg-whisper: #314556;
+  --icdu-surface: #152433;
+  --icdu-surface-solid: #1A2A3C;
+  --icdu-surface-hover: #243446;
+  --icdu-border: #314556;
+  --icdu-border-hover: #4E6E8C;
   --icdu-glow-blue: transparent;
   --icdu-glow-green: rgba(16, 185, 129, 0.1);
-  --icdu-nav-bg: #161318;
-  --icdu-blue: #e4d0ec;
-  --icdu-blue-hover: #f3e6f6;
-  --icdu-plum: #c9a8d6;
-  --icdu-lavender: #2a2430;
-  --icdu-paper: #161318;
-  --icdu-cream: #322c38;
-  --icdu-focus: #f2caac;
+  --icdu-nav-bg: #0E1620;
+  --icdu-blue: #285BC5;
+  --icdu-blue-hover: #1E4A9E;
+  --icdu-accent: #9EBEF2;
+  --icdu-plum: #9EBEF2;
+  --icdu-lavender: #1C2C3E;
+  --icdu-path: #173753;
+  --icdu-path-muted: #CFDDEA;
+  --icdu-paper: #0E1620;
+  --icdu-cream: #243446;
+  --icdu-focus: #9EBEF2;
   --icdu-green: #10b981;
   --icdu-amber: #f59e0b;
   --icdu-red: #ef4444;
@@ -299,7 +308,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--icdu-blue);
+    color: var(--icdu-accent);
     margin-bottom: 0.75rem;
   }
 
@@ -352,7 +361,7 @@
 
   .icdu-cta-primary:focus-visible,
   .icdu-cta-secondary:focus-visible {
-    outline: 2px solid var(--icdu-blue);
+    outline: 2px solid var(--icdu-focus);
     outline-offset: 2px;
   }
 
@@ -412,7 +421,7 @@
   }
 
   .icdu-brand-card--interactive:focus-visible {
-    outline: 2px solid var(--icdu-blue);
+    outline: 2px solid var(--icdu-focus);
     outline-offset: 2px;
   }
 
@@ -436,7 +445,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in srgb, var(--icdu-blue) 30%, transparent),
+      color-mix(in srgb, var(--icdu-accent) 30%, transparent),
       transparent
     );
   }
@@ -618,9 +627,9 @@
 }
 .icdu-role-option:hover { border-color: var(--icdu-plum); }
 .icdu-role-option[aria-pressed="true"] {
-  color: #fffefa;
-  background: #4c305a;
-  border-color: #4c305a;
+  color: #ffffff;
+  background: var(--icdu-blue);
+  border-color: var(--icdu-blue);
 }
 .icdu-step-foot {
   display: flex;
@@ -678,17 +687,17 @@
 }
 .icdu-industry-option:hover { border-color: var(--icdu-plum); }
 .icdu-industry-option[aria-pressed="true"] {
-  color: #fffefa;
-  background: #4c305a;
-  border-color: #4c305a;
+  color: #ffffff;
+  background: var(--icdu-blue);
+  border-color: var(--icdu-blue);
 }
-.icdu-industry-option[aria-pressed="true"] small { color: #ded0e4; }
+.icdu-industry-option[aria-pressed="true"] small { color: #E8EEF6; }
 .icdu-chooser.is-result {
-  background: #4c305a;
-  color: #fffefa;
+  background: var(--icdu-path);
+  color: #ffffff;
   padding-bottom: 34px;
 }
-.icdu-chooser.is-result .icdu-chooser-meta { color: #d8c9df; }
+.icdu-chooser.is-result .icdu-chooser-meta { color: var(--icdu-path-muted); }
 .icdu-chooser.is-result .icdu-step-content { padding-top: 23px; }
 .icdu-path-pair {
   display: flex;
@@ -697,7 +706,7 @@
   gap: 8px;
   margin-bottom: 15px;
   font-size: 12px;
-  color: #e5d6eb;
+  color: var(--icdu-path-muted);
 }
 .icdu-path-pair span + span::before { content: "·"; margin-right: 8px; }
 .icdu-path-title {
@@ -712,7 +721,7 @@
   margin: 0 auto 25px;
   max-width: 625px;
   font-size: 16px;
-  color: #e5d6eb;
+  color: var(--icdu-path-muted);
   line-height: 1.5;
 }
 .icdu-path-actions {
@@ -730,21 +739,21 @@
   min-height: 49px;
   padding: 13px 22px;
   border-radius: 27px;
-  background: #fffefa;
-  color: #4c305a;
+  background: #ffffff;
+  color: var(--icdu-blue);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
 }
-.icdu-path-primary:hover { background: #eadfee; }
+.icdu-path-primary:hover { background: #E8EEF6; }
 .icdu-path-secondary {
   font-size: 14px;
   padding: 7px 0;
-  border-bottom: 1px solid #b89fc3;
-  color: #fffefa;
+  border-bottom: 1px solid #8FA8C2;
+  color: var(--icdu-path-muted);
   text-decoration: none;
 }
-.icdu-path-secondary:hover { border-bottom-color: #fffefa; }
+.icdu-path-secondary:hover { border-bottom-color: #ffffff; color: #ffffff; }
 .icdu-path-additional {
   margin: 21px 0 0;
   display: flex;
@@ -753,7 +762,7 @@
   flex-wrap: wrap;
 }
 .icdu-path-additional a {
-  color: #e5d6eb;
+  color: var(--icdu-path-muted);
   font-size: 12px;
   text-decoration: none;
 }
@@ -762,7 +771,7 @@
   margin: 26px auto 0;
   padding-top: 18px;
   max-width: 650px;
-  border-top: 1px solid #785985;
+  border-top: 1px solid #6A8AAB;
   display: flex;
   justify-content: center;
   gap: 23px;
@@ -770,7 +779,7 @@
 .icdu-path-edit button {
   border: 0;
   background: none;
-  color: #e5d6eb;
+  color: var(--icdu-path-muted);
   padding: 5px 0;
   font-size: 12px;
   cursor: pointer;
@@ -780,9 +789,8 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-.icdu-chooser.is-result a:focus-visible,
-.icdu-chooser.is-result button:focus-visible {
-  outline-color: #f2caac !important;
+.icdu-chooser.is-result :is(a, button):is(:focus, :focus-visible) {
+  outline-color: #CFDDEA !important;
 }
 .icdu-browse {
   display: flex;
@@ -796,7 +804,7 @@
 .icdu-browse a {
   color: var(--icdu-fg);
   padding-bottom: 2px;
-  border-bottom: 1px solid #c0b8c1;
+  border-bottom: 1px solid #A9B7C6;
   text-decoration: none;
 }
 .icdu-browse a:hover { color: var(--icdu-plum); border-color: var(--icdu-plum); }
@@ -808,14 +816,16 @@
   min-height: 43px;
   padding: 11px 18px;
   border-radius: 24px;
-  background: var(--icdu-fg);
-  color: var(--icdu-bg);
+  background: #182635;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: background .16s, color .16s;
 }
-.icdu-walkthrough:hover { background: #4c305a; color: #fffefa; }
+.dark .icdu-walkthrough { background: #F7F9FC; color: #0E1620; }
+.icdu-walkthrough:hover { background: #0F1A26; color: #ffffff; }
+.dark .icdu-walkthrough:hover { background: #CFDDEA; color: #0E1620; }
 .icdu-wordmark {
   font-size: 33px;
   line-height: 1;
@@ -836,7 +846,7 @@
   background: var(--icdu-cream);
   padding: 10px;
   z-index: 5;
-  box-shadow: 0 12px 30px #27232b12;
+  box-shadow: 0 12px 30px #1826351f;
 }
 .icdu-menu-panel a {
   display: block;
@@ -847,12 +857,6 @@
   border-radius: 8px;
 }
 .icdu-menu-panel a:hover { background: var(--icdu-lavender); }
-.dark .icdu-role-option[aria-pressed="true"],
-.dark .icdu-industry-option[aria-pressed="true"] {
-  background: #6d4a80;
-  border-color: #6d4a80;
-  color: #fffefa;
-}
 @media (min-width: 1400px) {
   .icdu-hero { padding-top: 89px; }
 }

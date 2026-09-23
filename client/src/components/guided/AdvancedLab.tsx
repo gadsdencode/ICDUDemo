@@ -95,7 +95,7 @@ export function AdvancedLab() {
             <FlaskRound className="h-4 w-4" aria-hidden="true" />
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-blue)] mb-1">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-1">
               Advanced Lab
             </div>
             <h2 className="text-base sm:text-lg font-semibold tracking-tight mb-1">

@@ -166,7 +166,7 @@ export default function Journey() {
                   "h-auto w-auto min-w-[10.5rem] rounded-md border-[color:var(--icdu-border)]",
                   "bg-[color:var(--icdu-surface-solid)] px-2.5 py-1.5 text-xs font-medium",
                   "text-[color:var(--icdu-fg)] shadow-none",
-                  "focus:ring-2 focus:ring-[color:var(--icdu-blue)] focus:ring-offset-0",
+                  "focus:ring-2 focus:ring-[color:var(--icdu-focus)] focus:ring-offset-0",
                 )}
               >
                 <SelectValue />
@@ -215,7 +215,7 @@ export default function Journey() {
           personaId={personaId}
           endNote={
             <section
-              className="rounded-md border-2 border-[color:var(--icdu-fg)] p-4"
+              className="rounded-md border-2 border-[color:var(--icdu-accent)] p-4"
               data-testid="journey-handoff"
             >
               <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--icdu-fg-faint)]">
