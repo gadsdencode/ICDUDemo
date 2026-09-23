@@ -116,8 +116,7 @@ export function AudienceFunnel() {
       </a>
       <section className="icdu-hero" aria-labelledby="home-title">
         <h1 id="home-title">
-          Enabling AI to understand
-          <span>your intent.</span>
+          AI Guided by Intent
         </h1>
         <p data-testid="funnel-sentence">
           Define the task. Check the work. Keep the record.
