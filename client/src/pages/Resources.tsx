@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import { Download, ArrowRight, ExternalLink } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
@@ -17,6 +17,9 @@ import {
   type CatalogItem,
 } from "@/data/siteResources";
 import { cn } from "@/lib/utils";
+import { useAudience } from "@/components/AudienceProvider";
+import { RecommendedFlag } from "@/components/PathChrome";
+import { formatAudienceChip } from "@/data/audience";
 
 function FormatBadge({ format }: { format: string }) {
   return (
@@ -65,11 +68,21 @@ export default function Resources() {
     trackPageViewed("resources");
   }, []);
 
+  const { personaId, industryId, route } = useAudience();
+  const audienceChip = formatAudienceChip(personaId, industryId);
+
   const byGroup = {
     executive: staticDownloads.filter((d) => d.group === "executive"),
     research: staticDownloads.filter((d) => d.group === "research"),
     technical: generatedTechnicalDocs,
   };
+
+  const groups = useMemo(() => {
+    if (!route) return resourceGroups;
+    const match = resourceGroups.filter((group) => group.id === route.resourceGroup);
+    const rest = resourceGroups.filter((group) => group.id !== route.resourceGroup);
+    return [...match, ...rest];
+  }, [route]);
 
   return (
     <BrandPage>
@@ -108,16 +121,30 @@ export default function Resources() {
           </Link>
         </div>
 
-        {resourceGroups.map((group) => {
+        {audienceChip && route ? (
+          <p className="text-sm text-[color:var(--icdu-fg-muted)] m-0" data-testid="resources-audience-lead">
+            {`Recommended for ${audienceChip}: ${resourceGroups.find((group) => group.id === route.resourceGroup)?.title}. The other sets are on this page.`}
+          </p>
+        ) : null}
+
+        {groups.map((group) => {
           const items = byGroup[group.id];
           const isTechnical = group.id === "technical";
+          const recommended = route?.resourceGroup === group.id;
           return (
             <ContentSection
               key={group.id}
               label={group.title}
               heading={group.title}
               description={group.description}
+              className={recommended ? "border-l-2 border-l-[color:var(--icdu-fg)] pl-4" : undefined}
+              data-testid={recommended ? "resources-recommended" : undefined}
             >
+              {recommended ? (
+                <div className="mb-4">
+                  <RecommendedFlag />
+                </div>
+              ) : null}
               <div
                 className={cn(
                   "grid gap-4",

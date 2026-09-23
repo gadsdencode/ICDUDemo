@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navigation } from "@/components/Navigation";
+import { AudienceProvider } from "@/components/AudienceProvider";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -43,13 +44,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="icdu-theme">
         <TooltipProvider>
-          <div className="min-h-screen bg-background text-foreground font-sans">
-            <Navigation />
-            <main>
-              <Router />
-            </main>
-          </div>
-          <Toaster />
+          <AudienceProvider>
+            <div className="min-h-screen bg-background text-foreground font-sans">
+              <Navigation />
+              <main>
+                <Router />
+              </main>
+            </div>
+            <Toaster />
+          </AudienceProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

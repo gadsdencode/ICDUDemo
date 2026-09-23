@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import {
+  getGuidedScenario,
   guidedSteps,
   type GuidedScenario,
   type GuidedStepId,
@@ -28,18 +30,38 @@ const WALKTHROUGH_URL =
 
 type GuidedDemoProps = {
   onOpenAdvancedLab: () => void;
+  scenarioId?: string | null;
+  onScenarioChange?: (id: string | null) => void;
+  handoffHref?: string;
+  handoffLabel?: string;
 };
+
+const SIMULATION_NOTE =
+  "Simulated demo. The reply, scores, and gate decision are scripted for this walkthrough. They are not a live model run, a customer outcome, or an independently measured result.";
 
 function stepIndex(id: GuidedStepId) {
   return guidedSteps.findIndex((s) => s.id === id);
 }
 
-export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
-  const [scenario, setScenario] = useState<GuidedScenario | null>(null);
+export function GuidedDemo({
+  onOpenAdvancedLab,
+  scenarioId = null,
+  onScenarioChange,
+  handoffHref = "/business-case",
+  handoffLabel = "Business case",
+}: GuidedDemoProps) {
+  const scenario = scenarioId ? getGuidedScenario(scenarioId) ?? null : null;
   const [step, setStep] = useState<GuidedStepId>("define");
   const [furthest, setFurthest] = useState(0);
   const [ranAi, setRanAi] = useState(false);
   const [evaluated, setEvaluated] = useState(false);
+
+  useEffect(() => {
+    setStep("define");
+    setFurthest(0);
+    setRanAi(false);
+    setEvaluated(false);
+  }, [scenarioId]);
 
   const progressPct = useMemo(() => {
     if (!scenario) return 0;
@@ -47,11 +69,7 @@ export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
   }, [scenario, step]);
 
   const selectScenario = (s: GuidedScenario) => {
-    setScenario(s);
-    setStep("define");
-    setFurthest(0);
-    setRanAi(false);
-    setEvaluated(false);
+    onScenarioChange?.(s.id);
     trackDemoInteraction("guided_demo", `select_${s.id}`);
   };
 
@@ -80,16 +98,17 @@ export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
   };
 
   const resetToScenarios = () => {
-    setScenario(null);
-    setStep("define");
-    setFurthest(0);
-    setRanAi(false);
-    setEvaluated(false);
+    onScenarioChange?.(null);
     trackDemoInteraction("guided_demo", "try_another");
   };
 
   if (!scenario) {
-    return <ScenarioSelector onSelect={selectScenario} />;
+    return (
+      <div className="space-y-4">
+        <SimulationNote />
+        <ScenarioSelector onSelect={selectScenario} selectedId={scenarioId} />
+      </div>
+    );
   }
 
   const canContinue =
@@ -110,6 +129,7 @@ export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
 
   return (
     <div data-testid="guided-demo">
+      <SimulationNote />
       <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-blue)] mb-1">
@@ -163,6 +183,8 @@ export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
               scenario={scenario}
               onTryAnother={resetToScenarios}
               onOpenAdvancedLab={onOpenAdvancedLab}
+              handoffHref={handoffHref}
+              handoffLabel={handoffLabel}
             />
           )}
 
@@ -188,6 +210,17 @@ export function GuidedDemo({ onOpenAdvancedLab }: GuidedDemoProps) {
         <StageCoach scenario={scenario} step={step} />
       </div>
     </div>
+  );
+}
+
+function SimulationNote() {
+  return (
+    <p
+      className="mb-4 rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] px-3 py-2 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]"
+      data-testid="guided-simulation-note"
+    >
+      {SIMULATION_NOTE}
+    </p>
   );
 }
 
@@ -350,6 +383,9 @@ function EvaluateStep({
         </div>
       ) : (
         <>
+          <p className="m-0 text-xs leading-relaxed text-[color:var(--icdu-fg-faint)]">
+            Scripted demonstration scores. Not a live run or a measured result.
+          </p>
           <div className="flex flex-wrap items-center gap-3">
             <Badge
               className={cn(
@@ -423,10 +459,14 @@ function EvidenceStep({
   scenario,
   onTryAnother,
   onOpenAdvancedLab,
+  handoffHref,
+  handoffLabel,
 }: {
   scenario: GuidedScenario;
   onTryAnother: () => void;
   onOpenAdvancedLab: () => void;
+  handoffHref: string;
+  handoffLabel: string;
 }) {
   const evidencePack = {
     scenario_id: scenario.id,
@@ -496,16 +536,30 @@ function EvidenceStep({
 
       <TechnicalRecord title="View Technical Record — Evidence Pack" data={evidencePack} />
 
-      <div className="flex flex-col sm:flex-row flex-wrap gap-3 pt-2">
-        <PrimaryCTA onClick={onTryAnother} data-testid="guided-try-another">
-          Try Another Scenario
-        </PrimaryCTA>
-        <SecondaryCTA onClick={onOpenAdvancedLab} data-testid="guided-open-lab">
-          Open Advanced Lab
-        </SecondaryCTA>
-        <SecondaryCTA href={WALKTHROUGH_URL} data-testid="guided-book-walkthrough">
-          Book a Walkthrough
-        </SecondaryCTA>
+      <div
+        className="rounded-md border-2 border-[color:var(--icdu-fg)] p-4"
+        data-testid="guided-handoff"
+      >
+        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--icdu-fg-faint)]">
+          Continue to the decision
+        </p>
+        <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">
+          Take {scenario.title} into {handoffLabel}.
+        </p>
+        <div className="mt-4 flex flex-col sm:flex-row flex-wrap gap-3">
+          <PrimaryCTA asChild>
+            <Link href={handoffHref}>{handoffLabel}</Link>
+          </PrimaryCTA>
+          <SecondaryCTA onClick={onTryAnother} data-testid="guided-try-another">
+            Try Another Scenario
+          </SecondaryCTA>
+          <SecondaryCTA onClick={onOpenAdvancedLab} data-testid="guided-open-lab">
+            Open Advanced Lab
+          </SecondaryCTA>
+          <SecondaryCTA href={WALKTHROUGH_URL} data-testid="guided-book-walkthrough">
+            Book a Walkthrough
+          </SecondaryCTA>
+        </div>
       </div>
     </section>
   );

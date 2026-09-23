@@ -260,9 +260,65 @@ export const businessCaseIntro = {
   ],
 };
 
+export const workComparison = {
+  heading: "Inconsistent work vs. repeatable judgment",
+  lead: "What changes when the same AI-assisted task has an intent contract, a readiness check, and a record.",
+  without: [
+    {
+      title: "Inconsistent judgment",
+      desc: "Each prompt is a one-off. Quality depends on who wrote it, when they wrote it, and which model answered.",
+    },
+    {
+      title: "Silent drift",
+      desc: "Model updates and prompt tweaks change behavior without notice. Customers find the failures first.",
+    },
+    {
+      title: "Rework loops",
+      desc: "Vague asks drive retries, hallucinations, and human cleanup — burning compute and calendar time.",
+    },
+    {
+      title: "No defensibility",
+      desc: "When something goes wrong, there is no record of what the AI was supposed to do or what checks ran.",
+    },
+  ],
+  with: [
+    {
+      title: "Repeatable organizational judgment",
+      desc: "Best-practice intent is encoded once, versioned, and reused — so every run reflects how your org wants work done.",
+    },
+    {
+      title: "Bound execution",
+      desc: "AI operates inside declared scope, data access, and success criteria — not open-ended improvisation.",
+    },
+    {
+      title: "Fewer wasted cycles",
+      desc: "Clear contracts raise first-pass quality and cut unnecessary inference loops, energy, and cleanup.",
+    },
+    {
+      title: "Provable readiness",
+      desc: "Gates and recorded traces show what was intended, what passed, and what was released — on every task.",
+    },
+  ],
+};
+
+export const outcomePillars = [
+  {
+    title: "Better work",
+    body: "Outputs match the standard your experts would hold — clearer, more consistent, more useful on the first pass.",
+  },
+  {
+    title: "Less waste",
+    body: "Fewer retries, less rework, and lower compute for the same volume of AI-assisted tasks.",
+  },
+  {
+    title: "Provable control",
+    body: "Every promoted result comes with a record of intent, checks, and outcome — without turning delivery into a compliance project.",
+  },
+];
+
 export const exposurePanel = {
   heading: "Current exposure without structured intent",
-  lead: "This page focuses on decision inputs for finance and leadership — not the same headline statistics used on the homepage. Use sourced ceilings where they exist, then size your own exposure in the calculator.",
+  lead: "Use sourced ceilings where they exist, then size your own exposure in the Value Model. Labeled external figures and pilot targets are collected on Evidence & Research.",
   items: [
     {
       title: "Regulatory penalty ceiling",
@@ -599,7 +655,7 @@ export const pilotPathPanel = {
       href: "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough",
     },
     {
-      label: "Try the Live Demo",
+      label: "Open the guided demo",
       href: "/demos",
     },
   ],

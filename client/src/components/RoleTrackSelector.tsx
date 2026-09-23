@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
 import { trackPersonaSelected } from "@/lib/analytics";
+import { getPersonaAudience } from "@/data/audience";
 import {
   Briefcase,
   BarChart3,
@@ -61,11 +62,15 @@ const tracks: {
 type RoleTrackSelectorProps = {
   personas: Persona[];
   onSelectPersona: (personaId: string) => void;
+  selectedId?: string | null;
+  actionLabel?: string;
 };
 
 export function RoleTrackSelector({
   personas,
   onSelectPersona,
+  selectedId = null,
+  actionLabel = "Explore this path",
 }: RoleTrackSelectorProps) {
   const handleSelect = (persona: Persona) => {
     trackPersonaSelected(persona.id, persona.name);
@@ -78,7 +83,7 @@ export function RoleTrackSelector({
         const roles = personas.filter((p) => p.track === track.id);
         if (!roles.length) return null;
         return (
-          <section key={track.id}>
+          <section key={track.id} id={`track-${track.id}`} className="scroll-mt-24">
             <div className="mb-4 sm:mb-5 max-w-2xl">
               <div className="icdu-section-label">{track.title}</div>
               <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0">
@@ -96,16 +101,18 @@ export function RoleTrackSelector({
             >
               {roles.map((persona) => {
                 const Icon = iconMap[persona.icon] || Briefcase;
+                const alias = getPersonaAudience(persona.id)?.alias;
+                const selected = selectedId === persona.id;
                 return (
                   <button
                     key={persona.id}
                     type="button"
                     onClick={() => handleSelect(persona)}
+                    aria-pressed={selected}
                     className={cn(
-                      "text-left rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 cursor-pointer",
-                      "shadow-sm transition-all hover:border-[color:var(--icdu-border-hover)] hover:bg-[color:var(--icdu-surface-hover)] hover:shadow-md hover:-translate-y-0.5",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
-                      "active:translate-y-0",
+                      "icdu-focus text-left rounded-xl border-2 border-[color:var(--icdu-fg-whisper)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 cursor-pointer",
+                      "transition-colors hover:border-[color:var(--icdu-fg)]",
+                      selected && "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-surface-solid)]",
                     )}
                     data-testid={`persona-card-${persona.id}`}
                   >
@@ -117,9 +124,19 @@ export function RoleTrackSelector({
                         <Icon className="h-5 w-5" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-editorial text-xl tracking-tight text-[color:var(--icdu-fg)] m-0">
+                        <h3
+                          className={cn(
+                            "font-editorial text-xl tracking-tight text-[color:var(--icdu-fg)] m-0",
+                            selected && "font-semibold",
+                          )}
+                        >
                           {persona.name}
                         </h3>
+                        {alias ? (
+                          <p className="text-xs font-medium text-[color:var(--icdu-blue)] mt-1 m-0">
+                            {alias}
+                          </p>
+                        ) : null}
                         <p className="text-sm text-[color:var(--icdu-fg-muted)] mt-1 leading-snug m-0">
                           {persona.valueProposition}
                         </p>
@@ -149,7 +166,7 @@ export function RoleTrackSelector({
                         ~{persona.estimatedMinutes} min
                       </span>
                       <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[color:var(--icdu-blue)]">
-                        Explore this path
+                        {selected ? "Selected" : actionLabel}
                         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                       </span>
                     </div>

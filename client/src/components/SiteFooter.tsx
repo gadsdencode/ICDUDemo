@@ -40,7 +40,47 @@ const footerColumns = [
   },
 ];
 
-export function SiteFooter({ className }: { className?: string }) {
+export function SiteFooter({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
+  if (compact) {
+    const links = footerColumns.flatMap((column) => column.links);
+    return (
+      <footer className={cn("border-t border-[color:var(--icdu-border)] bg-[color:var(--icdu-bg)]", className)}>
+        <div className="mx-auto flex max-w-[1344px] flex-wrap items-center justify-between gap-3 px-[19px] py-6 sm:px-8 lg:px-12">
+          <p className="m-0 text-[11px] text-[color:var(--icdu-fg-muted)]">
+            ICDU · Intent in every execution.
+          </p>
+          <nav className="flex max-w-full flex-wrap gap-x-4 gap-y-2" aria-label="Footer">
+            {links.map((link) =>
+              link.href.startsWith("mailto:") || link.href.startsWith("http") ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="icdu-focus text-[11px] text-[color:var(--icdu-fg-muted)] no-underline hover:text-[color:var(--icdu-fg)]"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="icdu-focus text-[11px] text-[color:var(--icdu-fg-muted)] no-underline hover:text-[color:var(--icdu-fg)]"
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
+          </nav>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer
       className={cn(
@@ -51,15 +91,9 @@ export function SiteFooter({ className }: { className?: string }) {
       <div className="mx-auto max-w-7xl px-[clamp(1.25rem,4vw,3rem)] py-10 sm:py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 mb-10">
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="flex h-7 w-7 items-center justify-center rounded text-white text-xs font-bold"
-                style={{ background: "var(--icdu-blue)" }}
-              >
-                IC
-              </div>
-              <span className="font-display text-sm font-semibold tracking-tight text-[color:var(--icdu-fg)]">
-                ICDU
+            <div className="mb-3">
+              <span className="text-2xl font-bold tracking-[-0.065em] text-[color:var(--icdu-fg)]">
+                icdu
               </span>
             </div>
             <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 max-w-[16rem]">

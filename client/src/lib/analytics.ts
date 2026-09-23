@@ -1,5 +1,5 @@
 type AnalyticsEvent = {
-  type: 'persona_selected' | 'journey_step_viewed' | 'demo_interaction' | 'page_viewed';
+  type: 'persona_selected' | 'journey_step_viewed' | 'demo_interaction' | 'page_viewed' | 'audience_selected';
   data: Record<string, string | number>;
   timestamp: number;
 };
@@ -20,6 +20,11 @@ export function trackEvent(type: AnalyticsEvent['type'], data: Record<string, st
 
 export function trackPersonaSelected(personaId: string, personaName: string) {
   trackEvent('persona_selected', { personaId, personaName });
+}
+
+/** In-memory console log only. This cannot establish conversion rates. */
+export function trackAudienceSelected(personaId: string, industryId: string) {
+  trackEvent('audience_selected', { personaId, industryId });
 }
 
 export function trackJourneyStepViewed(personaId: string, stepId: string, stepTitle: string) {

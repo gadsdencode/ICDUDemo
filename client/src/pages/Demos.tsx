@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
 import { BrandPage, PageHero } from "@/components/brand";
 import { GuidedDemo, AdvancedLab } from "@/components/guided";
+import { useAudience } from "@/components/AudienceProvider";
+import { PathEntrance } from "@/components/PathChrome";
+import { businessCaseLinkLabel } from "@/data/audience";
 import { cn } from "@/lib/utils";
 import { Compass, FlaskConical } from "lucide-react";
 
@@ -16,6 +20,14 @@ function modeFromSearch(): DemoMode {
 
 export default function Demos() {
   const [mode, setMode] = useState<DemoMode>(modeFromSearch);
+  const { personaId, industryId, route, setIndustryId } = useAudience();
+  const scenarioId = industryId;
+  const handoff =
+    personaId === "developer"
+      ? { href: "/developers", label: "Developers" }
+      : route
+        ? { href: route.businessCaseHref, label: businessCaseLinkLabel(route) }
+        : { href: "/business-case", label: "Business case" };
 
   useSEO({
     title: "Interactive Demos | ICDU",
@@ -28,7 +40,9 @@ export default function Demos() {
   }, []);
 
   useEffect(() => {
-    setMode(modeFromSearch());
+    const onPop = () => setMode(modeFromSearch());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   const selectMode = (next: DemoMode) => {
@@ -39,7 +53,11 @@ export default function Demos() {
     } else {
       url.searchParams.delete("mode");
     }
-    window.history.replaceState({}, "", url.pathname + url.search);
+    const nextHref = `${url.pathname}${url.search}${url.hash}`;
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (nextHref !== current) {
+      window.history.pushState(window.history.state, "", nextHref);
+    }
   };
 
   return (
@@ -52,8 +70,28 @@ export default function Demos() {
           displayTitle={false}
         />
 
+        <div className="mb-5 flex flex-col gap-2">
+          <PathEntrance page="demos" mode={mode} />
+          {personaId ? (
+            <Link
+              href={`/journey/${personaId}`}
+              className="icdu-focus w-fit text-sm text-[color:var(--icdu-fg-muted)] underline-offset-4 hover:text-[color:var(--icdu-fg)] hover:underline"
+              data-testid="demos-back-journey"
+            >
+              Back to your journey
+            </Link>
+          ) : industryId ? (
+            <Link
+              href="/#funnel"
+              className="icdu-focus w-fit text-sm text-[color:var(--icdu-fg-muted)] underline-offset-4 hover:text-[color:var(--icdu-fg)] hover:underline"
+            >
+              Change path
+            </Link>
+          ) : null}
+        </div>
+
         <div
-          className="mb-6 sm:mb-8 inline-flex max-w-full rounded-full border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-1"
+          className="mb-6 sm:mb-8 inline-flex max-w-full flex-wrap gap-2"
           role="tablist"
           aria-label="Demo mode"
         >
@@ -62,15 +100,23 @@ export default function Demos() {
             role="tab"
             aria-selected={mode === "guided"}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              "icdu-focus inline-flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm cursor-pointer",
               mode === "guided"
-                ? "bg-[color:var(--icdu-blue)] text-white"
-                : "text-[color:var(--icdu-fg-muted)] hover:text-[color:var(--icdu-fg)]",
+                ? "border-[color:var(--icdu-fg)] font-semibold text-[color:var(--icdu-fg)]"
+                : "border-[color:var(--icdu-fg-whisper)] font-medium text-[color:var(--icdu-fg-muted)]",
             )}
             onClick={() => selectMode("guided")}
             data-testid="mode-guided"
           >
+            <span
+              className={cn(
+                "h-2 w-2 rounded-full border-2",
+                mode === "guided"
+                  ? "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-fg)]"
+                  : "border-[color:var(--icdu-fg-whisper)]",
+              )}
+              aria-hidden="true"
+            />
             <Compass className="h-4 w-4" />
             Guided Demo
           </button>
@@ -79,22 +125,36 @@ export default function Demos() {
             role="tab"
             aria-selected={mode === "lab"}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full px-3.5 sm:px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-blue)]",
+              "icdu-focus inline-flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm cursor-pointer",
               mode === "lab"
-                ? "bg-[color:var(--icdu-blue)] text-white"
-                : "text-[color:var(--icdu-fg-muted)] hover:text-[color:var(--icdu-fg)]",
+                ? "border-[color:var(--icdu-fg)] font-semibold text-[color:var(--icdu-fg)]"
+                : "border-[color:var(--icdu-fg-whisper)] font-medium text-[color:var(--icdu-fg-muted)]",
             )}
             onClick={() => selectMode("lab")}
             data-testid="mode-lab"
           >
+            <span
+              className={cn(
+                "h-2 w-2 rounded-full border-2",
+                mode === "lab"
+                  ? "border-[color:var(--icdu-fg)] bg-[color:var(--icdu-fg)]"
+                  : "border-[color:var(--icdu-fg-whisper)]",
+              )}
+              aria-hidden="true"
+            />
             <FlaskConical className="h-4 w-4" />
             Advanced Lab
           </button>
         </div>
 
         {mode === "guided" ? (
-          <GuidedDemo onOpenAdvancedLab={() => selectMode("lab")} />
+          <GuidedDemo
+            scenarioId={scenarioId}
+            onScenarioChange={setIndustryId}
+            onOpenAdvancedLab={() => selectMode("lab")}
+            handoffHref={handoff.href}
+            handoffLabel={handoff.label}
+          />
         ) : (
           <AdvancedLab />
         )}

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Check, ArrowRight, ArrowLeft, ChevronRight } from "lucide-react";
 import { trackJourneyStepViewed } from "@/lib/analytics";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link } from "wouter";
 import { PrimaryCTA, SecondaryCTA } from "@/components/brand";
 
@@ -41,6 +41,7 @@ type JourneyStepperProps = {
   currentTabId: string;
   onTabChange: (tabId: string) => void;
   personaId: string;
+  endNote?: ReactNode;
 };
 
 function isExternalHref(href: string) {
@@ -260,6 +261,7 @@ export function JourneyStepper({
   currentTabId,
   onTabChange,
   personaId,
+  endNote,
 }: JourneyStepperProps) {
   const tabs = journey.tabs;
   const currentIndex = Math.max(
@@ -380,11 +382,12 @@ export function JourneyStepper({
 
         <ContentBlocks blocks={tab.blocks} />
 
-        {tab.cta && (
+        {tab.cta && !(isLast && endNote) ? (
           <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[color:var(--icdu-border)]">
             <StepCta cta={tab.cta} />
           </div>
-        )}
+        ) : null}
+        {isLast && endNote ? <div className="mt-6 sm:mt-8">{endNote}</div> : null}
       </article>
 
       {/* Previous / Next */}

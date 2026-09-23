@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/tooltip";
 import {
   businessCaseIntro,
+  workComparison,
+  outcomePillars,
   exposurePanel,
   roiCalculatorDefaults,
   roiCalculatorRanges,
@@ -53,6 +55,9 @@ import {
   SecondaryCTA,
 } from "@/components/brand";
 import { cn } from "@/lib/utils";
+import { useAudience } from "@/components/AudienceProvider";
+import { RecommendedFlag } from "@/components/PathChrome";
+import { businessCaseLinkLabel, formatAudienceChip, stakeholderAnchor } from "@/data/audience";
 
 const inputKeys = [
   "workflows",
@@ -440,9 +445,37 @@ export default function BusinessCase() {
       "Decision-ready business case for ICDU — current exposure, interactive value model, stakeholder value, common questions, and an estimated 4–6 week pilot path.",
   });
 
+  const { personaId, industryId, route } = useAudience();
+  const audienceChip = formatAudienceChip(personaId, industryId);
+  const matchedRole = route?.stakeholderRole ?? null;
+  const recommendedHash = route?.businessCaseHref.includes("#")
+    ? route.businessCaseHref.split("#")[1]
+    : null;
+  const recommendValueModel = recommendedHash === "value-model";
+  const orderedStakeholders = useMemo(() => {
+    if (!matchedRole) return stakeholderArguments;
+    const match = stakeholderArguments.filter((item) => item.role === matchedRole);
+    const rest = stakeholderArguments.filter((item) => item.role !== matchedRole);
+    return [...match, ...rest];
+  }, [matchedRole]);
+  const openStakeholders = matchedRole
+    ? [matchedRole]
+    : orderedStakeholders.map((item) => item.role);
+
   useEffect(() => {
     trackPageViewed("business-case");
   }, []);
+
+  useEffect(() => {
+    const explicit = window.location.hash.replace(/^#/, "");
+    const fallback = route?.businessCaseHref.split("#")[1];
+    const hash = explicit || fallback;
+    if (!hash) return;
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [route?.businessCaseHref]);
 
   return (
     <BrandPage>
@@ -454,6 +487,14 @@ export default function BusinessCase() {
           displayTitle={false}
         />
 
+        {audienceChip ? (
+          <p className="m-0 -mt-6 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)] sm:-mt-8" data-testid="business-case-path">
+            {recommendedHash
+              ? `Recommended for ${audienceChip}: ${route ? businessCaseLinkLabel(route) : "this section"}. The rest of the case is on this page.`
+              : `Your path is ${audienceChip}. The full case is on this page.`}
+          </p>
+        ) : null}
+
         <div className="grid gap-6 sm:gap-8 md:grid-cols-3 -mt-6 sm:-mt-10">
           {businessCaseIntro.outcomes.map((item) => (
             <div key={item.title} className="min-w-0">
@@ -464,6 +505,47 @@ export default function BusinessCase() {
             </div>
           ))}
         </div>
+
+        <ContentSection
+          id="comparison"
+          className="scroll-mt-24"
+          label="How the work changes"
+          heading={workComparison.heading}
+          description={workComparison.lead}
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5">
+              <h3 className="m-0 text-sm font-semibold text-[color:var(--icdu-fg)]">Without an intent contract</h3>
+              <ul className="mt-3 space-y-3 m-0 p-0 list-none">
+                {workComparison.without.map((item) => (
+                  <li key={item.title}>
+                    <p className="m-0 text-sm font-medium text-[color:var(--icdu-fg)]">{item.title}</p>
+                    <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">{item.desc}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5">
+              <h3 className="m-0 text-sm font-semibold text-[color:var(--icdu-fg)]">With ICDU</h3>
+              <ul className="mt-3 space-y-3 m-0 p-0 list-none">
+                {workComparison.with.map((item) => (
+                  <li key={item.title}>
+                    <p className="m-0 text-sm font-medium text-[color:var(--icdu-fg)]">{item.title}</p>
+                    <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">{item.desc}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div id="outcomes" className="mt-6 scroll-mt-24 grid gap-4 sm:grid-cols-3">
+            {outcomePillars.map((pillar) => (
+              <div key={pillar.title}>
+                <h3 className="m-0 text-sm font-semibold text-[color:var(--icdu-fg)]">{pillar.title}</h3>
+                <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">{pillar.body}</p>
+              </div>
+            ))}
+          </div>
+        </ContentSection>
 
         {/* 1. Current Exposure */}
         <ContentSection
@@ -508,53 +590,80 @@ export default function BusinessCase() {
           heading="Size the case with your numbers"
           description="Keep the calculator central. Enter assumptions you control, read ICDU model constants separately, and treat every output as an illustrative estimate."
           id="value-model"
+          className={cn(
+            "scroll-mt-24",
+            recommendValueModel && "border-l-2 border-l-[color:var(--icdu-fg)] pl-4",
+          )}
         >
+          {recommendValueModel ? (
+            <div className="mb-4" data-testid="business-case-recommended">
+              <RecommendedFlag />
+            </div>
+          ) : null}
           <RoiCalculatorPanel />
         </ContentSection>
 
         {/* 3. Value by Stakeholder */}
         <ContentSection
+          id="value-by-stakeholder"
+          className="scroll-mt-24"
           label="03 · Value by Stakeholder"
           heading="What each decision owner needs to hear"
           description="One point of view per audience — architecture, security, finance, and legal/compliance — without repeating the same metric strip."
         >
-          <div className="space-y-0 divide-y divide-[color:var(--icdu-border)] border-y border-[color:var(--icdu-border)]">
-            {stakeholderArguments.map((persona) => (
-              <div
-                key={persona.role}
-                className="grid sm:grid-cols-[8rem,1fr] gap-3 sm:gap-6 py-5 sm:py-6"
-              >
-                <div
-                  className="text-xs font-semibold uppercase tracking-[0.08em]"
-                  style={{ color: "var(--icdu-blue)" }}
+          <Accordion
+            key={matchedRole ?? "all"}
+            type="multiple"
+            defaultValue={openStakeholders}
+            className="border-y border-[color:var(--icdu-border)]"
+          >
+            {orderedStakeholders.map((persona) => {
+              const isMatch = persona.role === matchedRole;
+              return (
+                <AccordionItem
+                  key={persona.role}
+                  value={persona.role}
+                  id={stakeholderAnchor(persona.role)}
+                  data-testid={isMatch ? "business-case-recommended" : undefined}
+                  className={cn(
+                    "scroll-mt-24 border-[color:var(--icdu-border)]",
+                    isMatch && "border-l-2 border-l-[color:var(--icdu-fg)] bg-[color:var(--icdu-surface)] pl-3",
+                  )}
                 >
-                  {persona.role}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm sm:text-base text-[color:var(--icdu-fg)] m-0 mb-1.5">
-                    {persona.headline}
-                  </h3>
-                  <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 mb-3">
-                    {persona.argument}
-                  </p>
-                  <ul className="space-y-1.5 m-0 p-0 list-none">
-                    {persona.talkingPoints.map((point) => (
-                      <li
-                        key={point}
-                        className="text-xs sm:text-sm text-[color:var(--icdu-fg-muted)] flex items-start gap-2"
-                      >
-                        <span
-                          className="mt-1.5 h-1.5 w-1.5 rounded-full shrink-0"
-                          style={{ background: "var(--icdu-blue)" }}
-                        />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
+                  <AccordionTrigger className="py-5 hover:no-underline">
+                    <span className="text-left">
+                      <span className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-[color:var(--icdu-fg)]">
+                        {persona.role}
+                        {isMatch ? <RecommendedFlag /> : null}
+                      </span>
+                      <span className="mt-1 block font-semibold text-sm sm:text-base text-[color:var(--icdu-fg)]">
+                        {persona.headline}
+                      </span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 mb-3">
+                      {persona.argument}
+                    </p>
+                    <ul className="space-y-1.5 m-0 p-0 list-none">
+                      {persona.talkingPoints.map((point) => (
+                        <li
+                          key={point}
+                          className="text-xs sm:text-sm text-[color:var(--icdu-fg-muted)] flex items-start gap-2"
+                        >
+                          <span
+                            className="mt-1.5 h-1.5 w-1.5 rounded-full shrink-0"
+                            style={{ background: "var(--icdu-blue)" }}
+                          />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </ContentSection>
 
         {/* 4. Common Questions */}
@@ -579,6 +688,8 @@ export default function BusinessCase() {
 
         {/* 5. Pilot Path */}
         <ContentSection
+          id="pilot-path"
+          className="scroll-mt-24"
           label="05 · Pilot Path"
           heading={pilotPathPanel.heading}
           description={pilotPathPanel.lead}
