@@ -178,5 +178,65 @@
       "label": "Explore Advanced Lab",
       "href": "/demos?mode=lab"
     }
+  },
+  {
+    "id": "administrator",
+    "name": "Administrator",
+    "track": "governance",
+    "tagline": "Hold one operating standard for the workflows your team already runs",
+    "valueProposition": "See how a named workflow gets a shared outcome, a check before release, and a record you can review.",
+    "learnings": [
+      "Where the operating standard is missing today",
+      "What gets checked before work is released",
+      "What a reviewable record contains"
+    ],
+    "estimatedMinutes": 8,
+    "icon": "ClipboardList",
+    "primaryConcerns": [
+      "Operating consistency",
+      "Reviewable evidence",
+      "Workflow ownership",
+      "Handoffs"
+    ],
+    "successMetrics": [
+      "Standard followed on the workflow",
+      "Exceptions visible before release",
+      "Time to reconstruct a decision"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Scope a Pilot",
+      "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+    }
+  },
+  {
+    "id": "manager",
+    "name": "Manager",
+    "track": "leadership",
+    "tagline": "Give the team one definition of done for AI-assisted work",
+    "valueProposition": "See whether your team can meet the same outcome every time, without each person inventing the prompt.",
+    "learnings": [
+      "Why the same task produces different work",
+      "What the team standard looks like",
+      "How to read whether the standard held"
+    ],
+    "estimatedMinutes": 8,
+    "icon": "Users",
+    "primaryConcerns": [
+      "Team consistency",
+      "Adoption",
+      "Rework",
+      "Definition of done"
+    ],
+    "successMetrics": [
+      "First-pass fit to the standard",
+      "Rework on the workflow",
+      "Team adoption of the governed path"
+    ],
+    "recommendedStartingSection": "situation",
+    "nextAction": {
+      "label": "Scope a Pilot",
+      "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+    }
   }
 ]

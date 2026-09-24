@@ -8,13 +8,17 @@ import {
   describeAudience,
   getPersonaAudience,
   getRoleLens,
+  homepageRoleIds,
   markJourneyIndexBrowse,
 } from "@/data/audience";
 import { guidedScenarios } from "@/data/guidedScenarios";
 import personasData from "@/data/personas.json";
 import { cn } from "@/lib/utils";
 
-const personas = personasData as Persona[];
+const personas = homepageRoleIds.flatMap((id) => {
+  const persona = (personasData as Persona[]).find((item) => item.id === id);
+  return persona ? [persona] : [];
+});
 
 type Stage = "role" | "industry" | "result";
 

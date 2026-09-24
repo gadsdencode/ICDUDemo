@@ -9,6 +9,8 @@ import {
   Shield,
   Scale,
   Code2,
+  ClipboardList,
+  Users,
   ArrowRight,
   Clock,
 } from "lucide-react";
@@ -20,6 +22,8 @@ const iconMap: Record<string, ComponentType<{ className?: string }>> = {
   Shield,
   Scale,
   Code2,
+  ClipboardList,
+  Users,
 };
 
 export type Persona = {
@@ -126,7 +130,7 @@ export function RoleTrackSelector({
                       <div className="min-w-0">
                         <h3
                           className={cn(
-                            "font-editorial text-xl tracking-tight text-[color:var(--icdu-fg)] m-0",
+                            "font-display font-medium text-xl tracking-tight text-[color:var(--icdu-fg)] m-0",
                             selected && "font-semibold",
                           )}
                         >

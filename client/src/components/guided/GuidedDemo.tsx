@@ -135,7 +135,7 @@ export function GuidedDemo({
           <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-1">
             Guided demo
           </div>
-          <h2 className="text-base sm:text-lg font-semibold tracking-tight">
+          <h2 className="font-display text-base sm:text-lg font-medium tracking-tight">
             {scenario.title}
           </h2>
           <p className="text-sm text-[color:var(--icdu-fg-muted)]">

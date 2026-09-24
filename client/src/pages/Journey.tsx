@@ -197,7 +197,7 @@ export default function Journey() {
                 ? "Governance & Risk"
                 : "Technical"}
           </div>
-          <h1 className="font-editorial text-3xl sm:text-4xl tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2">
+          <h1 className="font-display text-3xl font-medium tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2 sm:text-4xl">
             {selectedPersona.name}
           </h1>
           <p className="text-sm sm:text-base text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 max-w-2xl">
@@ -226,7 +226,7 @@ export default function Journey() {
               </p>
               {scenario ? (
                 <>
-                  <h3 className="m-0 mt-2 font-display text-lg font-semibold tracking-tight text-[color:var(--icdu-fg)]">
+                  <h3 className="m-0 mt-2 font-display text-lg font-medium tracking-tight text-[color:var(--icdu-fg)]">
                     {scenario.title}
                   </h3>
                   <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">

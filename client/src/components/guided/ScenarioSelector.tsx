@@ -89,7 +89,7 @@ export function ScenarioSelector({
               </div>
               <h3
                 className={cn(
-                  "font-editorial text-xl tracking-tight mb-2 text-[color:var(--icdu-fg)]",
+                  "font-display font-medium text-xl tracking-tight mb-2 text-[color:var(--icdu-fg)]",
                   selected && "font-semibold",
                 )}
               >

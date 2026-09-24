@@ -1251,5 +1251,249 @@
         }
       }
     ]
+  },
+  "administrator": {
+    "groups": [
+      {
+        "label": "Journey",
+        "tabIds": ["situation", "changes", "how", "evidence", "next"]
+      }
+    ],
+    "tabs": [
+      {
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "ADMINISTRATOR · YOUR SITUATION",
+        "h2": "The operating standard lives in people’s heads",
+        "lead": "The same workflow is handled differently depending on who is on shift, which prompt they reuse, and whether anyone can reconstruct what was supposed to happen.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "No named standard",
+                "desc": "Outcome, boundaries, and handoffs are implied. New people learn them by copying whoever went last."
+              },
+              {
+                "title": "Checks after the fact",
+                "desc": "Problems show up in the inbox or the audit, not before the work is released."
+              },
+              {
+                "title": "Thin records",
+                "desc": "When someone asks what the system was supposed to do, the answer is a chat log."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "What Changes",
+        "sectionTag": "ADMINISTRATOR · WHAT CHANGES",
+        "h2": "One standard, checked before release",
+        "lead": "ICDU puts the outcome and the boundary on the workflow, then refuses to treat a run as done until that standard is checked.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "A written outcome",
+                "desc": "The workflow states what a good result is, in language operations can review."
+              },
+              {
+                "title": "A gate before release",
+                "desc": "Work that misses the boundary does not go out as if it passed."
+              },
+              {
+                "title": "A record you can open",
+                "desc": "Each promoted result keeps the intent, the check, and the outcome together."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "ADMINISTRATOR · HOW IT WORKS",
+        "h2": "Define, check, and record the workflow you already run",
+        "lead": "You do not replace the tools. You put a readiness path around one workflow and make the standard visible to the people who operate it.",
+        "blocks": [
+          {
+            "type": "flow",
+            "steps": [
+              { "label": "Define" },
+              { "label": "Check" },
+              { "label": "Record" }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Define names the outcome and the boundary. Check runs before the result is treated as finished. Record keeps what was intended, what passed, and what was released."
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence",
+        "sectionTag": "ADMINISTRATOR · EVIDENCE",
+        "h2": "A record the operator can review",
+        "lead": "The useful evidence is not a new dashboard. It is enough to answer what the workflow was supposed to do and whether that held.",
+        "blocks": [
+          {
+            "type": "checklist",
+            "items": [
+              "The outcome the workflow was held to",
+              "The boundary that had to stay intact",
+              "Whether the run was released, held, or refused",
+              "Who can open that record later"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": "Next Step",
+        "sectionTag": "ADMINISTRATOR · NEXT STEP",
+        "h2": "Put one workflow on a bounded pilot",
+        "lead": "Pick the workflow you already own. Name the outcome, the boundary, and who reviews the record. Leave with a plan, not a platform program.",
+        "blocks": [
+          {
+            "type": "checklist",
+            "items": [
+              "One workflow with a named owner",
+              "Outcome and boundary written so operations can review them",
+              "A readout for whether the team will follow that standard"
+            ]
+          }
+        ],
+        "cta": {
+          "label": "Scope a Pilot",
+          "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+        }
+      }
+    ]
+  },
+  "manager": {
+    "groups": [
+      {
+        "label": "Journey",
+        "tabIds": ["situation", "changes", "how", "evidence", "next"]
+      }
+    ],
+    "tabs": [
+      {
+        "id": "situation",
+        "title": "Your Situation",
+        "sectionTag": "MANAGER · YOUR SITUATION",
+        "h2": "The team’s output depends on who prompted",
+        "lead": "The same task comes back different depending on the person, the prompt, and the model. You cannot tell whether the team met a standard or just shipped something plausible.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "No shared definition of done",
+                "desc": "Each person decides what “good” means for the task in front of them."
+              },
+              {
+                "title": "Rework you can feel",
+                "desc": "Reviews, retries, and cleanup land on the team after the first answer."
+              },
+              {
+                "title": "Adoption by exception",
+                "desc": "People keep the old path when the new one is unclear or easy to skip."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "What Changes",
+        "sectionTag": "MANAGER · WHAT CHANGES",
+        "h2": "The team shares one definition of done",
+        "lead": "ICDU makes the outcome explicit, then checks the work against it before anyone treats the result as finished.",
+        "blocks": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "title": "One outcome for the task",
+                "desc": "The team is not inventing the standard on each run."
+              },
+              {
+                "title": "A boundary they can see",
+                "desc": "What must not happen is written down, not left to taste."
+              },
+              {
+                "title": "Less silent rework",
+                "desc": "Misses show up as a failed check instead of a later cleanup."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "how",
+        "title": "How It Works",
+        "sectionTag": "MANAGER · HOW IT WORKS",
+        "h2": "The same path on every run",
+        "lead": "Define the outcome, check the work, and keep the record. The team uses that path instead of a fresh prompt each time.",
+        "blocks": [
+          {
+            "type": "flow",
+            "steps": [
+              { "label": "Define" },
+              { "label": "Check" },
+              { "label": "Record" }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Managers do not have to read every prompt. They can see whether the team’s work met the outcome the workflow declared."
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence",
+        "sectionTag": "MANAGER · EVIDENCE",
+        "h2": "You can see whether the standard held",
+        "lead": "Adoption is not a feeling. A run either met the outcome and the boundary, or it did not.",
+        "blocks": [
+          {
+            "type": "checklist",
+            "items": [
+              "The outcome the team was asked to meet",
+              "Whether the run passed that check",
+              "What was released when it did",
+              "Where people still bypass the path"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": "Next Step",
+        "sectionTag": "MANAGER · NEXT STEP",
+        "h2": "Read one team workflow out",
+        "lead": "Choose the task your team repeats. Agree the outcome, run it on the governed path, and decide whether people will keep using that standard.",
+        "blocks": [
+          {
+            "type": "checklist",
+            "items": [
+              "One repeated team task",
+              "A written outcome and boundary",
+              "A readout on adoption and rework"
+            ]
+          }
+        ],
+        "cta": {
+          "label": "Scope a Pilot",
+          "href": "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough"
+        }
+      }
+    ]
   }
 }

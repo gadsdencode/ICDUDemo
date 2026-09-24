@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export interface SectionHeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: "h1" | "h2" | "h3" | "h4";
-  /** Use Sora display face instead of Instrument Serif */
+  /** Use the larger Sora page-title treatment. */
   display?: boolean;
 }
 

@@ -25,6 +25,9 @@ export type PersonaAudience = {
 
 const BROWSE_ROLES_KEY = "icdu-browse-roles";
 
+/** Homepage chooser order. Other roles remain available from the journey index. */
+export const homepageRoleIds = ["executive", "administrator", "developer", "manager"] as const;
+
 export const personaAudiences: PersonaAudience[] = [
   {
     id: "executive",
@@ -70,6 +73,26 @@ export const personaAudiences: PersonaAudience[] = [
     businessCaseHref: "/business-case#stakeholder-legal-compliance",
     resourceGroup: "research",
     downloadId: "research-paper",
+    demoMode: "guided",
+  },
+  {
+    id: "administrator",
+    chipLabel: "Administrator",
+    alias: "Workflow owner, operations",
+    stakeholderRole: null,
+    businessCaseHref: "/business-case#pilot-path",
+    resourceGroup: "research",
+    downloadId: "research-paper",
+    demoMode: "guided",
+  },
+  {
+    id: "manager",
+    chipLabel: "Manager",
+    alias: "Team lead, adoption",
+    stakeholderRole: null,
+    businessCaseHref: "/business-case#comparison",
+    resourceGroup: "executive",
+    downloadId: "exec-quick-hits",
     demoMode: "guided",
   },
   {
@@ -123,6 +146,8 @@ export function getCatalogItem(id: string): CatalogItem | undefined {
 }
 
 export function businessCaseLinkLabel(route: PersonaAudience): string {
+  if (route.id === "administrator") return "pilot path";
+  if (route.id === "manager") return "work comparison";
   if (route.stakeholderRole) return `Value for ${route.stakeholderRole}`;
   if (route.id === "executive") return "Value model";
   return "Business case";
@@ -198,6 +223,14 @@ export const roleLenses: RoleLens[] = [
     focus: "Policy boundaries and evidence",
   },
   {
+    id: "administrator",
+    focus: "Operating standard and a record the team can follow",
+  },
+  {
+    id: "manager",
+    focus: "Team adoption and a shared definition of done",
+  },
+  {
     id: "developer",
     focus: "Implementation and testing",
   },
@@ -252,6 +285,16 @@ export function materialsForRole(personaId: string): MaterialLink[] {
         },
         { label: "ICDU AI Research Paper", href: "/downloads/ICDU_AI_Research_Paper.pdf" },
       ];
+    case "administrator":
+      return [
+        { label: "Pilot path", href: "/business-case#pilot-path" },
+        { label: "ICDU AI Research Paper", href: "/downloads/ICDU_AI_Research_Paper.pdf" },
+      ];
+    case "manager":
+      return [
+        { label: "How the work changes", href: "/business-case#comparison" },
+        { label: "ICDU Executive Quick Hits", href: "/downloads/ICDU_Executive_Quick_Hits.docx" },
+      ];
     case "developer":
       return [
         { label: "Developers", href: "/developers" },
@@ -262,24 +305,65 @@ export function materialsForRole(personaId: string): MaterialLink[] {
   }
 }
 
+/** Short outcome and boundary used only in the homepage result paragraph. */
+const funnelBriefs: Record<string, { outcome: string; boundary: string }> = {
+  "support-escalation": {
+    outcome: "acknowledging the error and explaining the fix",
+    boundary: "inventing credits or policy exceptions",
+  },
+  "document-review": {
+    outcome: "citing clause changes without legal conclusions beyond the document",
+    boundary: "making uncited claims or inventing norms",
+  },
+  "healthcare-admin": {
+    outcome: "explaining coverage language and the next confirmation step",
+    boundary: "giving diagnosis or treatment guidance",
+  },
+  "financial-services": {
+    outcome: "citing the fee schedule and how to request a review",
+    boundary: "promising a waiver or refund",
+  },
+  "insurance-claim": {
+    outcome: "naming the missing document and the review window",
+    boundary: "approving the claim or quoting a payment",
+  },
+  "public-benefits": {
+    outcome: "stating the published rules and the filing checklist",
+    boundary: "deciding eligibility in the chat",
+  },
+  "plant-maintenance": {
+    outcome: "following the controlled lockout steps and citing the revision",
+    boundary: "skipping a safety step",
+  },
+  "hr-policy": {
+    outcome: "stating the handbook rule and the exception path",
+    boundary: "treating a verbal okay as approval",
+  },
+};
+
 export function applyRoleLens(personaId: string, scenario: GuidedScenario): string {
   const name = scenario.title;
-  const outcome = scenario.intendedOutcome;
-  const boundary = scenario.principles[0] ?? scenario.intendedOutcome;
+  const brief = funnelBriefs[scenario.id];
+  const outcome = brief?.outcome ?? scenario.intendedOutcome;
+  const boundary = brief?.boundary ?? scenario.principles[0] ?? scenario.intendedOutcome;
 
   switch (personaId) {
     case "executive":
-      return `For “${name},” quality and adoption depend on this outcome: ${outcome} A bounded pilot asks whether teams will use that standard on this workflow.`;
+      return `For “${name},” a pilot asks whether teams will keep ${outcome}.`;
     case "cfo":
-      return `For “${name},” rework shows up when that outcome is missed. The investment case is whether enforcing “${boundary}” costs less than the cleanup — using your assumptions, not a preset savings claim.`;
+      return `For “${name},” the rework is ${boundary}. The case is whether stopping it costs less than the cleanup — on your assumptions.`;
     case "cto":
-      return `For “${name},” integration is the contract around this outcome: ${outcome} The architecture has to carry “${boundary}” on the model path you already run.`;
+      return `For “${name},” your current model path has to keep ${outcome}, and stop ${boundary}.`;
     case "ciso":
-      return `For “${name},” the control is “${boundary}.” Reviewable evidence has to show whether this outcome held: ${outcome}`;
+      return `For “${name},” the control is to stop ${boundary}. Evidence has to show the work kept ${outcome}.`;
     case "compliance":
-      return `For “${name},” the policy boundary is “${boundary}.” The outcome that has to stay inside it: ${outcome}`;
+      return `For “${name},” the policy line is to stop ${boundary} while ${outcome}.`;
+    case "administrator":
+      return `For “${name},” the operating standard is ${outcome}. The record has to show the work stopped ${boundary}.`;
+    case "manager":
+      return `For “${name},” the team standard is ${outcome}, without ${boundary}.`;
     case "developer":
-      return `For “${name},” implementation is an ICDU whose success criteria match this outcome: ${outcome} Test that “${boundary}” fails the run when it is violated.`;
+      return `For “${name},” the run succeeds by ${outcome}, and fails by ${boundary}.`;
     default:
       return outcome;
   }

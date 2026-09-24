@@ -11,7 +11,7 @@ export interface PageHeroProps extends Omit<HTMLAttributes<HTMLElement>, "title"
   description?: ReactNode;
   actions?: ReactNode;
   align?: "center" | "left";
-  /** Use Sora for the title (default). Set false for Instrument Serif. */
+  /** Use the larger Sora page-title size. Set false for the section-heading size. */
   displayTitle?: boolean;
 }
 

@@ -373,7 +373,7 @@ export function JourneyStepper({
       {/* Step content */}
       <article className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-8">
         <div className="icdu-section-label mb-3">{tab.sectionTag}</div>
-        <h2 className="font-editorial text-2xl sm:text-3xl tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2 sm:mb-3">
+        <h2 className="font-display text-2xl font-medium tracking-tight text-[color:var(--icdu-fg)] m-0 mb-2 sm:mb-3 sm:text-3xl">
           {tab.h2}
         </h2>
         <p className="text-sm sm:text-base text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 mb-5 sm:mb-7 max-w-3xl">

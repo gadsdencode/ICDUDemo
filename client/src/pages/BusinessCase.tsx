@@ -508,11 +508,19 @@ export default function BusinessCase() {
 
         <ContentSection
           id="comparison"
-          className="scroll-mt-24"
+          className={cn(
+            "scroll-mt-24",
+            recommendedHash === "comparison" && "border-l-2 border-l-[color:var(--icdu-accent)] pl-4",
+          )}
           label="How the work changes"
           heading={workComparison.heading}
           description={workComparison.lead}
         >
+          {recommendedHash === "comparison" ? (
+            <div className="mb-4" data-testid="business-case-recommended">
+              <RecommendedFlag />
+            </div>
+          ) : null}
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5">
               <h3 className="m-0 text-sm font-semibold text-[color:var(--icdu-fg)]">Without an intent contract</h3>
@@ -560,7 +568,7 @@ export default function BusinessCase() {
                 className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5"
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="font-editorial text-xl tracking-tight text-[color:var(--icdu-fg)] m-0">
+                  <h3 className="font-display text-xl font-medium tracking-tight text-[color:var(--icdu-fg)] m-0">
                     {item.title}
                   </h3>
                   <span
@@ -689,11 +697,19 @@ export default function BusinessCase() {
         {/* 5. Pilot Path */}
         <ContentSection
           id="pilot-path"
-          className="scroll-mt-24"
+          className={cn(
+            "scroll-mt-24",
+            recommendedHash === "pilot-path" && "border-l-2 border-l-[color:var(--icdu-accent)] pl-4",
+          )}
           label="05 · Pilot Path"
           heading={pilotPathPanel.heading}
           description={pilotPathPanel.lead}
         >
+          {recommendedHash === "pilot-path" ? (
+            <div className="mb-4" data-testid="business-case-recommended">
+              <RecommendedFlag />
+            </div>
+          ) : null}
           <p
             className={cn(
               "text-xs sm:text-sm mb-5 sm:mb-6 inline-flex items-center rounded-md border px-2.5 py-1.5 m-0",
