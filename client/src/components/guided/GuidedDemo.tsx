@@ -44,9 +44,6 @@ type GuidedDemoProps = {
   handoffLabel?: string;
 };
 
-const SIMULATION_NOTE =
-  "Simulated demo. The reply, scores, and gate decision are scripted for this walkthrough. They are not a live model run, a customer outcome, or an independently measured result.";
-
 const SCORE_EXPLANATIONS = [
   {
     id: "IAS" as const,
@@ -151,12 +148,7 @@ export function GuidedDemo({
   };
 
   if (!scenario) {
-    return (
-      <div className="space-y-4">
-        <SimulationNote />
-        <ScenarioSelector onSelect={selectScenario} selectedId={scenarioId} />
-      </div>
-    );
+    return <ScenarioSelector onSelect={selectScenario} selectedId={scenarioId} />;
   }
 
   const canContinue =
@@ -177,7 +169,6 @@ export function GuidedDemo({
 
   return (
     <div data-testid="guided-demo">
-      <SimulationNote />
       <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-1">
@@ -259,17 +250,6 @@ export function GuidedDemo({
         <StageCoach scenario={scenario} step={step} />
       </div>
     </div>
-  );
-}
-
-function SimulationNote() {
-  return (
-    <p
-      className="mb-4 rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] px-3 py-2 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]"
-      data-testid="guided-simulation-note"
-    >
-      {SIMULATION_NOTE}
-    </p>
   );
 }
 

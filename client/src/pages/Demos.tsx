@@ -158,6 +158,15 @@ export default function Demos() {
         ) : (
           <AdvancedLab />
         )}
+
+        {mode === "guided" ? (
+          <p
+            className="mt-12 border-t border-[color:var(--icdu-border)] pt-4 text-xs leading-relaxed text-[color:var(--icdu-fg-faint)]"
+            data-testid="guided-simulation-note"
+          >
+            Simulated demo. The reply, scores, and gate decision are scripted for this walkthrough. They are not a live model run, a customer outcome, or an independently measured result.
+          </p>
+        ) : null}
       </div>
     </BrandPage>
   );
