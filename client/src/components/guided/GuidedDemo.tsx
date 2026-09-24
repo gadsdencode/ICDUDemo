@@ -239,7 +239,7 @@ function DefineStep({ scenario }: { scenario: GuidedScenario }) {
       <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 space-y-4">
         <Field label="Business task" value={scenario.businessTask} />
         <Field label="Intended outcome" value={scenario.intendedOutcome} />
-        <ListField label="Organizational principles" items={scenario.principles} />
+        <ListField label="Organizational principles" items={scenario.principles} columns={2} />
         <ListField label="Allowed context" items={scenario.allowedContext} />
         <ListField label="Constraints" items={scenario.constraints} />
         <ListField label="Success criteria" items={scenario.successCriteria} />
@@ -578,13 +578,27 @@ function Field({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ListField({ label, items }: { label: string; items: string[] }) {
+function ListField({
+  label,
+  items,
+  columns = 1,
+}: {
+  label: string;
+  items: string[];
+  columns?: 1 | 2;
+}) {
   return (
     <div>
       <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)] mb-1.5">
         {label}
       </div>
-      <ul className="space-y-1.5 m-0 p-0 list-none">
+      <ul
+        className={
+          columns === 2
+            ? "grid grid-cols-2 gap-x-5 gap-y-2 m-0 p-0 list-none"
+            : "space-y-1.5 m-0 p-0 list-none"
+        }
+      >
         {items.map((item) => (
           <li
             key={item}

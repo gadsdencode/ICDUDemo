@@ -91,22 +91,16 @@ export const guidedScenarios: GuidedScenario[] = [
       "Escalate rather than guess when policy is ambiguous",
     ],
     allowedContext: [
-      "Approved billing FAQ v4.2",
-      "Enterprise plan change policy",
-      "Customer account summary (non-PII fields only)",
-      "Standard apology and remediation templates",
+      "Approved billing FAQ v4.2 and the enterprise plan-change policy",
+      "Account summary (non-PII only) and the standard apology and remediation templates",
     ],
     constraints: [
-      "Do not disclose other customers' information",
-      "Do not commit to refunds beyond published policy",
-      "Keep reply under 250 words",
-      "Route unresolved policy questions to human specialist",
+      "Do not disclose other customers' information or commit to refunds beyond published policy",
+      "Keep the reply under 250 words, and route unresolved policy questions to a human specialist",
     ],
     successCriteria: [
-      "Customer issue restated accurately",
-      "Correction path stated in concrete steps",
-      "No unverified promises",
-      "Tone remains calm and accountable",
+      "The issue is restated accurately, with a concrete correction path",
+      "No unverified promises, and the tone stays calm and accountable",
     ],
     unstructuredRequest:
       "Write a nice reply saying we'll fix the billing mistake and give them a credit so they don't escalate.",
@@ -126,10 +120,8 @@ export const guidedScenarios: GuidedScenario[] = [
         primary_goal:
           "Resolve an incorrect post-plan-change invoice with an accurate, empathetic reply that follows published billing policy.",
         success_criteria: [
-          "Restate the billing issue accurately",
-          "Provide a concrete correction path with reference ID",
-          "Avoid inventing credits or exceptions",
-          "Offer clear next-step timing",
+          "The issue is restated accurately, with a concrete correction path",
+          "No unverified promises, and the tone stays calm and accountable",
         ],
       },
       principles: [
@@ -145,15 +137,12 @@ export const guidedScenarios: GuidedScenario[] = [
       context: {
         domain: "Customer support / billing",
         allowed_sources: [
-          "Approved billing FAQ v4.2",
-          "Enterprise plan change policy",
-          "Account summary (non-PII)",
+          "Approved billing FAQ v4.2 and the enterprise plan-change policy",
+          "Account summary (non-PII only) and the standard apology and remediation templates",
         ],
         constraints: [
-          "No other-customer disclosure",
-          "No refunds beyond published policy",
-          "Max 250 words",
-          "Escalate unresolved policy questions",
+          "Do not disclose other customers' information or commit to refunds beyond published policy",
+          "Keep the reply under 250 words, and route unresolved policy questions to a human specialist",
         ],
       },
       prompt:
@@ -262,21 +251,16 @@ export const guidedScenarios: GuidedScenario[] = [
       "Do not invent market norms or 'standard' positions",
     ],
     allowedContext: [
-      "Vendor MSA redline PDF (uploaded excerpt)",
-      "Internal playbook: liability & DPA checklist",
-      "Prior approved summary template",
+      "Vendor MSA redline PDF (uploaded excerpt) and the approved summary template",
+      "Internal playbook: liability and DPA checklist",
     ],
     constraints: [
-      "No advice purporting to be formal legal opinion",
-      "Do not reference external case law unless provided",
-      "Limit summary to liability, data, and termination sections",
-      "Mark uncertainty when clause language is ambiguous",
+      "No formal legal opinion, and no external case law unless it was provided",
+      "Stay within liability, data, and termination, and mark ambiguous clause language",
     ],
     successCriteria: [
-      "Each flagged change includes a clause citation",
-      "Risks labeled as document facts vs. open questions",
-      "No unsupported 'market standard' claims",
-      "Negotiation-ready bullet structure",
+      "Each flagged change cites a clause, and risks are labeled as document facts or open questions",
+      "No unsupported market-standard claims, in a negotiation-ready structure",
     ],
     unstructuredRequest:
       "Quickly tell me if this vendor contract is okay and what we should push back on before the call.",
@@ -296,10 +280,8 @@ export const guidedScenarios: GuidedScenario[] = [
         primary_goal:
           "Produce a citation-backed summary of material MSA redline changes for counsel preparation.",
         success_criteria: [
-          "Clause citations on every material flag",
-          "Separate facts from open questions",
-          "No invented market norms",
-          "Cover liability, data, and termination only",
+          "Each flagged change cites a clause, and risks are labeled as document facts or open questions",
+          "No unsupported market-standard claims, in a negotiation-ready structure",
         ],
       },
       principles: [
@@ -315,15 +297,12 @@ export const guidedScenarios: GuidedScenario[] = [
       context: {
         domain: "Contract review",
         allowed_sources: [
-          "Vendor MSA redline excerpt",
-          "Liability & DPA checklist",
-          "Approved summary template",
+          "Vendor MSA redline PDF (uploaded excerpt) and the approved summary template",
+          "Internal playbook: liability and DPA checklist",
         ],
         constraints: [
-          "Not a formal legal opinion",
-          "No external case law unless provided",
-          "Limit to liability, data, termination",
-          "Mark ambiguous language",
+          "No formal legal opinion, and no external case law unless it was provided",
+          "Stay within liability, data, and termination, and mark ambiguous clause language",
         ],
       },
       prompt:
@@ -432,22 +411,16 @@ export const guidedScenarios: GuidedScenario[] = [
       "Escalate urgent medical concerns to appropriate care channels",
     ],
     allowedContext: [
-      "Member plan summary (administrative excerpt)",
-      "Preventive services coverage FAQ",
-      "Approved disclaimer library",
-      "Insurer contact instructions",
+      "Member plan summary and the preventive-services coverage FAQ",
+      "Approved disclaimer library and insurer contact instructions",
     ],
     constraints: [
-      "Refuse clinical decision-making",
-      "Do not estimate clinical urgency",
-      "Do not collect unnecessary health details",
-      "Keep response accessible at 8th-grade reading level",
+      "Refuse clinical decisions, urgency estimates, and unnecessary health details",
+      "Keep the response at an 8th-grade reading level",
     ],
     successCriteria: [
-      "States this is administrative information only",
-      "References plan-document language for preventive visits",
-      "Provides insurer confirmation steps",
-      "Refuses any clinical advice cleanly",
+      "Administrative information only, using plan-document language for preventive visits",
+      "Insurer confirmation steps are included, and clinical advice is refused",
     ],
     unstructuredRequest:
       "Tell the member if they should get this checkup and whether their plan will definitely pay for it.",
@@ -467,10 +440,8 @@ export const guidedScenarios: GuidedScenario[] = [
         primary_goal:
           "Explain administrative preventive-visit coverage language and confirmation steps without clinical advice.",
         success_criteria: [
-          "Administrative-only disclaimer present",
-          "Plan-document language referenced",
-          "Insurer confirmation steps included",
-          "Clinical advice refused",
+          "Administrative information only, using plan-document language for preventive visits",
+          "Insurer confirmation steps are included, and clinical advice is refused",
         ],
       },
       principles: [
@@ -486,15 +457,12 @@ export const guidedScenarios: GuidedScenario[] = [
       context: {
         domain: "Healthcare benefits administration",
         allowed_sources: [
-          "Plan summary excerpt",
-          "Preventive services FAQ",
-          "Approved disclaimer library",
+          "Member plan summary and the preventive-services coverage FAQ",
+          "Approved disclaimer library and insurer contact instructions",
         ],
         constraints: [
-          "Refuse clinical decision-making",
-          "No clinical urgency estimates",
-          "No unnecessary health details",
-          "8th-grade reading level",
+          "Refuse clinical decisions, urgency estimates, and unnecessary health details",
+          "Keep the response at an 8th-grade reading level",
         ],
       },
       prompt:
@@ -732,22 +700,16 @@ guidedScenarios.push(
       "Do not reference other customers' accounts",
     ],
     allowedContext: [
-      "Published monthly fee schedule",
-      "Account notice template for posted fees",
-      "Fee-review request instructions",
-      "Approved hardship escalation path",
+      "Published monthly fee schedule and the account notice for posted fees",
+      "Fee-review request instructions and the approved hardship escalation path",
     ],
     constraints: [
-      "Do not state that the fee was a bank error",
-      "Do not commit to a refund amount or date",
-      "Keep the reply under 200 words",
-      "Route unresolved disputes to the fee-review team",
+      "Do not call the fee a bank error or commit to a refund amount or date",
+      "Keep the reply under 200 words, and route unresolved disputes to the fee-review team",
     ],
     successCriteria: [
-      "Fee is identified using the published schedule",
-      "Review path is stated as a request, not an approval",
-      "No waiver or refund is promised",
-      "Tone stays plain and accountable",
+      "The fee is identified from the published schedule, and review is a request, not an approval",
+      "No waiver or refund is promised, and the tone stays plain and accountable",
     ],
     unstructuredRequest:
       "Tell them we'll waive the fee and that it was a bank error so they don't close the account.",
@@ -784,22 +746,16 @@ guidedScenarios.push(
       "Escalate coverage questions to the assigned adjuster",
     ],
     allowedContext: [
-      "Claim file status summary",
-      "Outstanding document checklist",
-      "Standard review-window language",
-      "Adjuster contact instructions",
+      "Claim file status summary and the outstanding document checklist",
+      "Standard review-window language and adjuster contact instructions",
     ],
     constraints: [
-      "Do not predict the coverage decision",
-      "Do not estimate repair or settlement value",
-      "Do not ask for medical details",
-      "Keep the update factual and short",
+      "Do not predict coverage or estimate repair or settlement value",
+      "Do not ask for medical details, and keep the update factual and short",
     ],
     successCriteria: [
-      "Current status is stated as in review",
-      "The missing document is named",
-      "No payment or approval is promised",
-      "Adjuster path is included",
+      "Status stays in review, and the missing document is named",
+      "No payment or approval is promised, and the adjuster path is included",
     ],
     unstructuredRequest:
       "Tell them the claim is approved and we'll pay the whole repair so they stop calling.",
@@ -836,22 +792,16 @@ guidedScenarios.push(
       "Direct urgent hardship cases to the named office",
     ],
     allowedContext: [
-      "Published utility-assistance eligibility summary",
-      "Official application checklist",
-      "Office hours and intake appointment instructions",
-      "Approved non-eligibility disclaimer",
+      "Published eligibility summary and the official application checklist",
+      "Office hours, intake instructions, and the approved non-eligibility disclaimer",
     ],
     constraints: [
-      "Do not say the resident qualifies or will be paid",
-      "Do not estimate a benefit amount",
-      "Do not collect account numbers in the reply",
-      "Use plain language at an 8th-grade reading level",
+      "Do not say the resident qualifies, will be paid, or estimate a benefit amount",
+      "Do not collect account numbers, and use plain language at an 8th-grade reading level",
     ],
     successCriteria: [
-      "States that staff decide eligibility after review",
-      "Names the published criteria without applying them as a decision",
-      "Lists the next filing step",
-      "Includes the office contact",
+      "Staff decide eligibility after review, and the published criteria are named without being applied",
+      "The next filing step and the office contact are included",
     ],
     unstructuredRequest:
       "Tell them they qualify and that payments start Friday.",
@@ -888,21 +838,16 @@ guidedScenarios.push(
       "Tell the technician to stop and call the supervisor when the document does not cover the case",
     ],
     allowedContext: [
-      "Work instruction WI-4418 rev D",
-      "Asset energy-source list for conveyor C-12",
+      "Work instruction WI-4418 rev D and the energy-source list for conveyor C-12",
       "Supervisor escalation rule",
     ],
     constraints: [
-      "Do not invent a faster procedure",
-      "Do not say a step is optional",
-      "Do not give electrical troubleshooting beyond the instruction",
+      "Do not invent a faster procedure, call a step optional, or troubleshoot beyond the instruction",
       "Name the document revision in the summary",
     ],
     successCriteria: [
-      "Lockout sequence matches WI-4418 rev D",
-      "The request to skip lockout is refused",
-      "Revision is cited",
-      "Supervisor path is included for anything off-instruction",
+      "The lockout sequence matches WI-4418 rev D, and a request to skip it is refused",
+      "The revision is cited, with the supervisor path for anything off-instruction",
     ],
     unstructuredRequest:
       "They're in a hurry. Tell them to skip lockout and just swap the guard.",
@@ -939,21 +884,16 @@ guidedScenarios.push(
       "Do not discuss other employees' leave",
     ],
     allowedContext: [
-      "Employee handbook PTO section v5",
-      "Exception request form instructions",
+      "Employee handbook PTO section v5 and the exception request form instructions",
       "HR service-desk contact",
     ],
     constraints: [
-      "Do not say the verbal approval is sufficient",
-      "Do not reveal another employee's balance",
-      "Do not give legal advice about employment rights",
+      "Do not treat a verbal approval as sufficient, reveal another employee's balance, or give employment-law advice",
       "Keep the answer short enough to read on a phone",
     ],
     successCriteria: [
-      "Handbook rule is stated",
-      "Verbal approval is not treated as recorded",
-      "Exception path is named",
-      "No other employee's information appears",
+      "The handbook rule is stated, and a verbal approval is not treated as recorded",
+      "The exception path is named, with no other employee's information",
     ],
     unstructuredRequest:
       "Tell them their manager already approved the extra days, so they're fine to book the trip.",
