@@ -1,11 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import {
   getGuidedScenario,
   guidedSteps,
   type GuidedScenario,
+  type GuidedJudgeResult,
   type GuidedStepId,
 } from "@/data/guidedScenarios";
+import {
+  clearGuidedProgress,
+  loadGuidedProgress,
+  writeGuidedProgress,
+  type GuidedProgress,
+} from "@/lib/guidedProgress";
 import { GuidedStepper } from "./GuidedStepper";
 import { StageCoach } from "./StageCoach";
 import { ScenarioSelector } from "./ScenarioSelector";
@@ -39,6 +46,24 @@ type GuidedDemoProps = {
 const SIMULATION_NOTE =
   "Simulated demo. The reply, scores, and gate decision are scripted for this walkthrough. They are not a live model run, a customer outcome, or an independently measured result.";
 
+const SCORE_EXPLANATIONS = [
+  {
+    id: "IAS" as const,
+    name: "Intent-Alignment Score",
+    body: "Measures how well the response matches the stated intent and success criteria. It is the score for the declared task.",
+  },
+  {
+    id: "PAS" as const,
+    name: "Principle-Adherence Score",
+    body: "Measures how well the response follows the governing principles and constraints. It is the score for the organizational principles.",
+  },
+  {
+    id: "AS" as const,
+    name: "Application Score",
+    body: "Measures how well the response applies domain knowledge and produces actionable output. It is the score for a usable result in this domain.",
+  },
+];
+
 function stepIndex(id: GuidedStepId) {
   return guidedSteps.findIndex((s) => s.id === id);
 }
@@ -51,17 +76,30 @@ export function GuidedDemo({
   handoffLabel = "Business case",
 }: GuidedDemoProps) {
   const scenario = scenarioId ? getGuidedScenario(scenarioId) ?? null : null;
-  const [step, setStep] = useState<GuidedStepId>("define");
-  const [furthest, setFurthest] = useState(0);
-  const [ranAi, setRanAi] = useState(false);
-  const [evaluated, setEvaluated] = useState(false);
+  const [trackedScenarioId, setTrackedScenarioId] = useState(scenarioId);
+  const [progress, setProgress] = useState<GuidedProgress | null>(() => loadGuidedProgress(scenarioId));
 
-  useEffect(() => {
-    setStep("define");
-    setFurthest(0);
-    setRanAi(false);
-    setEvaluated(false);
-  }, [scenarioId]);
+  // Restore during render so a remount does not paint step 1 before the saved stage.
+  let activeProgress = progress;
+  if (scenarioId !== trackedScenarioId) {
+    activeProgress = loadGuidedProgress(scenarioId);
+    setTrackedScenarioId(scenarioId);
+    setProgress(activeProgress);
+  }
+
+  const step = activeProgress?.step ?? "define";
+  const furthest = activeProgress?.furthest ?? 0;
+  const ranAi = activeProgress?.ranAi ?? false;
+  const evaluated = activeProgress?.evaluated ?? false;
+
+  const commitProgress = (patch: (current: GuidedProgress) => GuidedProgress) => {
+    setProgress((current) => {
+      if (!current) return current;
+      const next = patch(current);
+      writeGuidedProgress(next);
+      return next;
+    });
+  };
 
   const progressPct = useMemo(() => {
     if (!scenario) return 0;
@@ -75,20 +113,23 @@ export function GuidedDemo({
 
   const goTo = (next: GuidedStepId) => {
     const idx = stepIndex(next);
-    setStep(next);
-    setFurthest((f) => Math.max(f, idx));
+    commitProgress((current) => ({
+      ...current,
+      step: next,
+      furthest: Math.max(current.furthest, idx),
+    }));
     trackDemoInteraction("guided_demo", `step_${next}`);
   };
 
   const continueNext = () => {
     const idx = stepIndex(step);
     if (step === "run" && !ranAi) {
-      setRanAi(true);
+      commitProgress((current) => ({ ...current, ranAi: true }));
       trackDemoInteraction("guided_demo", "run_ai");
       return;
     }
     if (step === "evaluate" && !evaluated) {
-      setEvaluated(true);
+      commitProgress((current) => ({ ...current, evaluated: true }));
       trackDemoInteraction("guided_demo", "evaluate");
       return;
     }
@@ -98,8 +139,14 @@ export function GuidedDemo({
   };
 
   const resetToScenarios = () => {
+    clearGuidedProgress();
     onScenarioChange?.(null);
     trackDemoInteraction("guided_demo", "try_another");
+  };
+
+  const markBusinessCaseReturn = () => {
+    if (!handoffHref.startsWith("/business-case")) return;
+    commitProgress((current) => ({ ...current, returnPending: true }));
   };
 
   if (!scenario) {
@@ -122,7 +169,7 @@ export function GuidedDemo({
     step === "run" && !ranAi
       ? "Run both paths"
       : step === "evaluate" && !evaluated
-        ? "Run readiness gate"
+        ? "Check readiness"
         : step === "evidence"
           ? null
           : "Continue";
@@ -185,6 +232,7 @@ export function GuidedDemo({
               onOpenAdvancedLab={onOpenAdvancedLab}
               handoffHref={handoffHref}
               handoffLabel={handoffLabel}
+              onHandoff={markBusinessCaseReturn}
             />
           )}
 
@@ -232,14 +280,14 @@ function DefineStep({ scenario }: { scenario: GuidedScenario }) {
           Define the intent
         </h3>
         <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
-          Before any model runs, lock what good looks like — in plain English.
+          Before any model runs, lock in the expertise and rules that guide the work.
         </p>
       </header>
 
       <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 space-y-4">
         <Field label="Business task" value={scenario.businessTask} />
         <Field label="Intended outcome" value={scenario.intendedOutcome} />
-        <ListField label="Organizational principles" items={scenario.principles} columns={2} />
+        <ListField label="Organizational principles" items={scenario.principles} />
         <ListField label="Allowed context" items={scenario.allowedContext} />
         <ListField label="Constraints" items={scenario.constraints} />
         <ListField label="Success criteria" items={scenario.successCriteria} />
@@ -257,31 +305,42 @@ function BuildStep({ scenario }: { scenario: GuidedScenario }) {
           Build the ICDU contract
         </h3>
         <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
-          The same intent, now structured so gates and audits can use it.
+          The same intent, now structured for audit.
+        </p>
+        <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
+          The ICDU contract records the task, rules, context, and success criteria used to check the response.
         </p>
       </header>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <MiniCard title="Primary goal" body={icdu.intent.primary_goal} />
-        <MiniCard
-          title="Persona"
-          body={`${icdu.persona.role} · ${icdu.persona.tone}`}
-        />
-        <MiniCard title="Domain" body={icdu.context.domain} />
-        <MiniCard
-          title="Policy / profile"
-          body={`${icdu.policy_set_id} / ${icdu.evaluation_profile_id}`}
-        />
-      </div>
-
-      <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 space-y-3">
-        <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)]">
+      <div
+        className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5"
+        data-testid="guided-contract-summary"
+      >
+        <h4 className="m-0 mb-4 text-center text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)]">
           Contract summary
+        </h4>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <MiniCard title="Primary goal" body={icdu.intent.primary_goal} emphasized />
+          <MiniCard
+            title="Persona"
+            body={`${icdu.persona.role} · ${icdu.persona.tone}`}
+            emphasized
+          />
+          <MiniCard title="Domain" body={icdu.context.domain} emphasized />
+          <MiniCard
+            title="Policy / profile"
+            body={`${icdu.policy_set_id} / ${icdu.evaluation_profile_id}`}
+            emphasized
+          />
         </div>
-        <ListField label="Success criteria" items={icdu.intent.success_criteria} />
-        <ListField label="Principles" items={icdu.principles} />
-        <ListField label="Constraints" items={icdu.context.constraints} />
-        <Field label="Bound prompt" value={icdu.prompt} />
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3 md:items-start">
+          <ListField label="Success criteria" items={icdu.intent.success_criteria} />
+          <ListField label="Principles" items={icdu.principles} />
+          <ListField label="Constraints" items={icdu.context.constraints} />
+        </div>
+        <div className="mt-4 border-t border-[color:var(--icdu-border)] pt-4 text-left">
+          <Field label="Bound prompt" value={icdu.prompt} />
+        </div>
       </div>
 
       <TechnicalRecord data={icdu} />
@@ -333,8 +392,8 @@ function RunStep({
             <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 mb-3">
               {scenario.unstructuredOutcome}
             </p>
-            <Badge variant="outline" className="text-xs">
-              No contract · no gate · no evidence
+            <Badge variant="outline" className="h-auto max-w-full whitespace-normal text-left text-xs">
+              No ICDU contract · no readiness check · no evidence
             </Badge>
           </div>
           <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-4 sm:p-5">
@@ -347,8 +406,8 @@ function RunStep({
             <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 whitespace-pre-wrap mb-3">
               {scenario.governedResponse}
             </p>
-            <Badge variant="outline" className="text-xs border-emerald-500/30">
-              Bound to contract · ready for gate
+            <Badge variant="outline" className="h-auto max-w-full whitespace-normal text-left text-xs border-emerald-500/30">
+              Bound to the ICDU contract · ready for review.
             </Badge>
           </div>
         </div>
@@ -372,24 +431,34 @@ function EvaluateStep({
           Evaluate readiness
         </h3>
         <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
-          Score the governed output against the contract — then decide promote,
-          escalate, or block.
+          Check the response against the ICDU contract, then decide whether it can proceed, needs review, or should be blocked.
+        </p>
+        <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
+          That check is the readiness gate. Promote means the result can proceed, escalate means it needs review, and block means it should be blocked.
         </p>
       </header>
 
+      <ScoreExplanations judge={judge} revealed={revealed} />
+      <p
+        className="m-0 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)] max-w-2xl"
+        data-testid="guided-score-disclaimer"
+      >
+        These explanations describe the metrics. The scores and release decision in this walkthrough are scripted examples, not live measurements.
+      </p>
+
       {!revealed ? (
-        <div className="rounded-xl border border-dashed border-[color:var(--icdu-border)] p-6 text-center text-sm text-[color:var(--icdu-fg-faint)]">
-          Run the readiness gate to see IAS, PAS, AS, and the release decision.
-        </div>
+        <p
+          className="m-0 text-sm leading-relaxed text-[color:var(--icdu-fg)] max-w-2xl"
+          data-testid="guided-readiness-prompt"
+        >
+          Check whether the response meets the ICDU contract, then review the scores and release decision.
+        </p>
       ) : (
         <>
-          <p className="m-0 text-xs leading-relaxed text-[color:var(--icdu-fg-faint)]">
-            Scripted demonstration scores. Not a live run or a measured result.
-          </p>
           <div className="flex flex-wrap items-center gap-3">
             <Badge
               className={cn(
-                "text-xs px-3 py-1",
+                "h-auto max-w-full whitespace-normal text-left text-xs px-3 py-1",
                 judge.decision === "PROMOTE" &&
                   "bg-emerald-600 hover:bg-emerald-600 text-white",
                 judge.decision === "ESCALATE" &&
@@ -404,28 +473,6 @@ function EvaluateStep({
               Thresholds IAS ≥ {judge.thresholds.IAS_min} · PAS ≥{" "}
               {judge.thresholds.PAS_min} · AS ≥ {judge.thresholds.AS_min}
             </span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            {(
-              [
-                ["IAS", judge.scores.IAS],
-                ["PAS", judge.scores.PAS],
-                ["AS", judge.scores.AS],
-              ] as const
-            ).map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 text-center"
-              >
-                <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)] mb-1">
-                  {label}
-                </div>
-                <div className="icdu-metric-value text-2xl">
-                  {(value * 100).toFixed(0)}%
-                </div>
-              </div>
-            ))}
           </div>
 
           <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5 space-y-3">
@@ -445,13 +492,47 @@ function EvaluateStep({
             </ul>
           </div>
 
+          <p className="m-0 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">
+            Evaluation results: the scores, the release decision, and the reasons for this response.
+          </p>
           <TechnicalRecord
-            title="View Technical Record — Judge Report"
+            title="View Technical Record — Evaluation Results"
             data={judge}
           />
         </>
       )}
     </section>
+  );
+}
+
+function ScoreExplanations({
+  judge,
+  revealed,
+}: {
+  judge: GuidedJudgeResult;
+  revealed: boolean;
+}) {
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      {SCORE_EXPLANATIONS.map((score) => (
+        <article
+          key={score.id}
+          className="min-w-0 rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 text-left"
+          data-testid={`guided-score-${score.id}`}
+        >
+          <h4 className="m-0 text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)]">
+            {score.id}
+          </h4>
+          <p className="m-0 mt-1 text-sm font-medium text-[color:var(--icdu-fg)]">{score.name}</p>
+          <p className="m-0 mt-2 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">{score.body}</p>
+          {revealed ? (
+            <p className="icdu-metric-value m-0 mt-3 text-2xl text-left">
+              {(judge.scores[score.id] * 100).toFixed(0)}%
+            </p>
+          ) : null}
+        </article>
+      ))}
+    </div>
   );
 }
 
@@ -461,12 +542,14 @@ function EvidenceStep({
   onOpenAdvancedLab,
   handoffHref,
   handoffLabel,
+  onHandoff,
 }: {
   scenario: GuidedScenario;
   onTryAnother: () => void;
   onOpenAdvancedLab: () => void;
   handoffHref: string;
   handoffLabel: string;
+  onHandoff: () => void;
 }) {
   const evidencePack = {
     scenario_id: scenario.id,
@@ -534,6 +617,9 @@ function EvidenceStep({
         </ul>
       </div>
 
+      <p className="m-0 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">
+        Evidence record: the scenario and ICDU identifiers, the scores, the decision, and the evidence notes recorded for this walkthrough.
+      </p>
       <TechnicalRecord title="View Technical Record — Evidence Pack" data={evidencePack} />
 
       <div
@@ -548,7 +634,9 @@ function EvidenceStep({
         </p>
         <div className="mt-4 flex flex-col sm:flex-row flex-wrap gap-3">
           <PrimaryCTA asChild>
-            <Link href={handoffHref}>{handoffLabel}</Link>
+            <Link href={handoffHref} onClick={onHandoff}>
+              {handoffLabel}
+            </Link>
           </PrimaryCTA>
           <SecondaryCTA onClick={onTryAnother} data-testid="guided-try-another">
             Try Another Scenario
@@ -613,13 +701,33 @@ function ListField({
   );
 }
 
-function MiniCard({ title, body }: { title: string; body: string }) {
+function MiniCard({
+  title,
+  body,
+  emphasized = false,
+}: {
+  title: string;
+  body: string;
+  emphasized?: boolean;
+}) {
   return (
-    <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4">
-      <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-ghost)] mb-1">
+    <div
+      className={cn(
+        "min-w-0 rounded-xl border p-4 text-left",
+        emphasized
+          ? "border-[color:var(--icdu-accent)]/45 bg-[color:var(--icdu-bg)]"
+          : "border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)]",
+      )}
+    >
+      <div
+        className={cn(
+          "text-xs font-semibold uppercase tracking-[0.1em] mb-1",
+          emphasized ? "text-[color:var(--icdu-accent)]" : "text-[color:var(--icdu-fg-ghost)]",
+        )}
+      >
         {title}
       </div>
-      <p className="text-sm text-[color:var(--icdu-fg)] m-0 leading-snug">{body}</p>
+      <p className="text-sm font-medium text-[color:var(--icdu-fg)] m-0 leading-snug">{body}</p>
     </div>
   );
 }

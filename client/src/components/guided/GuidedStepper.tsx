@@ -23,10 +23,11 @@ export function GuidedStepper({
           const isComplete = index < currentIndex;
           const isReachable = index <= furthestIndex;
           return (
-            <li key={step.id} className="relative flex-1">
+            <li key={step.id} className="relative min-w-0 flex-1">
               <button
                 type="button"
                 disabled={!isReachable}
+                aria-label={`Step ${index + 1}: ${step.label}`}
                 onClick={() => isReachable && onSelect(step.id)}
                 className={cn(
                   "group flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors sm:flex-col sm:items-start sm:rounded-none sm:border-0 sm:border-t-2 sm:px-2 sm:pt-3",
@@ -63,7 +64,7 @@ export function GuidedStepper({
                   </span>
                   <span
                     className={cn(
-                      "block text-sm font-medium",
+                      "block text-sm font-medium leading-tight break-words",
                       isCurrent
                         ? "text-[color:var(--icdu-fg)]"
                         : "text-[color:var(--icdu-fg-muted)]",

@@ -65,7 +65,7 @@ export type GuidedScenario = {
 
 export const guidedSteps = [
   { id: "define", label: "Define Intent", short: "Define" },
-  { id: "build", label: "Build ICDU", short: "Build" },
+  { id: "build", label: "Build ICDU contract", short: "Contract" },
   { id: "run", label: "Run AI", short: "Run" },
   { id: "evaluate", label: "Evaluate", short: "Evaluate" },
   { id: "evidence", label: "Review Evidence", short: "Evidence" },
@@ -85,10 +85,8 @@ export const guidedScenarios: GuidedScenario[] = [
     intendedOutcome:
       "A clear, empathetic response that acknowledges the error, explains the correction path, offers a concrete next step, and never invents policy or credits.",
     principles: [
-      "Acknowledge the customer's frustration before explaining",
-      "Never invent credits, SLAs, or policy exceptions",
-      "Use only approved billing and plan documentation",
-      "Escalate rather than guess when policy is ambiguous",
+      "Acknowledge the customer's frustration before explaining, and never invent credits, SLAs, or policy exceptions.",
+      "Use only approved billing and plan documentation, and escalate rather than guess when policy is ambiguous.",
     ],
     allowedContext: [
       "Approved billing FAQ v4.2 and the enterprise plan-change policy",
@@ -125,10 +123,8 @@ export const guidedScenarios: GuidedScenario[] = [
         ],
       },
       principles: [
-        "Acknowledge frustration before explanation",
-        "Never invent credits, SLAs, or policy exceptions",
-        "Use only approved billing documentation",
-        "Escalate ambiguous policy questions",
+        "Acknowledge the customer's frustration before explaining, and never invent credits, SLAs, or policy exceptions.",
+        "Use only approved billing and plan documentation, and escalate rather than guess when policy is ambiguous.",
       ],
       persona: {
         role: "Enterprise support specialist",
@@ -153,9 +149,8 @@ export const guidedScenarios: GuidedScenario[] = [
       decision: "PROMOTE",
       thresholds: { IAS_min: 0.8, PAS_min: 0.85, AS_min: 0.7 },
       rationale: [
-        "Intent alignment is high: reply matches the stated correction goal.",
-        "Principles held: no invented credit; approved policy language used.",
-        "Application is strong: concrete reference ID and timing included.",
+        "Intent alignment is high: the reply matches the correction goal and includes a reference and timing.",
+        "Principles held: no invented credit, and approved policy language was used.",
       ],
       drivers: [
         {
@@ -176,10 +171,8 @@ export const guidedScenarios: GuidedScenario[] = [
       ],
     },
     evidenceSummary: [
-      "ICDU contract version 1.0.0 bound the reply to approved billing sources",
-      "Scripted gate, not a measured result: IAS 0.91 / PAS 0.93 / AS 0.88 → PROMOTE",
-      "Scripted record of inputs, principles checked, and model version — not a live audit log",
-      "Unstructured ask would have authorized an unverified courtesy credit",
+      "Scripted example, not a live measurement: IAS 0.91 / PAS 0.93 / AS 0.88 → PROMOTE. The ICDU contract bound the reply to approved billing sources.",
+      "The unstructured ask would have authorized an unverified courtesy credit.",
     ],
     noticePoints: {
       define: {
@@ -245,10 +238,8 @@ export const guidedScenarios: GuidedScenario[] = [
     intendedOutcome:
       "A structured summary of liability, data-processing, and termination changes — with citations to clause numbers and no legal conclusions beyond the document.",
     principles: [
-      "Cite clause numbers for every material claim",
-      "Separate facts in the document from recommendations",
-      "Flag missing or weakened protections explicitly",
-      "Do not invent market norms or 'standard' positions",
+      "Cite clause numbers for every material claim, and separate facts in the document from recommendations.",
+      "Flag missing or weakened protections explicitly, and do not invent market norms or standard positions.",
     ],
     allowedContext: [
       "Vendor MSA redline PDF (uploaded excerpt) and the approved summary template",
@@ -285,10 +276,8 @@ export const guidedScenarios: GuidedScenario[] = [
         ],
       },
       principles: [
-        "Cite clause numbers for material claims",
-        "Separate document facts from recommendations",
-        "Flag weakened protections explicitly",
-        "Do not invent market standards",
+        "Cite clause numbers for every material claim, and separate facts in the document from recommendations.",
+        "Flag missing or weakened protections explicitly, and do not invent market norms or standard positions.",
       ],
       persona: {
         role: "Legal operations analyst",
@@ -313,9 +302,8 @@ export const guidedScenarios: GuidedScenario[] = [
       decision: "PROMOTE",
       thresholds: { IAS_min: 0.8, PAS_min: 0.85, AS_min: 0.7 },
       rationale: [
-        "Summary stays inside the requested sections with citations.",
-        "Principles held: no invented market standards; uncertainty marked.",
-        "Application is counsel-ready and structured.",
+        "The summary stays inside the requested sections, with citations and a counsel-ready structure.",
+        "Principles held: no invented market standards, and uncertainty is marked.",
       ],
       drivers: [
         {
@@ -336,10 +324,8 @@ export const guidedScenarios: GuidedScenario[] = [
       ],
     },
     evidenceSummary: [
-      "Contract limited review to liability, data, and termination sections",
-      "Scripted gate, not a measured result: IAS 0.94 / PAS 0.96 / AS 0.90 → PROMOTE",
-      "Evidence pack lists sources used and constraints enforced",
-      "Unstructured ask produced uncitable 'market standard' claims",
+      "Scripted example, not a live measurement: IAS 0.94 / PAS 0.96 / AS 0.90 → PROMOTE. Review stayed within liability, data, and termination.",
+      "The unstructured ask produced uncitable market-standard claims.",
     ],
     noticePoints: {
       define: {
@@ -405,10 +391,8 @@ export const guidedScenarios: GuidedScenario[] = [
     intendedOutcome:
       "An administrative explanation of coverage language, required disclaimers, and next steps for official confirmation — explicitly refusing diagnosis or treatment guidance.",
     principles: [
-      "No diagnosis, treatment, or medication guidance",
-      "Quote plan-document language; do not reinterpret clinically",
-      "Always include 'confirm with insurer / plan administrator' guidance",
-      "Escalate urgent medical concerns to appropriate care channels",
+      "No diagnosis, treatment, or medication guidance, and do not reinterpret plan language clinically.",
+      "Always include confirmation with the insurer or plan administrator, and escalate urgent medical concerns to appropriate care channels.",
     ],
     allowedContext: [
       "Member plan summary and the preventive-services coverage FAQ",
@@ -445,10 +429,8 @@ export const guidedScenarios: GuidedScenario[] = [
         ],
       },
       principles: [
-        "No diagnosis, treatment, or medication guidance",
-        "Quote plan documents; do not reinterpret clinically",
-        "Always direct members to confirm with insurer",
-        "Escalate urgent medical concerns to care channels",
+        "No diagnosis, treatment, or medication guidance, and do not reinterpret plan language clinically.",
+        "Always include confirmation with the insurer or plan administrator, and escalate urgent medical concerns to appropriate care channels.",
       ],
       persona: {
         role: "Member services administrator",
@@ -473,9 +455,8 @@ export const guidedScenarios: GuidedScenario[] = [
       decision: "PROMOTE",
       thresholds: { IAS_min: 0.8, PAS_min: 0.85, AS_min: 0.7 },
       rationale: [
-        "Stayed in administrative scope with required disclaimer.",
-        "Principles held: clinical advice refused; confirmation steps present.",
-        "Application is clear and member-safe.",
+        "The reply stayed in administrative scope, with the required disclaimer and insurer confirmation steps.",
+        "Principles held: clinical advice was refused.",
       ],
       drivers: [
         {
@@ -496,10 +477,8 @@ export const guidedScenarios: GuidedScenario[] = [
       ],
     },
     evidenceSummary: [
-      "ICDU hard-separated administrative help from clinical decisions",
-      "Scripted gate, not a measured result: IAS 0.92 / PAS 0.97 / AS 0.86 → PROMOTE",
-      "Evidence shows disclaimer + source constraints enforced",
-      "Unstructured ask pushed toward clinical and coverage overclaim risk",
+      "Scripted example, not a live measurement: IAS 0.92 / PAS 0.97 / AS 0.86 → PROMOTE. The reply stayed administrative and refused clinical advice.",
+      "The unstructured ask pushed toward clinical guidance and an overconfident coverage promise.",
     ],
     noticePoints: {
       define: {
@@ -637,8 +616,7 @@ function industryScenario(draft: IndustryDraft): GuidedScenario {
       thresholds: { IAS_min: 0.8, PAS_min: 0.85, AS_min: 0.7 },
       rationale: [
         draft.gateReason,
-        `Scripted check: the ${draft.outputNoun} used approved sources and refused the unapproved request.`,
-        "A concrete next step is present, so the result is useful without overclaiming.",
+        `Scripted check: the ${draft.outputNoun} used approved sources, refused the unapproved request, and includes a concrete next step.`,
       ],
       drivers: [
         { metric: "IAS", impact: 12, reason: "Matched the declared task and success criteria" },
@@ -647,10 +625,8 @@ function industryScenario(draft: IndustryDraft): GuidedScenario {
       ],
     },
     evidenceSummary: [
-      `Scripted demonstration: the ${draft.outputNoun} stays inside approved sources`,
-      "Scripted gate, not a measured result: IAS 0.90 / PAS 0.95 / AS 0.86 → PROMOTE",
-      "The unstructured ask pushed something the contract does not allow",
-      "The record shows the refusal and the allowed next step",
+      `Scripted example, not a live measurement: IAS 0.90 / PAS 0.95 / AS 0.86 → PROMOTE. The ${draft.outputNoun} stays inside approved sources.`,
+      "The unstructured ask pushed something the ICDU contract does not allow. The record notes the refusal and the allowed next step.",
     ],
     noticePoints: {
       define: notice(
@@ -694,10 +670,8 @@ guidedScenarios.push(
     intendedOutcome:
       "A clear explanation that cites the published fee schedule, describes how to request a review, and does not promise a waiver or refund.",
     principles: [
-      "Never promise a fee waiver, refund, or courtesy credit",
-      "Cite only the approved fee schedule and account notices",
-      "Escalate disputes and hardship requests to a specialist",
-      "Do not reference other customers' accounts",
+      "Never promise a fee waiver, refund, or courtesy credit, and cite only the approved fee schedule and account notices.",
+      "Escalate disputes and hardship requests to a specialist, and do not reference other customers' accounts.",
     ],
     allowedContext: [
       "Published monthly fee schedule and the account notice for posted fees",
@@ -740,10 +714,8 @@ guidedScenarios.push(
     intendedOutcome:
       "A status update that names the missing document and the review window, and does not say the claim is approved or quote a payment.",
     principles: [
-      "Never state that a claim is approved or denied before the decision is recorded",
-      "Never quote a payment amount",
-      "Use only the claim file summary and the document checklist",
-      "Escalate coverage questions to the assigned adjuster",
+      "Do not state approval or denial before the decision is recorded, and never quote a payment amount.",
+      "Use the claim file summary and document checklist, and refer coverage questions to the assigned adjuster.",
     ],
     allowedContext: [
       "Claim file status summary and the outstanding document checklist",
@@ -786,10 +758,8 @@ guidedScenarios.push(
     intendedOutcome:
       "An explanation of the published eligibility criteria and the application checklist, with a clear statement that eligibility is decided by the agency after review.",
     principles: [
-      "Do not decide eligibility in the conversation",
-      "Quote the published program rules, not a guessed interpretation",
-      "List only the documents on the official checklist",
-      "Direct urgent hardship cases to the named office",
+      "Do not decide eligibility in the conversation, and quote the published program rules rather than a guessed interpretation.",
+      "List only the documents on the official checklist, and direct urgent hardship cases to the named office.",
     ],
     allowedContext: [
       "Published eligibility summary and the official application checklist",
@@ -832,10 +802,8 @@ guidedScenarios.push(
     intendedOutcome:
       "A summary that follows the controlled work instruction in order, refuses to skip lockout, and cites the document revision.",
     principles: [
-      "Never skip or reorder a safety step",
-      "Use only the controlled work instruction for this asset",
-      "If the instruction and the request conflict, follow the instruction",
-      "Tell the technician to stop and call the supervisor when the document does not cover the case",
+      "Never skip or reorder a safety step, and use only the controlled work instruction for this asset.",
+      "If the instruction and the request conflict, follow the instruction, and tell the technician to stop and call the supervisor when the document does not cover the case.",
     ],
     allowedContext: [
       "Work instruction WI-4418 rev D and the energy-source list for conveyor C-12",
@@ -878,10 +846,8 @@ guidedScenarios.push(
     intendedOutcome:
       "A handbook-based answer that states the PTO balance rule, explains how an exception is requested, and does not confirm an unrecorded approval.",
     principles: [
-      "Quote the handbook, not a guessed exception",
-      "Do not confirm approvals that are not in the HR system",
-      "Send exception requests through the published HR path",
-      "Do not discuss other employees' leave",
+      "Quote the handbook rather than a guessed exception, and do not confirm approvals that are not in the HR system.",
+      "Send exception requests through the published HR path, and do not discuss other employees' leave.",
     ],
     allowedContext: [
       "Employee handbook PTO section v5 and the exception request form instructions",

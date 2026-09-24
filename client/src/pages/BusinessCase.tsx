@@ -58,6 +58,8 @@ import { cn } from "@/lib/utils";
 import { useAudience } from "@/components/AudienceProvider";
 import { RecommendedFlag } from "@/components/PathChrome";
 import { businessCaseLinkLabel, formatAudienceChip, stakeholderAnchor } from "@/data/audience";
+import { getGuidedScenario } from "@/data/guidedScenarios";
+import { pendingGuidedReturn } from "@/lib/guidedProgress";
 
 const inputKeys = [
   "workflows",
@@ -447,6 +449,8 @@ export default function BusinessCase() {
 
   const { personaId, industryId, route } = useAudience();
   const audienceChip = formatAudienceChip(personaId, industryId);
+  const demoReturn = pendingGuidedReturn(industryId);
+  const demoScenario = demoReturn ? getGuidedScenario(demoReturn.scenarioId) : undefined;
   const matchedRole = route?.stakeholderRole ?? null;
   const recommendedHash = route?.businessCaseHref.includes("#")
     ? route.businessCaseHref.split("#")[1]
@@ -493,6 +497,24 @@ export default function BusinessCase() {
               ? `Recommended for ${audienceChip}: ${route ? businessCaseLinkLabel(route) : "this section"}. The rest of the case is on this page.`
               : `Your path is ${audienceChip}. The full case is on this page.`}
           </p>
+        ) : null}
+
+        {demoReturn && demoScenario ? (
+          <div
+            className="-mt-4 rounded-xl border-2 border-[color:var(--icdu-accent)] p-4 sm:p-5"
+            data-testid="return-to-demo"
+          >
+            <p className="m-0 text-sm font-semibold text-[color:var(--icdu-fg)]">
+              You opened this case from your guided demo.
+            </p>
+            <p className="m-0 mt-1 text-sm leading-relaxed text-[color:var(--icdu-fg-muted)]">
+              {demoScenario.title}
+              {audienceChip ? ` · ${audienceChip}` : ""}. Your place in that walkthrough is saved.
+            </p>
+            <PrimaryCTA asChild className="mt-4">
+              <Link href="/demos">Return to your demo</Link>
+            </PrimaryCTA>
+          </div>
         ) : null}
 
         <div className="grid gap-6 sm:gap-8 md:grid-cols-3 -mt-6 sm:-mt-10">
