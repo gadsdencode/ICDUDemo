@@ -31,6 +31,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { trackDemoInteraction } from "@/lib/analytics";
+import { formatGatePercent, pasGateExplanation } from "@/lib/gateDecision";
 
 const WALKTHROUGH_URL =
   "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough";
@@ -436,6 +437,12 @@ function EvaluateStep({
         <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl">
           That check is the readiness gate. Promote means the result can proceed, escalate means it needs review, and block means it should be blocked.
         </p>
+        <p
+          className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed max-w-2xl"
+          data-testid="guided-pas-rule"
+        >
+          {pasGateExplanation(judge.thresholds)}
+        </p>
       </header>
 
       <ScoreExplanations judge={judge} revealed={revealed} />
@@ -470,8 +477,8 @@ function EvaluateStep({
               Readiness decision: {judge.decision}
             </Badge>
             <span className="text-xs text-[color:var(--icdu-fg-faint)]">
-              Thresholds IAS ≥ {judge.thresholds.IAS_min} · PAS ≥{" "}
-              {judge.thresholds.PAS_min} · AS ≥ {judge.thresholds.AS_min}
+              Thresholds IAS ≥ {formatGatePercent(judge.thresholds.IAS_min)} · PAS ≥{" "}
+              {formatGatePercent(judge.thresholds.PAS_min)} · AS ≥ {formatGatePercent(judge.thresholds.AS_min)}
             </span>
           </div>
 

@@ -9,7 +9,7 @@ export default function Overview() {
   useSEO({
     title: "ICDU — AI Guided by Intent",
     description:
-      "Define the task. Check the work. Keep the record. See what that means for your work.",
+      "Define the task. Lock in expertise. Auditable outcomes. See what that means for your work.",
   });
 
   useEffect(() => {

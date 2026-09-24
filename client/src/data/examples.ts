@@ -137,7 +137,7 @@ export const glossaryTerms = [
   },
   {
     term: "PAS (Principle-Adherence Score)",
-    definition: "Measures how well the AI output follows the governing principles and constraints. Principle adherence is non-negotiable — PAS below threshold triggers BLOCK."
+    definition: "Measures how well the AI output follows the governing principles and constraints. Principle adherence is non-negotiable: PAS below its configured threshold triggers BLOCK even if the other scores pass. Meeting that threshold does not by itself produce PROMOTE; the other required scores must also pass."
   },
   {
     term: "AS (Application Score)",
@@ -145,7 +145,7 @@ export const glossaryTerms = [
   },
   {
     term: "Promote / Escalate / Block",
-    definition: "The three gate decisions made by the AI Judge. PROMOTE: all scores exceed thresholds, ready for deployment. ESCALATE: borderline scores, human review required. BLOCK: critical thresholds failed, revision required before re-evaluation."
+    definition: "The three gate decisions made by the AI Judge. PROMOTE: every configured score threshold is met. ESCALATE: human review is required when the result is not blocked but does not meet every threshold. BLOCK: PAS is below its configured threshold, or another critical failure applies, and revision is required before re-evaluation."
   },
   {
     term: "Stability",

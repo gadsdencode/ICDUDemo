@@ -8,7 +8,7 @@
     "build": "tsx script/build.ts",
     "start": "cross-env NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
-    "test": "tsx --test client/src/lib/guidedProgress.test.ts",
+    "test": "tsx --test client/src/lib/guidedProgress.test.ts client/src/lib/gateDecision.test.ts",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {

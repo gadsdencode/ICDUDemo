@@ -123,9 +123,8 @@ export function AudienceFunnel() {
           AI Guided by Intent
         </h1>
         <p data-testid="funnel-sentence">
-          Define the task. Check the work. Keep the record.
-          <br />
-          See what that means for your work.
+          Define the task. Lock in expertise. Auditable outcomes.
+          <span className="icdu-hero-prompt">See what that means for your work.</span>
         </p>
       </section>
 

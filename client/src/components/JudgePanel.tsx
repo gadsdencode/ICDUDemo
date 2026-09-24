@@ -7,6 +7,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Scale, Play, CheckCircle2, AlertTriangle, XCircle, RotateCcw, ChevronDown, FileText, Lightbulb, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trackDemoInteraction } from "@/lib/analytics";
+import {
+  defaultGateThresholds,
+  evaluateGate,
+  formatGatePercent,
+  pasGateExplanation,
+} from "@/lib/gateDecision";
 
 type ScoreDriver = {
   metric: string;
@@ -38,11 +44,7 @@ type JudgeResult = {
   toPromote: ToPromoteItem[];
 };
 
-const thresholds = {
-  IAS_min: 0.80,
-  PAS_min: 0.85,
-  AS_min: 0.70,
-};
+const thresholds = defaultGateThresholds;
 
 function generateMockScores(): JudgeResult {
   const IAS = Math.random() * 0.35 + 0.60;
@@ -50,10 +52,10 @@ function generateMockScores(): JudgeResult {
   const AS = Math.random() * 0.40 + 0.55;
 
   const passIAS = IAS >= thresholds.IAS_min;
-  const passPAS = PAS >= thresholds.PAS_min;
   const passAS = AS >= thresholds.AS_min;
+  const outcome = evaluateGate({ IAS, PAS, AS }, thresholds);
 
-  let decision: "PROMOTE" | "ESCALATE" | "BLOCK";
+  const decision = outcome.decision;
   let rationale: string[] = [];
   let drivers: ScoreDriver[] = [];
   let toPromote: ToPromoteItem[] = [];
@@ -109,21 +111,23 @@ function generateMockScores(): JudgeResult {
     });
   }
 
-  if (passIAS && passPAS && passAS) {
-    decision = "PROMOTE";
+  if (decision === "PROMOTE") {
     rationale = [
-      "All scores exceed minimum thresholds",
-      `IAS (${(IAS * 100).toFixed(0)}%) demonstrates clear intent alignment`,
-      `PAS (${(PAS * 100).toFixed(0)}%) shows proper principle adherence`,
-      `AS (${(AS * 100).toFixed(0)}%) indicates good application quality`,
+      "All configured score thresholds are met",
+      `IAS (${formatGatePercent(IAS)}) demonstrates clear intent alignment`,
+      `PAS (${formatGatePercent(PAS)}) shows proper principle adherence`,
+      `AS (${formatGatePercent(AS)}) indicates good application quality`,
       "Ready for deployment with standard monitoring"
     ];
-  } else if (IAS < 0.65 || PAS < 0.70 || AS < 0.55) {
-    decision = "BLOCK";
+  } else if (decision === "BLOCK") {
     rationale = [];
-    if (IAS < 0.65) rationale.push("Intent alignment critically low - unclear what success looks like");
-    if (PAS < 0.70) rationale.push("Principle adherence below safety threshold - governance risk");
-    if (AS < 0.55) rationale.push("Application quality insufficient - domain mismatch likely");
+    if (outcome.iasHardFailure) rationale.push("Intent alignment critically low - unclear what success looks like");
+    if (outcome.pasBlocks) {
+      rationale.push(
+        `Principle adherence (${formatGatePercent(PAS)}) is below the configured PAS threshold (${formatGatePercent(thresholds.PAS_min)})`,
+      );
+    }
+    if (outcome.asHardFailure) rationale.push("Application quality insufficient - domain mismatch likely");
     rationale.push("Automatic block triggered - requires significant revision before re-evaluation");
 
     toPromote = [
@@ -133,19 +137,22 @@ function generateMockScores(): JudgeResult {
       { action: "Add domain-specific constraints", impact: "AS +5-10%", priority: "medium" }
     ];
   } else {
-    decision = "ESCALATE";
     rationale = [];
-    if (!passIAS) rationale.push(`Intent alignment (${(IAS * 100).toFixed(0)}%) slightly below 80% threshold`);
-    if (!passPAS) rationale.push(`Principle adherence (${(PAS * 100).toFixed(0)}%) needs review against 85% threshold`);
-    if (!passAS) rationale.push(`Application score (${(AS * 100).toFixed(0)}%) may need improvement vs 70% threshold`);
+    if (!passIAS) {
+      rationale.push(
+        `Intent alignment (${formatGatePercent(IAS)}) is below the configured IAS threshold (${formatGatePercent(thresholds.IAS_min)})`,
+      );
+    }
+    if (!passAS) {
+      rationale.push(
+        `Application score (${formatGatePercent(AS)}) is below the configured AS threshold (${formatGatePercent(thresholds.AS_min)})`,
+      );
+    }
     rationale.push("Human review recommended - scores are borderline");
 
     toPromote = [];
     if (!passIAS) {
       toPromote.push({ action: "Refine success criteria with quantifiable metrics", impact: "IAS +5-10%", priority: "high" });
-    }
-    if (!passPAS) {
-      toPromote.push({ action: "Review and strengthen governing principles", impact: "PAS +5-10%", priority: "high" });
     }
     if (!passAS) {
       toPromote.push({ action: "Clarify persona and add context constraints", impact: "AS +5-10%", priority: "medium" });
@@ -305,12 +312,12 @@ export function JudgePanel() {
       <div className="p-2.5 sm:p-4 rounded-md bg-muted/50 border mb-4 sm:mb-6">
         <div className="text-xs sm:text-sm font-medium mb-2">Gate Thresholds</div>
         <div className="flex flex-wrap gap-2 sm:gap-3">
-          <Badge variant="outline" className="text-xs sm:text-sm">IAS ≥ 80%</Badge>
-          <Badge variant="outline" className="text-xs sm:text-sm">PAS ≥ 85%</Badge>
-          <Badge variant="outline" className="text-xs sm:text-sm">AS ≥ 70%</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">IAS ≥ {formatGatePercent(thresholds.IAS_min)}</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">PAS ≥ {formatGatePercent(thresholds.PAS_min)}</Badge>
+          <Badge variant="outline" className="text-xs sm:text-sm">AS ≥ {formatGatePercent(thresholds.AS_min)}</Badge>
         </div>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-2">
-          Principles are non-negotiable: PAS below threshold triggers BLOCK regardless of other scores.
+        <p className="text-xs sm:text-sm text-muted-foreground mt-2" data-testid="judge-pas-rule">
+          {pasGateExplanation(thresholds)}
         </p>
       </div>
 
