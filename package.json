@@ -9,7 +9,9 @@
     "start": "cross-env NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
     "test": "tsx --test client/src/lib/guidedProgress.test.ts client/src/lib/gateDecision.test.ts client/src/lib/assistantNavigation.test.ts client/src/lib/guidedTransitions.test.ts client/src/lib/roiEdit.test.ts shared/siteKnowledge.test.ts server/icdu/session.test.ts server/icdu/clientIp.test.ts server/icdu/messages.test.ts server/icdu/continuations.test.ts server/icdu/publicAi.test.ts",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "knowledge:index": "tsx script/index-knowledge.ts",
+    "test:knowledge": "tsx --test server/icdu/knowledge/knowledge.test.ts"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "2.0.79",

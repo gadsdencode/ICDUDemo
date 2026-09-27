@@ -1,6 +1,7 @@
 import { tool, type Tool } from "ai";
 import { z } from "zod";
 import { glossaryTerms } from "../../client/src/data/examples.ts";
+import { knowledgeEntries, normalize } from "./knowledge/corpus.ts";
 
 const termSchema = z
   .object({
@@ -9,8 +10,10 @@ const termSchema = z
   .strict();
 
 function findTerm(term: string): { term: string; definition: string } | null {
-  const needle = term.trim().toLowerCase();
-  const match = glossaryTerms.find((entry) => entry.term.toLowerCase() === needle);
+  const needle = normalize(term);
+  const alias = knowledgeEntries.find(e => e.kind === "definition" &&
+    [e.title, ...e.aliases].some(a => normalize(a) === needle));
+  const match = glossaryTerms.find((entry) => normalize(entry.term) === needle || entry.term === alias?.title);
   if (!match) return null;
   return { term: match.term, definition: match.definition };
 }

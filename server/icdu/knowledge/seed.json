@@ -1,0 +1,367 @@
+{
+  "version": 1,
+  "status": "approved-for-public-retrieval",
+  "source_policy": "Current website repository only. No unseen PDF/DOCX body is represented as read. Newer owner material may supersede these entries.",
+  "entries": [
+    {
+      "id": "icdu",
+      "kind": "definition",
+      "title": "ICDU",
+      "aliases": [
+        "Intent-Conscious Data Unit",
+        "Intent Conscious Data Unit"
+      ],
+      "answer": "Intent-Conscious Data Unit - A structured record format that encodes user intent, governing principles, persona requirements, and context for AI interactions.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "intent",
+      "kind": "definition",
+      "title": "Intent",
+      "aliases": [],
+      "answer": "The explicit goal or outcome that the AI system should achieve. Includes primary goal and success criteria.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "principles",
+      "kind": "definition",
+      "title": "Principles",
+      "aliases": [
+        "governing principles"
+      ],
+      "answer": "Governing rules that constrain AI behavior - safety requirements, ethical guidelines, and policy constraints.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "persona",
+      "kind": "definition",
+      "title": "Persona",
+      "aliases": [],
+      "answer": "The role and tone requirements for AI responses - who the AI should behave as and how it should communicate.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "context",
+      "kind": "definition",
+      "title": "Context",
+      "aliases": [],
+      "answer": "Domain knowledge and operational constraints that shape appropriate responses - what the AI knows and what limits apply.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "governance-id",
+      "kind": "definition",
+      "title": "Governance ID",
+      "aliases": [
+        "governance identifier"
+      ],
+      "answer": "A unique identifier linking every AI output to its ICDU, enabling complete traceability and audit trails.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "ai-judge",
+      "kind": "definition",
+      "title": "AI Judge",
+      "aliases": [
+        "Judge"
+      ],
+      "answer": "A quantitative evaluator that scores AI outputs on Intent-Alignment (IAS), Principle-Adherence (PAS), and Application (AS).",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "gates",
+      "kind": "definition",
+      "title": "Gates",
+      "aliases": [
+        "gate",
+        "readiness gates"
+      ],
+      "answer": "Threshold-based checkpoints that determine whether outputs are promoted, escalated, or blocked based on scores.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "hitl-nuance-grader",
+      "kind": "definition",
+      "title": "HITL Nuance Grader",
+      "aliases": [
+        "HITL",
+        "human-in-the-loop",
+        "human review"
+      ],
+      "answer": "Human-in-the-loop rubric-based assessment for qualitative dimensions: empathy, clarity, coaching, trust, and safety.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "perturbations",
+      "kind": "definition",
+      "title": "Perturbations",
+      "aliases": [
+        "perturbation",
+        "scenario variations"
+      ],
+      "answer": "Controlled variations of scenarios (role, tone, constraints, channel) used to stress-test AI behavior.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "ias-intent-alignment-score",
+      "kind": "definition",
+      "title": "IAS (Intent-Alignment Score)",
+      "aliases": [
+        "IAS",
+        "Intent-Alignment Score",
+        "intent alignment"
+      ],
+      "answer": "Measures how well the AI output matches the stated intent and success criteria. Scored by the AI Judge; must meet threshold for PROMOTE gate.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "pas-principle-adherence-score",
+      "kind": "definition",
+      "title": "PAS (Principle-Adherence Score)",
+      "aliases": [
+        "PAS",
+        "Principle-Adherence Score",
+        "principle adherence"
+      ],
+      "answer": "Measures how well the AI output follows the governing principles and constraints. Principle adherence is non-negotiable: PAS below its configured threshold triggers BLOCK even if the other scores pass. Meeting that threshold does not by itself produce PROMOTE; the other required scores must also pass.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "as-application-score",
+      "kind": "definition",
+      "title": "AS (Application Score)",
+      "aliases": [
+        "AS",
+        "Application Score"
+      ],
+      "answer": "Measures how well the AI applies domain knowledge and produces actionable outputs.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims",
+      "matching_note": "Do not match the ordinary lowercase English word \"as\" without score or ICDU context."
+    },
+    {
+      "id": "promote-escalate-block",
+      "kind": "definition",
+      "title": "Promote / Escalate / Block",
+      "aliases": [
+        "PROMOTE",
+        "ESCALATE",
+        "BLOCK",
+        "gate decisions"
+      ],
+      "answer": "The three gate decisions made by the AI Judge. PROMOTE: every configured score threshold is met. ESCALATE: human review is required when the result is not blocked but does not meet every threshold. BLOCK: PAS is below its configured threshold, or another critical failure applies, and revision is required before re-evaluation.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "stability",
+      "kind": "definition",
+      "title": "Stability",
+      "aliases": [
+        "behavioral stability"
+      ],
+      "answer": "A metric from the Stress Engine measuring whether AI behavior remains consistent across controlled perturbations of role, tone, constraints, and channel.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "disparity-indicators",
+      "kind": "definition",
+      "title": "Disparity Indicators",
+      "aliases": [],
+      "answer": "Fairness metrics measured across perturbation sets in the Stress Engine. Unlike isolated fairness benchmarks (BBQ, WinoBias), disparity is tracked as a continuous pipeline metric across deployment scenarios.",
+      "source_url": "/developers#schema-samples",
+      "source_label": "Glossary of Terms download",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved",
+      "scope": "Published ICDU terminology; not independent verification of product claims"
+    },
+    {
+      "id": "four-components",
+      "kind": "explanation",
+      "title": "How the four components fit together",
+      "aliases": [
+        "pipeline",
+        "components",
+        "how it works"
+      ],
+      "answer": "The published system description identifies four pieces: the ICDU record format, AI Judge scoring and gates, the HITL Nuance Grader, and the Scenario-Perturbation Stress Engine. The record captures intent, principles, persona, and context. The Judge evaluates outputs; human grading covers qualitative dimensions; stress testing applies controlled scenario variations.",
+      "source_url": "/faq#components",
+      "source_file": "client/src/data/siteResources.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "readiness-path",
+      "kind": "explanation",
+      "title": "Define → Gate → Execute → Audit",
+      "aliases": [
+        "readiness",
+        "workflow",
+        "process"
+      ],
+      "answer": "The website describes ICDU as a structured record inside a readiness path: Define → Gate → Execute → Audit, so outputs can be reviewed against explicit criteria. This is the published conceptual framing; do not infer unimplemented production integrations from it.",
+      "source_url": "/faq#what-is-icdu",
+      "source_file": "client/src/data/siteResources.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "sample-record",
+      "kind": "explanation",
+      "title": "A concrete example of an ICDU record",
+      "aliases": [
+        "example",
+        "sample",
+        "schema",
+        "record"
+      ],
+      "answer": "The published sample asks for a concept to be explained clearly to a non-expert. Success means accurate, actionable, low-jargon output. Principles include truthfulness, uncertainty, avoiding unsafe instructions, and clear structure. The persona is a staff engineer with a calm, direct tone; context is AI safety with no proprietary data or PHI. These are sample values, not mandatory values for every ICDU.",
+      "source_url": "/developers#schema-samples",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "pas-gate-rule",
+      "kind": "explanation",
+      "title": "How the public demo decides promote, escalate, or block",
+      "aliases": [
+        "threshold",
+        "PAS",
+        "IAS",
+        "Application Score",
+        "gate",
+        "block",
+        "80/85/70"
+      ],
+      "answer": "In the public Judge demonstration, PAS below its configured threshold blocks, even if IAS and AS pass. The default sample thresholds are IAS 0.80 (80%), PAS 0.85 (85%), AS 0.70 (70%). The demo also blocks IAS below 0.65 or AS below 0.55. Otherwise all configured thresholds met produces PROMOTE; remaining cases ESCALATE. These defaults and hard floors describe this demo implementation, not universal ICDU requirements.",
+      "source_url": "/demos?mode=lab",
+      "source_file": "client/src/lib/gateDecision.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "human-grading",
+      "kind": "explanation",
+      "title": "What human grading adds",
+      "aliases": [
+        "rubric",
+        "HITL",
+        "qualitative",
+        "human review"
+      ],
+      "answer": "The published HITL rubric assesses empathy/tone fit, clarity, coaching quality, perceived trust, and safety judgment. Perceived trust asks whether the response flags uncertainty, cites limitations, and avoids overclaiming. This qualitative rubric complements the AI Judge scores.",
+      "source_url": "/developers#schema-samples",
+      "source_file": "client/src/data/examples.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "demo-evidence",
+      "kind": "explanation",
+      "title": "What the demonstrations establish",
+      "aliases": [
+        "simulated",
+        "real",
+        "live",
+        "scores",
+        "proof"
+      ],
+      "answer": "Guided Demo replies, scores, and gate decisions are scripted. Advanced Lab controls use deterministic mock behavior. They demonstrate the workflow; they are not live model evaluations or customer outcomes. The public Ask ICDU chat being connected to a live model does not make those separate demos live evaluations.",
+      "source_url": "/demos#demo-experience",
+      "source_file": "shared/siteKnowledge.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    },
+    {
+      "id": "capability-vs-readiness",
+      "kind": "explanation",
+      "title": "How ICDU differs from capability benchmarks",
+      "aliases": [
+        "MMLU",
+        "HumanEval",
+        "benchmark",
+        "comparison"
+      ],
+      "answer": "The published FAQ distinguishes capability benchmarks, such as knowledge or coding tasks, from checking whether a workflow follows specified intent, principles, and promotion rules. ICDU concerns readiness for a specific governed use. This comparison does not establish that a particular ICDU implementation outperforms other systems.",
+      "source_url": "/faq#versus-benchmarks",
+      "source_file": "client/src/data/siteResources.ts",
+      "source_commit": "bf699ef9478123e6c92536197f76cb831bb3a15f",
+      "review_status": "approved"
+    }
+  ]
+}
