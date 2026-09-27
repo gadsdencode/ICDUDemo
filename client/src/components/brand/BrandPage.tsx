@@ -11,7 +11,7 @@ export function BrandPage({
   return (
     <div className={cn("icdu-page flex flex-col", className)} {...props}>
       <div className="icdu-page-inner flex-1 w-full">{children}</div>
-      <SiteFooter />
+      <SiteFooter compact className="mt-auto" />
     </div>
   );
 }
