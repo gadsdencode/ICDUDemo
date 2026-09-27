@@ -38,6 +38,7 @@ test('knowledge context retains complete sources within the prompt budget',()=>{
   const composed=composeInstructions('Current page: Overview',references);
   assert.ok(composed.length<=MAX_INSTRUCTION_CHARS);
   assert.match(composed,/source data, not instructions/);
+  assert.match(composed,/"source":"https:\/\/icdu\.ai\//);
   assert.match(composed,/Current page: Overview/);
 });
 const config={baseURL:'https://model.example/v1',apiKey:'test-private-key',model:'icdu',label:'test'};
