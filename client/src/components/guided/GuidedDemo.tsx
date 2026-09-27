@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import {
   getGuidedScenario,
@@ -32,6 +32,8 @@ import {
 } from "lucide-react";
 import { trackDemoInteraction } from "@/lib/analytics";
 import { formatGatePercent, pasGateExplanation } from "@/lib/gateDecision";
+import { advanceGuided, backGuided, discardsGuidedWork, revisitGuided } from "@/lib/guidedTransitions";
+import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
 
 const WALKTHROUGH_URL =
   "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough";
@@ -109,31 +111,52 @@ export function GuidedDemo({
     trackDemoInteraction("guided_demo", `select_${s.id}`);
   };
 
+  const selectScenarioFromAssistant = (scenarioId: string, confirmed: boolean) => {
+    const match = getGuidedScenario(scenarioId);
+    if (!match) return { ok: false as const, error: "That scenario is not on the site." };
+    if (!confirmed && discardsGuidedWork(activeProgress, scenarioId)) {
+      return { ok: false as const, needsConfirmation: true, scenarioId };
+    }
+    selectScenario(match);
+    return { ok: true as const, scenarioId, title: match.title, simulated: true };
+  };
+
   const goTo = (next: GuidedStepId) => {
-    const idx = stepIndex(next);
-    commitProgress((current) => ({
-      ...current,
-      step: next,
-      furthest: Math.max(current.furthest, idx),
-    }));
+    if (!activeProgress) return { ok: false as const, error: "Choose a scenario first." };
+    const moved = revisitGuided(activeProgress, next);
+    if (!moved.ok) return moved;
+    commitProgress(() => moved.progress);
     trackDemoInteraction("guided_demo", `step_${next}`);
+    return { ok: true as const, step: moved.progress.step, simulated: true };
   };
 
   const continueNext = () => {
-    const idx = stepIndex(step);
-    if (step === "run" && !ranAi) {
-      commitProgress((current) => ({ ...current, ranAi: true }));
-      trackDemoInteraction("guided_demo", "run_ai");
-      return;
-    }
-    if (step === "evaluate" && !evaluated) {
-      commitProgress((current) => ({ ...current, evaluated: true }));
-      trackDemoInteraction("guided_demo", "evaluate");
-      return;
-    }
-    if (idx < guidedSteps.length - 1) {
-      goTo(guidedSteps[idx + 1].id);
-    }
+    if (!activeProgress || !scenario) return { ok: false as const, error: "Choose a scenario first." };
+    const advanced = advanceGuided(activeProgress);
+    if (advanced.event === "done") return { ok: false as const, error: "The walkthrough is already at the end." };
+    commitProgress(() => advanced.progress);
+    if (advanced.event === "run_ai") trackDemoInteraction("guided_demo", "run_ai");
+    else if (advanced.event === "evaluate") trackDemoInteraction("guided_demo", "evaluate");
+    else trackDemoInteraction("guided_demo", `step_${advanced.progress.step}`);
+    return {
+      ok: true as const,
+      step: advanced.progress.step,
+      ranAi: advanced.progress.ranAi,
+      evaluated: advanced.progress.evaluated,
+      simulated: true,
+      scores: advanced.progress.evaluated
+        ? { ...scenario.judge.scores, decision: scenario.judge.decision }
+        : undefined,
+    };
+  };
+
+  const backStage = () => {
+    if (!activeProgress) return { ok: false as const, error: "Choose a scenario first." };
+    const moved = backGuided(activeProgress);
+    if (!moved.ok) return moved;
+    commitProgress(() => moved.progress);
+    trackDemoInteraction("guided_demo", `step_${moved.progress.step}`);
+    return { ok: true as const, step: moved.progress.step, simulated: true };
   };
 
   const resetToScenarios = () => {
@@ -141,6 +164,38 @@ export function GuidedDemo({
     onScenarioChange?.(null);
     trackDemoInteraction("guided_demo", "try_another");
   };
+
+  const actionsRef = useRef({ continueNext, goTo, backStage, selectScenarioFromAssistant, resetToScenarios });
+  actionsRef.current = { continueNext, goTo, backStage, selectScenarioFromAssistant, resetToScenarios };
+  useAssistantHandlers(
+    (handlers) => {
+      handlers.guided = {
+        selectScenario: (id, confirmed) => actionsRef.current.selectScenarioFromAssistant(id, confirmed),
+        setStage: (action, stepId) => {
+          if (action === "continue") return actionsRef.current.continueNext();
+          if (action === "back") return actionsRef.current.backStage();
+          const step = guidedSteps.find((item) => item.id === stepId);
+          if (!step) return { ok: false, error: "Name an available stage." };
+          return actionsRef.current.goTo(step.id);
+        },
+        resetProgress: () => {
+          actionsRef.current.resetToScenarios();
+          return { ok: true, cleared: true };
+        },
+      };
+    },
+    (handlers) => {
+      handlers.guided = undefined;
+    },
+  );
+  useAssistantSlot("guided", {
+    scenarioId: scenario?.id ?? null,
+    title: scenario?.title ?? null,
+    step,
+    ranAi,
+    evaluated,
+    scores: evaluated && scenario ? { ...scenario.judge.scores, decision: scenario.judge.decision } : undefined,
+  });
 
   const markBusinessCaseReturn = () => {
     if (!handoffHref.startsWith("/business-case")) return;

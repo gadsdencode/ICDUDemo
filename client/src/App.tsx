@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navigation } from "@/components/Navigation";
 import { AudienceProvider } from "@/components/AudienceProvider";
 import { AssistantHost } from "@/components/AssistantHost";
+import { AssistantProvider } from "@/components/assistant/AssistantProvider";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -56,14 +57,16 @@ function App() {
       <ThemeProvider defaultTheme="light" storageKey="icdu-theme">
         <TooltipProvider>
           <AudienceProvider>
-            <div className="min-h-screen bg-background text-foreground font-sans">
-              <Navigation />
-              <main>
-                <Router />
-              </main>
-            </div>
-            <AssistantHost />
-            <Toaster />
+            <AssistantProvider>
+              <div className="min-h-screen bg-background text-foreground font-sans">
+                <Navigation />
+                <main>
+                  <Router />
+                </main>
+              </div>
+              <AssistantHost />
+              <Toaster />
+            </AssistantProvider>
           </AudienceProvider>
         </TooltipProvider>
       </ThemeProvider>

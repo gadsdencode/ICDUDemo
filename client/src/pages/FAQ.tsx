@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import {
   Accordion,
@@ -15,9 +15,12 @@ import {
   type FaqCategory,
 } from "@/data/siteResources";
 import { cn } from "@/lib/utils";
+import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
+import { faqItem } from "@shared/siteKnowledge";
 
 export default function FAQ() {
   const [filter, setFilter] = useState<FaqCategory | "all">("all");
+  const [openId, setOpenId] = useState<string>("");
 
   useSEO({
     title: "FAQ | ICDU",
@@ -29,6 +32,41 @@ export default function FAQ() {
     trackPageViewed("faq");
   }, []);
 
+  const filterRef = useRef({ setFilter, setOpenId });
+  filterRef.current = { setFilter, setOpenId };
+  useAssistantSlot("faq", { category: filter, openId: openId || null });
+  useAssistantHandlers(
+    (handlers) => {
+      handlers.faq = {
+        open: ({ id, category }) => {
+          const match = id ? faqItem(id) : undefined;
+          if (id && !match) return { ok: false, error: "That question is not on the FAQ." };
+          if (category && match && match.category !== category) {
+            return { ok: false, error: "That question is not in that category." };
+          }
+          const nextCategory = match?.category ?? category;
+          if (nextCategory && !faqCategories.some((item) => item.id === nextCategory)) {
+            return { ok: false, error: "That category is not on the FAQ." };
+          }
+          const target = match ?? categorizedFaqItems.find((item) => item.category === nextCategory);
+          if (!target) return { ok: false, error: "Name a published FAQ question." };
+          filterRef.current.setFilter(target.category);
+          filterRef.current.setOpenId(target.id);
+          return {
+            ok: true,
+            id: target.id,
+            category: target.category,
+            question: target.question,
+            answer: target.answer,
+          };
+        },
+      };
+    },
+    (handlers) => {
+      handlers.faq = undefined;
+    },
+  );
+
   const items = useMemo(
     () =>
       filter === "all"
@@ -38,7 +76,7 @@ export default function FAQ() {
   );
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="faq">
       <div className="mx-auto max-w-3xl space-y-10 sm:space-y-12">
         <PageHero
           label="FAQ"
@@ -99,17 +137,24 @@ export default function FAQ() {
           ))}
         </div>
 
-        <ContentSection>
-          <Accordion type="single" collapsible className="w-full space-y-2">
-            {items.map((item, index) => (
+        <ContentSection id="faq-list" className="scroll-mt-24">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full space-y-2"
+            value={openId}
+            onValueChange={setOpenId}
+          >
+            {items.map((item) => (
               <AccordionItem
-                key={item.question}
-                value={`faq-${index}`}
-                className="border border-[color:var(--icdu-border)] rounded-lg px-3 sm:px-4"
+                key={item.id}
+                id={item.id}
+                value={item.id}
+                className="scroll-mt-24 border border-[color:var(--icdu-border)] rounded-lg px-3 sm:px-4"
               >
                 <AccordionTrigger
                   className="text-left hover:no-underline py-3 sm:py-4 text-[color:var(--icdu-fg)]"
-                  data-testid={`faq-question-${index}`}
+                  data-testid={`faq-question-${item.id}`}
                 >
                   <span className="font-medium text-sm sm:text-base pr-2 text-[color:var(--icdu-fg)]">
                     {item.question}

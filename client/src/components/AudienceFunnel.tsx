@@ -114,7 +114,7 @@ export function AudienceFunnel() {
   const showChooserMeta = Boolean(stepLabel) || (stage === "role" && Boolean(scenario));
 
   return (
-    <div className="icdu-home">
+    <div className="icdu-home" data-assistant-page="overview">
       <a className="icdu-focus sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:bg-[color:var(--icdu-fg)] focus:px-4 focus:py-3 focus:text-[color:var(--icdu-bg)]" href="#chooser">
         Skip to the chooser
       </a>

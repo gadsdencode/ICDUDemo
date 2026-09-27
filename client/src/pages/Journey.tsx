@@ -73,6 +73,15 @@ export default function Journey() {
   }, [personaId, firstTabId]);
 
   useEffect(() => {
+    if (!personaId || !personaJourney) return;
+    const hash = window.location.hash.replace(/^#/, "");
+    const prefix = `${personaId}-`;
+    if (!hash.startsWith(prefix)) return;
+    const tab = hash.slice(prefix.length);
+    if (personaJourney.tabs.some((item) => item.id === tab)) setCurrentTabId(tab);
+  }, [personaId, personaJourney]);
+
+  useEffect(() => {
     if (personaId) return;
     return () => clearJourneyIndexBrowse();
   }, [personaId]);
@@ -101,7 +110,7 @@ export default function Journey() {
 
   if (!personaId) {
     return (
-      <BrandPage>
+      <BrandPage data-assistant-page="journey">
         <PageHero
           label="For Your Role"
           title="Choose your path"
@@ -112,18 +121,20 @@ export default function Journey() {
         <div className="mb-6">
           <PathEntrance page="journey-index" />
         </div>
+        <div id="journey-roles" className="scroll-mt-24">
         <RoleTrackSelector
           personas={personas}
           selectedId={audiencePersonaId}
           onSelectPersona={handleSelectPersona}
         />
+        </div>
       </BrandPage>
     );
   }
 
   if (!selectedPersona || !personaJourney || !activeTabId) {
     return (
-      <BrandPage>
+      <BrandPage data-assistant-page="journey">
         <div className="text-center">
           <h1 className="icdu-section-heading mb-4">Role not found</h1>
           <SecondaryCTA
@@ -140,7 +151,7 @@ export default function Journey() {
   }
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="journey">
       <div className="mx-auto max-w-4xl">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
           <SecondaryCTA
@@ -189,7 +200,7 @@ export default function Journey() {
           </div>
         </div>
 
-        <header className="mb-6 sm:mb-8">
+        <header id={personaId} className="mb-6 scroll-mt-24 sm:mb-8">
           <div className="icdu-section-label mb-2">
             {selectedPersona.track === "leadership"
               ? "Leadership"
@@ -208,6 +219,7 @@ export default function Journey() {
           </div>
         </header>
 
+        <div id={`${personaId}-${activeTabId}`} className="scroll-mt-24">
         <JourneyStepper
           journey={personaJourney}
           currentTabId={activeTabId}
@@ -261,6 +273,7 @@ export default function Journey() {
             </section>
           }
         />
+        </div>
       </div>
     </BrandPage>
   );

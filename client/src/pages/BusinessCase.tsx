@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -60,6 +60,8 @@ import { RecommendedFlag } from "@/components/PathChrome";
 import { businessCaseLinkLabel, formatAudienceChip, stakeholderAnchor } from "@/data/audience";
 import { getGuidedScenario } from "@/data/guidedScenarios";
 import { pendingGuidedReturn } from "@/lib/guidedProgress";
+import { applyRoiInputs } from "@/lib/roiEdit";
+import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
 
 const inputKeys = [
   "workflows",
@@ -177,6 +179,28 @@ function RoiCalculatorPanel() {
     setInputs({ ...roiCalculatorDefaults });
     setCopied(false);
   };
+  const roiRef = useRef({ inputs, setInputs, reset });
+  roiRef.current = { inputs, setInputs, reset };
+  useAssistantSlot("roi", { inputs, summary: summarySentence });
+  useAssistantHandlers(
+    (handlers) => {
+      handlers.roi = {
+        setInputs: (patch) => {
+          const applied = applyRoiInputs(roiRef.current.inputs, patch);
+          if (!applied.ok) return applied;
+          roiRef.current.setInputs(applied.inputs);
+          return applied;
+        },
+        resetInputs: () => {
+          roiRef.current.reset();
+          return { ok: true, reset: true, modeledEstimate: true };
+        },
+      };
+    },
+    (handlers) => {
+      handlers.roi = undefined;
+    },
+  );
 
   const copySummary = async () => {
     const text = buildRoiSummary(inputs, results);
@@ -482,7 +506,7 @@ export default function BusinessCase() {
   }, [route?.businessCaseHref]);
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="business-case">
       <div className="mx-auto max-w-6xl space-y-14 sm:space-y-20">
         <PageHero
           label={businessCaseIntro.label}

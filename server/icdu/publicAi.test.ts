@@ -4,6 +4,7 @@ import type { Server } from "http";
 import test from "node:test";
 import express from "express";
 import { USER_MESSAGES_PER_HOUR } from "../../shared/aiPublic.ts";
+import { frontendParameterSchemas } from "../../shared/assistantContract.ts";
 import { mountPublicAi } from "./router.ts";
 import { MemoryAiStore, type AiStore } from "./store.ts";
 import type { ModelConfig } from "./config.ts";
@@ -215,9 +216,9 @@ test("streams a tool call continuation without leaking the API key", async () =>
       body: JSON.stringify(
         runBody(threadId, "Define ICDU with the glossary tool.", [
           {
-            name: "show_safe_note",
-            description: "Show a short note",
-            parameters: { type: "object", properties: { note: { type: "string" } } },
+            name: "navigate_site",
+            description: "Open a published page",
+            parameters: frontendParameterSchemas.navigate_site,
           },
           {
             name: "delete_database",
@@ -236,7 +237,7 @@ test("streams a tool call continuation without leaking the API key", async () =>
     assert.equal(harness.calls[0]?.authorization, `Bearer ${KEY}`);
     assert.match(harness.calls[0]?.url ?? "", /\/chat\/completions$/);
     assert.match(harness.calls[0]?.body ?? "", /lookup_icdu_term/);
-    assert.match(harness.calls[0]?.body ?? "", /show_safe_note/);
+    assert.match(harness.calls[0]?.body ?? "", /navigate_site/);
     assert.equal((harness.calls[0]?.body ?? "").includes("delete_database"), false);
   } finally {
     await harness.close();
@@ -404,6 +405,156 @@ test("threads can only be read, connected, or stopped by the owning session", as
     });
     assert.notEqual(ownMessages.status, 404);
     assert.equal((await ownMessages.text()).includes(KEY), false);
+  } finally {
+    await harness.close();
+  }
+});
+
+function frontendToolStream(): Response {
+  const encoder = new TextEncoder();
+  const parts = [
+    chunk({ role: "assistant", content: null }, null),
+    chunk(
+      {
+        tool_calls: [
+          {
+            index: 0,
+            id: "call_nav",
+            type: "function",
+            function: { name: "navigate_site", arguments: "{\"pageId\":\"developers\"}" },
+          },
+        ],
+      },
+      null,
+    ),
+    chunk({}, "tool_calls"),
+    "data: [DONE]\n\n",
+  ];
+  return new Response(
+    new ReadableStream({
+      start(controller) {
+        for (const part of parts) controller.enqueue(encoder.encode(part));
+        controller.close();
+      },
+    }),
+    { headers: { "content-type": "text/event-stream" } },
+  );
+}
+
+test("a frontend tool result continues the same turn without a second user-message charge", async () => {
+  const harness = await start({
+    store: new MemoryAiStore(),
+    fetchImpl: async (input, init) => {
+      const headers = new Headers(init?.headers);
+      const body = typeof init?.body === "string" ? init.body : "";
+      harness.calls.push({
+        url: String(input),
+        authorization: headers.get("authorization") ?? "",
+        body,
+      });
+      const followUp = body.includes('"role":"tool"');
+      if (!followUp) return frontendToolStream();
+      return textStream("The developer guide is open.");
+    },
+  });
+  try {
+    const threadId = randomUUID();
+    const first = await fetch(`${harness.base}/api/chat/status`);
+    const cookie = cookieFrom(first);
+    const opened = (await first.json()) as { remaining: number };
+    const run = await fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify(
+        runBody(threadId, "Take me to the developer guide", [
+          {
+            name: "navigate_site",
+            description: "Open a published page",
+            parameters: frontendParameterSchemas.navigate_site,
+          },
+        ]),
+      ),
+    });
+    const streamed = await run.text();
+    assert.equal(run.status, 200, streamed.slice(0, 400));
+    assert.match(streamed, /navigate_site/);
+    assert.equal(harness.calls.length, 1);
+    const continued = await fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({
+        threadId,
+        runId: randomUUID(),
+        state: {},
+        messages: [
+          { id: randomUUID(), role: "user", content: "Take me to the developer guide" },
+          {
+            id: randomUUID(),
+            role: "assistant",
+            content: "",
+            toolCalls: [
+              {
+                id: "call_nav",
+                type: "function",
+                function: { name: "navigate_site", arguments: "{\"pageId\":\"developers\"}" },
+              },
+            ],
+          },
+          { id: randomUUID(), role: "tool", content: "{\"ok\":true,\"path\":\"/developers\"}", toolCallId: "call_nav" },
+        ],
+        tools: [
+          {
+            name: "navigate_site",
+            description: "Open a published page",
+            parameters: frontendParameterSchemas.navigate_site,
+          },
+        ],
+        context: [],
+        forwardedProps: {},
+      }),
+    });
+    const answer = await continued.text();
+    assert.equal(continued.status, 200, answer.slice(0, 400));
+    assert.match(answer, /developer guide is open/);
+    assert.equal(harness.calls.length, 2);
+    const status = await fetch(`${harness.base}/api/chat/status`, { headers: { cookie } });
+    const body = (await status.json()) as { remaining: number };
+    assert.equal(body.remaining, opened.remaining - 1);
+
+    const extra = (step: number) =>
+      fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({
+          threadId,
+          runId: randomUUID(),
+          messages: [
+            { id: `u-${step}`, role: "user", content: "Take me to the developer guide" },
+            {
+              id: `a-${step}`,
+              role: "assistant",
+              content: "",
+              toolCalls: [
+                { id: `c-${step}`, type: "function", function: { name: "navigate_site", arguments: "{}" } },
+              ],
+            },
+            { id: `t-${step}`, role: "tool", content: "{\"ok\":true}", toolCallId: `c-${step}` },
+          ],
+          tools: [],
+          context: [],
+          forwardedProps: {},
+        }),
+      });
+    const second = await extra(2);
+    assert.equal(second.status, 200);
+    await second.text();
+    const third = await extra(3);
+    const denied = await third.text();
+    assert.equal(third.status, 429, denied.slice(0, 300));
+    assert.match(denied, /action steps/);
+    const after = await fetch(`${harness.base}/api/chat/status`, { headers: { cookie } });
+    const afterBody = (await after.json()) as { remaining: number };
+    assert.equal(afterBody.remaining, opened.remaining - 1);
   } finally {
     await harness.close();
   }

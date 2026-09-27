@@ -36,7 +36,7 @@ export default function Research() {
   const researchDocs = staticDownloads.filter((d) => d.group === "research");
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="research">
       <div className="mx-auto max-w-6xl space-y-12 sm:space-y-16">
         <PageHero
           label="Evidence & Research"
@@ -46,6 +46,8 @@ export default function Research() {
         />
 
         <ContentSection
+          id="claim-types"
+          className="scroll-mt-24"
           label="How to read claims"
           heading="Distinguish evidence types"
           description="Use these labels when sharing materials with diligence or research reviewers."
@@ -68,6 +70,8 @@ export default function Research() {
         </ContentSection>
 
         <ContentSection
+          id="industry-context"
+          className="scroll-mt-24"
           label="External evidence"
           heading="Industry and financial context"
           description="Third-party figures and incident examples. Sources appear on each statistic where available."
@@ -79,6 +83,8 @@ export default function Research() {
         </ContentSection>
 
         <ContentSection
+          id="efficiency-targets"
+          className="scroll-mt-24"
           label="Targets & projections"
           heading="ICDU efficiency targets"
           description="These figures are pilot targets or benchmark-oriented projections used in product materials — not independent market proof of ICDU outcomes."
@@ -107,6 +113,8 @@ export default function Research() {
         </ContentSection>
 
         <ContentSection
+          id="benchmarks"
+          className="scroll-mt-24"
           label="Methodology"
           heading="How ICDU compares to standard benchmarks"
           description="Capability benchmarks answer different questions than readiness gates. The comparison below is methodological — not a claim that ICDU replaces MMLU scores."
@@ -115,6 +123,8 @@ export default function Research() {
         </ContentSection>
 
         <ContentSection
+          id="regulatory"
+          className="scroll-mt-24"
           label="Regulatory context"
           heading="Frameworks that shape evidence needs"
           description="High-level mapping of common requirements. Your counsel determines applicability."
@@ -157,6 +167,8 @@ export default function Research() {
         </ContentSection>
 
         <ContentSection
+          id="research-downloads"
+          className="scroll-mt-24"
           label="Downloads"
           heading="Research documents"
           description="Primary research PDF and comparative financial-impact DOCX."

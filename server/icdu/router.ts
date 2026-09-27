@@ -21,8 +21,9 @@ import { createIcduAgent, createModel } from "./agent.ts";
 import { clientIp, replitProxyHops } from "./clientIp.ts";
 import { probeModel, type ModelConfig } from "./config.ts";
 import { jsonResponse, quotaMessage } from "./errors.ts";
+import { admitModelInvocation } from "./continuations.ts";
 import { defaultLimits, isThreadId, type AiLimits } from "./limits.ts";
-import { lastMessageIsUser } from "./messages.ts";
+import { hasUserMessage, lastMessageIsUser } from "./messages.ts";
 import {
   VISITOR_COOKIE,
   hashIp,
@@ -32,6 +33,12 @@ import {
   verifySession,
 } from "./session.ts";
 import type { AiStore, ThreadAccess } from "./store.ts";
+
+/**
+ * Thread history lives in this process only. Another Autoscale instance does
+ * not see it, and a restart clears it. This is not durable conversation storage.
+ */
+export const conversationDurability = "in-memory-per-process" as const;
 
 const runner = new InMemoryAgentRunner({
   maxThreads: 200,
@@ -211,7 +218,8 @@ export function mountPublicAi(app: Express, options: MountPublicAiOptions): void
 
     const body = req.body as { threadId?: unknown; messages?: unknown } | undefined;
     const messages = Array.isArray(body?.messages) ? body.messages : [];
-    if (!isThreadId(body?.threadId)) {
+    const threadId = body?.threadId;
+    if (!isThreadId(threadId)) {
       res.status(400).json({ message: ASSISTANT_GENERIC });
       return;
     }
@@ -224,7 +232,7 @@ export function mountPublicAi(app: Express, options: MountPublicAiOptions): void
       res.status(401).json({ message: "Refresh the page and try again." });
       return;
     }
-    const claimed = await activeStore.claimThread(body.threadId, sessionId);
+    const claimed = await activeStore.claimThread(threadId, sessionId);
     if (claimed === "foreign") {
       res.status(404).json({ message: "Not found" });
       return;
@@ -249,13 +257,28 @@ export function mountPublicAi(app: Express, options: MountPublicAiOptions): void
       res.status(429).json({ message });
       return;
     }
+    const messageList = messages.filter(
+      (message): message is { role?: string } => !!message && typeof message === "object",
+    );
+    const userTurn = lastMessageIsUser(messageList);
+    if (!userTurn && !hasUserMessage(messageList)) {
+      await turn.release();
+      res.status(400).json({ message: ASSISTANT_GENERIC });
+      return;
+    }
+    if (!admitModelInvocation(threadId, userTurn)) {
+      await turn.release();
+      res.set("retry-after", "1");
+      res.status(429).json({
+        message: "This reply has used its action steps. Send a new message to continue.",
+      });
+      return;
+    }
     const quota = await activeStore.consume({
       sessionId,
       ipHash: hashIp(ip, activeSecret),
       now: now(),
-      chargeUserMessage: lastMessageIsUser(
-      messages.filter((message): message is { role?: string } => !!message && typeof message === "object"),
-    ),
+      chargeUserMessage: userTurn,
       limits,
     });
     if (!quota.ok) {

@@ -26,7 +26,7 @@ export default function Developers() {
   }, []);
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="developers">
       <div className="mx-auto max-w-4xl space-y-12 sm:space-y-14">
         <PageHero
           label="Developers"
@@ -36,6 +36,8 @@ export default function Developers() {
         />
 
         <ContentSection
+          id="hands-on"
+          className="scroll-mt-24"
           label="Labs"
           heading="Where to work hands-on"
         >
@@ -121,6 +123,8 @@ export default function Developers() {
         </ContentSection>
 
         <ContentSection
+          id="schema-samples"
+          className="scroll-mt-24"
           label="Downloads"
           heading="Schema samples and exports"
           description="Generated technical files for integration testing. Executive DOCX/PDF materials live on Resources."

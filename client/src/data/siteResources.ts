@@ -186,71 +186,83 @@ export const faqCategories: { id: FaqCategory; label: string }[] = [
 ];
 
 export const categorizedFaqItems: {
+  id: string;
   category: FaqCategory;
   question: string;
   answer: string;
 }[] = [
   {
+    id: "what-is-icdu",
     category: "product",
     question: "What is ICDU?",
     answer:
       "ICDU (Intent-Conscious Data Unit) is a structured record format that encodes user intent, governing principles, persona, and context for AI-assisted work. It sits inside a readiness path — Define → Gate → Execute → Audit — so outputs can be reviewed against explicit criteria.",
   },
   {
+    id: "components",
     category: "product",
     question: "What components are included?",
     answer:
       "Four main pieces: (1) the ICDU record format, (2) AI Judge scoring with promote / escalate / block gates, (3) HITL Nuance Grader for qualitative dimensions, and (4) a Scenario-Perturbation Stress Engine for stability and consistency checks.",
   },
   {
+    id: "ai-judge",
     category: "product",
     question: "How does the AI Judge work?",
     answer:
       "The Judge scores outputs on Intent-Alignment (IAS), Principle-Adherence (PAS), and Application (AS). Configurable thresholds drive gate decisions: PROMOTE, ESCALATE for human review, or BLOCK when critical thresholds fail.",
   },
   {
+    id: "stress-engine",
     category: "product",
     question: "What is the Stress Engine for?",
     answer:
       "It applies controlled scenario variations (role, tone, constraints, channel) to test whether behavior stays stable and policy-aligned under realistic change — not just on a single happy-path prompt.",
   },
   {
+    id: "versus-benchmarks",
     category: "product",
     question: "How is this different from MMLU or HumanEval?",
     answer:
       "Capability benchmarks measure whether a model can answer knowledge or coding tasks. They do not verify that a production workflow followed your intent, principles, or promotion rules. ICDU answers readiness for a specific governed use — not raw model capability in isolation.",
   },
   {
+    id: "commercial-use",
     category: "licensing",
     question: "Can I use ICDU commercially?",
     answer:
       "Commercial use requires a license. Non-commercial evaluation — academic research, internal testing without revenue impact, benchmarking, and diligence — is permitted. See the Licensing page for the full framing.",
   },
   {
+    id: "commercial-definition",
     category: "licensing",
     question: "What counts as commercial use?",
     answer:
       "Examples include production deployment, use in a paid product or service, internal use that supports revenue-generating operations, model training or fine-tuning for commercial delivery, and offering ICDU-based evaluation as a service.",
   },
   {
+    id: "patented",
     category: "licensing",
     question: "Is ICDU patented?",
     answer:
       "ICDU is patented technology in the United States, with PCT planned. Public materials on this site do not grant a license to practice any patented method.",
   },
   {
+    id: "regulatory",
     category: "security",
     question: "What regulatory requirements does ICDU help address?",
     answer:
       "Intent contracts, gate decisions, and execution traces support evidence needs associated with frameworks such as the EU AI Act (risk, transparency, logging), GDPR automated-decision transparency expectations, and NIST AI RMF-style govern/measure loops. Mapping depth depends on your workflow and counsel.",
   },
   {
+    id: "buyer-start",
     category: "getting-started",
     question: "Where should a buyer start?",
     answer:
       "Most teams start with the Overview, a role journey, the Business Case value model, and a Guided Demo on one workflow. Download executive materials from Resources when you need briefing docs.",
   },
   {
+    id: "engineer-start",
     category: "getting-started",
     question: "Where should an engineer start?",
     answer:

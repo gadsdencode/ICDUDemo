@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ICDUBuilder } from "@/components/ICDUBuilder";
 import { JudgePanel } from "@/components/JudgePanel";
@@ -8,6 +8,7 @@ import { KeyTakeaways } from "@/components/KeyTakeaways";
 import { FileText, Scale, Users, FlaskConical, FlaskRound } from "lucide-react";
 import { componentReplacements } from "@/data/businessCase";
 import { cn } from "@/lib/utils";
+import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
 
 const labTabs = [
   { id: "icdu", label: "ICDU Builder", shortLabel: "Builder", icon: FileText },
@@ -83,6 +84,33 @@ const labTakeaways: Record<
 export function AdvancedLab() {
   const [activeTab, setActiveTab] = useState("icdu");
   const currentTakeaways = labTakeaways[activeTab];
+  const tabsRef = useRef({ activeTab, setActiveTab });
+  tabsRef.current = { activeTab, setActiveTab };
+  useAssistantSlot("lab", {
+    tab: activeTab as "icdu" | "judge" | "hitl" | "stress",
+    summary: `${currentTakeaways.title}. ${currentTakeaways.points.join(" ")} Deterministic mock lab, not a live model run.`,
+  });
+  useAssistantHandlers(
+    (handlers) => {
+      handlers.lab = {
+        selectTab: (tab) => {
+          const takeaways = labTakeaways[tab];
+          if (!takeaways) return { ok: false, error: "That lab tab is not available." };
+          tabsRef.current.setActiveTab(tab);
+          return {
+            ok: true,
+            tab,
+            label: takeaways.title,
+            simulated: true,
+            summary: takeaways.points.join(" "),
+          };
+        },
+      };
+    },
+    (handlers) => {
+      handlers.lab = undefined;
+    },
+  );
 
   return (
     <div data-testid="advanced-lab">

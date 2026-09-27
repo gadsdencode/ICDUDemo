@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
@@ -9,6 +9,7 @@ import { PathEntrance } from "@/components/PathChrome";
 import { businessCaseLinkLabel } from "@/data/audience";
 import { cn } from "@/lib/utils";
 import { Compass, FlaskConical } from "lucide-react";
+import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
 
 type DemoMode = "guided" | "lab";
 
@@ -59,9 +60,25 @@ export default function Demos() {
       window.history.pushState(window.history.state, "", nextHref);
     }
   };
+  const selectModeRef = useRef(selectMode);
+  selectModeRef.current = selectMode;
+  useAssistantSlot("demo", { mode });
+  useAssistantHandlers(
+    (handlers) => {
+      handlers.demo = {
+        setMode: (next) => {
+          selectModeRef.current(next);
+          return { ok: true, mode: next };
+        },
+      };
+    },
+    (handlers) => {
+      handlers.demo = undefined;
+    },
+  );
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="demos">
       <div className="mx-auto max-w-7xl">
         <PageHero
           label="Interactive Experience"
@@ -92,6 +109,7 @@ export default function Demos() {
 
         <div
           className="mb-6 sm:mb-8 inline-flex max-w-full flex-wrap gap-2"
+          id="demo-experience"
           role="tablist"
           aria-label="Demo mode"
         >

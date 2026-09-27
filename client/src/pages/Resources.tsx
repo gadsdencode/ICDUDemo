@@ -85,7 +85,7 @@ export default function Resources() {
   }, [route]);
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="resources">
       <div className="mx-auto max-w-6xl space-y-12 sm:space-y-16">
         <PageHero
           label="Resources"
@@ -134,10 +134,11 @@ export default function Resources() {
           return (
             <ContentSection
               key={group.id}
+              id={group.id}
+              className={cn("scroll-mt-24", recommended ? "border-l-2 border-l-[color:var(--icdu-accent)] pl-4" : undefined)}
               label={group.title}
               heading={group.title}
               description={group.description}
-              className={recommended ? "border-l-2 border-l-[color:var(--icdu-accent)] pl-4" : undefined}
               data-testid={recommended ? "resources-recommended" : undefined}
             >
               {recommended ? (

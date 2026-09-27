@@ -36,7 +36,7 @@ export default function Investor() {
   const onePager = staticDownloads.find((d) => d.id === "overture-onepager");
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="investor">
       <div className="mx-auto max-w-6xl space-y-12 sm:space-y-16">
         <PageHero
           label={investorPageIntro.label}
@@ -46,6 +46,8 @@ export default function Investor() {
         />
 
         <ContentSection
+          id="status"
+          className="scroll-mt-24"
           label="Status"
           heading={investorStatus.heading}
           description={investorStatus.body}
@@ -71,6 +73,8 @@ export default function Investor() {
         </ContentSection>
 
         <ContentSection
+          id="market"
+          className="scroll-mt-24"
           label="Market opportunity"
           heading="AI governance and efficiency TAM"
           description="Market sizing below is an estimate for diligence context. It does not prove ICDU revenue."
@@ -118,6 +122,8 @@ export default function Investor() {
         </ContentSection>
 
         <ContentSection
+          id="tailwinds"
+          className="scroll-mt-24"
           label="Tailwinds"
           heading="Regulatory and operational pressure"
         >
@@ -154,7 +160,7 @@ export default function Investor() {
           </div>
         </ContentSection>
 
-        <ContentSection label="Positioning" heading="Differentiators">
+        <ContentSection id="differentiators" className="scroll-mt-24" label="Positioning" heading="Differentiators">
           <div className="grid sm:grid-cols-2 gap-5">
             {investorDifferentiators.map((d) => (
               <div key={d.title}>
@@ -167,7 +173,7 @@ export default function Investor() {
           </div>
         </ContentSection>
 
-        <ContentSection label="Sectors" heading="Where governance demand concentrates">
+        <ContentSection id="sectors" className="scroll-mt-24" label="Sectors" heading="Where governance demand concentrates">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {investorUseCaseCards.map((card) => (
               <div

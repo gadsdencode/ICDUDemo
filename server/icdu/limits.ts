@@ -25,7 +25,11 @@ export const MAX_MESSAGES = 40;
 export const MAX_FRONTEND_TOOLS = 7;
 export const MAX_BODY_BYTES = 80 * 1024;
 export const MAX_MESSAGE_CHARS = 4_000;
+export const MAX_TOOL_RESULT_CHARS = 1_500;
 export const MAX_CONTEXT_CHARS = 1_500;
+export const MAX_INSTRUCTION_CHARS = 8_000;
+/** Follow-up model calls after the visitor's message, across HTTP continuations. */
+export const MAX_TURN_CONTINUATIONS = 2;
 export const TURN_TTL_MS = 3 * 60 * 1000;
 export const THREAD_ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
 

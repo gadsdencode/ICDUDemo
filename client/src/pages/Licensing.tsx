@@ -23,7 +23,7 @@ export default function Licensing() {
   }, []);
 
   return (
-    <BrandPage>
+    <BrandPage data-assistant-page="licensing">
       <div className="mx-auto max-w-3xl space-y-12 sm:space-y-14">
         <PageHero
           label="Licensing"
@@ -33,6 +33,8 @@ export default function Licensing() {
         />
 
         <ContentSection
+          id="patent-status"
+          className="scroll-mt-24"
           heading="Patent status"
           description="ICDU is patented technology in the United States. PCT filing is planned."
         >
@@ -43,7 +45,7 @@ export default function Licensing() {
           </p>
         </ContentSection>
 
-        <ContentSection heading="Permitted evaluation uses">
+        <ContentSection id="evaluation-uses" className="scroll-mt-24" heading="Permitted evaluation uses">
           <ul className="space-y-2 m-0 p-0 list-none">
             {[
               "Academic research and teaching",
@@ -66,6 +68,8 @@ export default function Licensing() {
         </ContentSection>
 
         <ContentSection
+          id="commercial-use"
+          className="scroll-mt-24"
           heading="Commercial use"
           description="A separate license agreement is required before production deployment or monetized use."
         >
