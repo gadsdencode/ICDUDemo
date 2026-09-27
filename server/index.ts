@@ -1,9 +1,15 @@
+import "./bootstrapEnv";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { log } from "./log";
+import { replitProxyHops } from "./icdu/clientIp";
+import { MAX_BODY_BYTES } from "./icdu/limits";
+import { ASSISTANT_TOO_LARGE } from "../shared/aiPublic";
 
 const app = express();
+app.set("trust proxy", replitProxyHops());
 const httpServer = createServer(app);
 
 declare module "http" {
@@ -14,24 +20,20 @@ declare module "http" {
 
 app.use(
   express.json({
+    limit: "80kb",
     verify: (req, _res, buf) => {
       req.rawBody = buf;
+      const url = req.url ?? "";
+      if (url.startsWith("/api/copilotkit") && buf.length > MAX_BODY_BYTES) {
+        const error = new Error(ASSISTANT_TOO_LARGE) as Error & { status: number };
+        error.status = 413;
+        throw error;
+      }
     },
   }),
 );
 
 app.use(express.urlencoded({ extended: false }));
-
-export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -48,7 +50,8 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
+      // CopilotKit responses can contain the conversation. Keep them out of this log.
+      if (capturedJsonResponse && !path.startsWith("/api/copilotkit")) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
 
@@ -62,11 +65,16 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
-  app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
+    const path = req.path || "";
 
-    console.error("Internal Server Error:", err);
+    if (path.startsWith("/api/copilotkit")) {
+      console.error(`icdu chat error ${status}`);
+    } else {
+      console.error("Internal Server Error:", err);
+    }
 
     if (res.headersSent) {
       return next(err);
@@ -94,7 +102,8 @@ app.use((req, res, next) => {
     {
       port,
       host: "0.0.0.0",
-      reusePort: true,
+      // Windows sockets reject SO_REUSEPORT; Replit's Linux runtime still uses it.
+      ...(process.platform === "win32" ? {} : { reusePort: true }),
     },
     () => {
       log(`serving on port ${port}`);

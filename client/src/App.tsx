@@ -1,4 +1,5 @@
-import { Switch, Route } from "wouter";
+import { useEffect } from "react";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navigation } from "@/components/Navigation";
 import { AudienceProvider } from "@/components/AudienceProvider";
+import { AssistantHost } from "@/components/AssistantHost";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -19,6 +21,14 @@ import Licensing from "@/pages/Licensing";
 import Investor from "@/pages/Investor";
 import Developers from "@/pages/Developers";
 
+function RedirectHome() {
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    navigate("/", { replace: true });
+  }, [navigate]);
+  return null;
+}
+
 function Router() {
   return (
     <Switch>
@@ -26,6 +36,7 @@ function Router() {
       <Route path="/journey" component={Journey} />
       <Route path="/journey/:personaId" component={Journey} />
       <Route path="/demos" component={Demos} />
+      <Route path="/ask" component={RedirectHome} />
       <Route path="/fine-tune" component={FineTune} />
       <Route path="/business-case" component={BusinessCase} />
       <Route path="/faq" component={FAQ} />
@@ -51,6 +62,7 @@ function App() {
                 <Router />
               </main>
             </div>
+            <AssistantHost />
             <Toaster />
           </AudienceProvider>
         </TooltipProvider>
