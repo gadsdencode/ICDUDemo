@@ -9,7 +9,7 @@ export default function Overview() {
   useSEO({
     title: "ICDU — AI Guided by Intent",
     description:
-      "Define the task. Lock in expertise. Auditable outcomes. See what that means for your work.",
+      "ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced. This helps teams get more consistent, reviewable, and accountable results from AI.",
   });
 
   useEffect(() => {

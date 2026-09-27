@@ -105,7 +105,7 @@ const pages: SitePage[] = [
     path: "/",
     title: "Overview",
     summary:
-      "AI Guided by Intent. Define the task. Lock in expertise. Auditable outcomes. Visitors choose a role and a workflow, then continue to a journey, demo, or business case.",
+      "AI Guided by Intent. ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced. This helps teams get more consistent, reviewable, and accountable results from AI. Visitors choose a role and a workflow, then continue to a journey, demo, or business case.",
     source: "client/src/components/AudienceFunnel.tsx",
   },
   {
@@ -471,7 +471,7 @@ export const siteSections: readonly SiteSection[] = buildSections();
 export const driftAnchors: readonly { file: string; text: string }[] = [
   {
     file: "client/src/components/AudienceFunnel.tsx",
-    text: "Define the task. Lock in expertise. Auditable outcomes.",
+    text: "ICDU turns a work request into a clear, guided AI process:",
   },
   {
     file: "client/src/pages/Demos.tsx",

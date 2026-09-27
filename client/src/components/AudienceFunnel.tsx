@@ -123,8 +123,8 @@ export function AudienceFunnel() {
           AI Guided by Intent
         </h1>
         <p data-testid="funnel-sentence">
-          Define the task. Lock in expertise. Auditable outcomes.
-          <span className="icdu-hero-prompt">See what that means for your work.</span>
+          ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced.
+          <span className="icdu-hero-prompt">Get consistent, reviewable, and accountable results from AI.</span>
         </p>
       </section>
 
