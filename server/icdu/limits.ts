@@ -9,12 +9,12 @@ export type AiLimits = {
   ipActive: number;
 };
 
-/** IP and run caps are abuse backstops above the published 10-message limit. */
+/** Scale IP and run backstops with the published visitor message limit. */
 export const defaultLimits: AiLimits = {
   sessionMessages: USER_MESSAGES_PER_HOUR,
-  ipMessages: 40,
-  sessionRuns: 30,
-  ipRuns: 80,
+  ipMessages: USER_MESSAGES_PER_HOUR * 4,
+  sessionRuns: USER_MESSAGES_PER_HOUR * 3,
+  ipRuns: USER_MESSAGES_PER_HOUR * 8,
   sessionActive: 1,
   ipActive: 4,
 };
