@@ -1,8 +1,8 @@
 /** Visitor-facing copy. No hosts, keys, or infrastructure. */
-export const USER_MESSAGES_PER_HOUR = 10;
+export const USER_MESSAGES_PER_HOUR = 25;
 
 export const USAGE_LIMIT_LABEL =
-  "10 messages per hour. No account required.";
+  `${USER_MESSAGES_PER_HOUR} messages per hour. No account required.`;
 
 export const SEPARATE_CHAT_NOTE =
   "This chat is separate from the local fine-tune workspace.";
@@ -20,7 +20,7 @@ export const ASSISTANT_BUSY =
   "ICDU is busy right now. Please wait and try again.";
 
 export const ASSISTANT_QUOTA =
-  "You've used your 10 messages for this hour. Please wait for the limit to reset.";
+  `You've used your ${USER_MESSAGES_PER_HOUR} messages for this hour. Please wait for the limit to reset.`;
 
 export const ASSISTANT_TURN_BUSY =
   "A reply is already in progress. Wait for it to finish or stop it, then try again.";
