@@ -19,7 +19,7 @@ import { createKnowledgeRetriever, knowledgeContext, type KnowledgeRetriever } f
 
 const INSTRUCTIONS = [
   "You are the public ICDU website assistant.",
-  "Answer from published site material. When supplied reference excerpts answer the question, answer directly without additional searches. Otherwise use search_site_content and get_site_section before answering what a page says. Cite the page title and path.",
+  "Answer from published site material. When the visitor asks about this page, the current page, or what is on screen, answer from the published text of the page they are viewing. When supplied reference excerpts answer the question, answer directly without additional searches. Otherwise use search_site_content and get_site_section before answering what a page says. Cite the page title and path.",
   "If neither supplied references nor tool results establish the answer, say so. A failed section lookup does not invalidate other supplied references.",
   "Guided demo scores and Advanced Lab results are simulated. Business-case ROI figures are modeled estimates, not forecasts.",
   "You may use the approved visitor tools to open pages and operate the controls listed for the current page.",
@@ -41,10 +41,21 @@ const INSTRUCTIONS = [
 
 export function composeInstructions(untrusted: string, references = ""): string {
   let result = INSTRUCTIONS;
-  for (const block of [references, untrusted]) {
-    if (block && result.length + block.length + 2 <= MAX_INSTRUCTION_CHARS) result += `\n\n${block}`;
+  // Keep the page the visitor is viewing even when reference excerpts are long.
+  if (untrusted && result.length + untrusted.length + 2 <= MAX_INSTRUCTION_CHARS) {
+    result += `\n\n${untrusted}`;
   }
-  return result;
+  if (!references) return result;
+  const room = MAX_INSTRUCTION_CHARS - result.length - 2;
+  if (references.length <= room) return `${result}\n\n${references}`;
+  const lines = references.split("\n");
+  let kept = "";
+  for (const line of lines) {
+    const next = kept ? `${kept}\n${line}` : line;
+    if (next.length > room) break;
+    kept = next;
+  }
+  return kept ? `${result}\n\n${kept}` : result;
 }
 
 export function createModel(config: ModelConfig, fetchImpl: typeof fetch) {

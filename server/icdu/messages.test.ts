@@ -121,8 +121,11 @@ test("current-page context stays valid JSON and untrusted text cannot replace in
     "test-key-not-real-icdu",
   );
   assert.match(block, /UNTRUSTED BROWSER CONTEXT/);
+  assert.match(block, /pageId=research/);
+  assert.match(block, /Distinguish evidence types/);
   assert.doesNotMatch(block, /shell/);
-  assert.equal(JSON.parse(block.split("\n").slice(1).join("\n")).route, "/research");
+  const jsonLine = block.split("\n").find((line) => line.startsWith("{"));
+  assert.equal(JSON.parse(jsonLine ?? "").route, "/research");
   const instructions = composeInstructions(`${block}${"x".repeat(20_000)}`);
   assert.match(instructions, /public ICDU website assistant/);
   assert.doesNotMatch(instructions, /xxxxxxxx/);
