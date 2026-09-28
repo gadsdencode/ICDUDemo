@@ -48,8 +48,7 @@ test('embedding response must match the model, count and dimensions',async()=>{
 });
 test('database and embedding failures degrade to existing sources without exposing errors',async()=>{
   const row={id:'pas',title:'PAS',body:'Principle adherence',aliases:['PAS'],source_url:'/faq',source_file:'test',kind:'definition',revision:'test'};
-  let calls=0;
-  const pool={query:async()=>({rows:calls++===0?[row]:[]})};
+  const pool={query:async(sql:string)=>({rows:sql.includes("kind IN")?[row]:[]})};
   const retriever=new KnowledgeRetriever(pool as never,config,async()=>{throw new Error('secret backend URL');});
   const result=await retriever.search('Explain PAS');
   assert.equal(result.mode,'keyword');

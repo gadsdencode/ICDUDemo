@@ -61,6 +61,7 @@ export function composeInstructions(untrusted: string, references = ""): string 
 export function createModel(config: ModelConfig, fetchImpl: typeof fetch) {
   const provider = createOpenAICompatible({
     name: "icdu",
+    headers: {"X-ICDU-Site":"icdu"},
     baseURL: config.baseURL,
     apiKey: config.apiKey,
     fetch: async (input, init) => {
