@@ -244,6 +244,39 @@ test("streams a tool call continuation without leaking the API key", async () =>
   }
 });
 
+test("consecutive replies keep distinct message IDs when the provider reuses text-part IDs", async () => {
+  let calls = 0;
+  const harness = await start({
+    store: new MemoryAiStore(),
+    fetchImpl: async () => textStream(++calls === 1 ? "First answer." : "Second answer."),
+  });
+  try {
+    const cookie = cookieFrom(await fetch(`${harness.base}/api/chat/status`));
+    const threadId = randomUUID();
+    const firstInput = runBody(threadId, "First question");
+    const run = async (body: object) => {
+      const response = await fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+        method: "POST", headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify(body),
+      });
+      const text = await response.text();
+      assert.equal(response.status, 200, text.slice(0, 500));
+      return text.split("\n").filter(line => line.startsWith("data: {")).map(line => JSON.parse(line.slice(6)));
+    };
+    const first = await run(firstInput);
+    const firstId = first.find(event => event.type === "TEXT_MESSAGE_START")?.messageId;
+    assert.ok(firstId, "first reply has an assistant message");
+    const nextInput = runBody(threadId, "Second question");
+    const second = await run({ ...nextInput, messages: [
+      ...firstInput.messages, {id:firstId,role:"assistant",content:"First answer."}, ...nextInput.messages,
+    ]});
+    const secondId = second.find(event => event.type === "TEXT_MESSAGE_START")?.messageId;
+    assert.ok(secondId, "second reply has an assistant message");
+    assert.notEqual(secondId, firstId, "new replies must not append to an earlier answer");
+    assert.equal(second.filter(event => event.type === "TEXT_MESSAGE_CONTENT").map(event => event.delta).join(""), "Second answer.");
+  } finally { await harness.close(); }
+});
+
 test("a second active turn for the same visitor is busy, and cancellation releases it", async () => {
   let releaseHold: (() => void) | undefined;
   const held = new Promise<void>((resolve) => {
