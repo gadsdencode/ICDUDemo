@@ -9,6 +9,7 @@ import { Navigation } from "@/components/Navigation";
 import { AudienceProvider } from "@/components/AudienceProvider";
 import { AssistantHost } from "@/components/AssistantHost";
 import { AssistantProvider } from "@/components/assistant/AssistantProvider";
+import KnowledgeDocument from "@/pages/KnowledgeDocument";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/licensing" component={Licensing} />
       <Route path="/investor" component={Investor} />
       <Route path="/developers" component={Developers} />
+      <Route path="/knowledge/:id" component={KnowledgeDocument} />
       <Route component={NotFound} />
     </Switch>
   );

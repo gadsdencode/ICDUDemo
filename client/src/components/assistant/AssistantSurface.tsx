@@ -1,3 +1,4 @@
+import {ReviewableMessage} from "./ReviewableMessage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import {
@@ -75,7 +76,7 @@ function suggestionsFor(pageId: string | null) {
   if (pageId === "faq") return [explain, { title: "Find the licensing FAQ", message: "Find the licensing FAQ." }];
   if (pageId === "business-case") return [explain, result];
   if (pageId === "developers") return [developer, explain];
-  return [explain, developer];
+  return [{title:"Guide me through ICDU",message:"Guide me through ICDU step by step. First ask about my role and goal, then recommend a published walkthrough and help me navigate it."}, explain, developer];
 }
 
 function stopped(signal: AbortSignal | undefined): boolean {
@@ -446,6 +447,7 @@ export default function AssistantSurface({
 
   return (
     <CopilotPopup
+      messageView={{assistantMessage:ReviewableMessage}}
       agentId="default"
       defaultOpen={false}
       clickOutsideToClose

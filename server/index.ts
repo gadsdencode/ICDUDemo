@@ -8,7 +8,10 @@ import { replitProxyHops } from "./icdu/clientIp";
 import { MAX_BODY_BYTES } from "./icdu/limits";
 import { ASSISTANT_TOO_LARGE } from "../shared/aiPublic";
 
+import { mountAssistantLibrary } from "./assistant/routes";
+
 const app = express();
+mountAssistantLibrary(app);
 app.set("trust proxy", replitProxyHops());
 const httpServer = createServer(app);
 
