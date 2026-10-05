@@ -1,11 +1,15 @@
 import { z } from "zod";
 import {
+  developerSectionIds,
   faqCategoryIds,
+  faqIds,
   guidedStepIds,
   labTabIds,
   personaIds,
+  resourceIds,
   scenarioIds,
   sitePages,
+  workspaceViewIds,
 } from "./siteKnowledge.ts";
 
 export const SERVER_TOOL_NAMES = [
@@ -18,6 +22,9 @@ export const SERVER_TOOL_NAMES = [
 export const FRONTEND_TOOL_NAMES = [
   "navigate_site",
   "set_visitor_audience",
+  "show_workspace",
+  "read_workspace",
+  "propose_workspace_edit",
   "set_demo_mode",
   "select_guided_scenario",
   "set_guided_stage",
@@ -99,6 +106,36 @@ export const setRoiInputsSchema = z
 
 export const confirmSchema = z.object({}).strict();
 
+export const showWorkspaceSchema = z
+  .object({
+    view: z.enum(enumValues(workspaceViewIds)),
+    personaId: z.enum(enumValues(personaIds)).optional(),
+    scenarioId: z.enum(enumValues(scenarioIds)).optional(),
+    stepId: z.enum(enumValues(guidedStepIds)).optional(),
+    faqId: z.enum(enumValues(faqIds)).optional(),
+    faqCategory: z.enum(enumValues(faqCategories)).optional(),
+    resourceId: z.enum(enumValues(resourceIds)).optional(),
+    labTab: z.enum(enumValues(labTabIds)).optional(),
+    developerSection: z.enum(enumValues(developerSectionIds)).optional(),
+    focusKind: z.enum(["field", "score", "evidence", "criterion", "principle", "assumption"]).optional(),
+    focusId: z.string().trim().min(1).max(80).optional(),
+  })
+  .strict();
+
+export const readWorkspaceSchema = z
+  .object({
+    section: z.enum(["active", "evidence", "scores", "contract", "roi", "review", "pilot"]),
+  })
+  .strict();
+
+export const proposeWorkspaceEditSchema = z
+  .object({
+    target: z.enum(["contract", "pilot"]),
+    field: z.enum(["primary_goal", "prompt", "domain", "criterion", "principle", "constraint", "outcome", "owner", "stakeholders", "criteria", "dependencies", "questions", "baseline"]),
+    value: z.string().trim().min(1).max(400),
+  })
+  .strict();
+
 export const searchSiteSchema = z
   .object({
     query: z.string().trim().min(2).max(120),
@@ -146,6 +183,34 @@ export const frontendParameterSchemas: Record<FrontendToolName, Record<string, u
     personaId: stringEnum(personaIds),
     industryId: stringEnum(scenarioIds),
   }),
+  show_workspace: objectSchema(
+    {
+      view: stringEnum(workspaceViewIds),
+      personaId: stringEnum(personaIds),
+      scenarioId: stringEnum(scenarioIds),
+      stepId: stringEnum(guidedStepIds),
+      faqId: stringEnum(faqIds),
+      faqCategory: stringEnum(faqCategoryIds()),
+      resourceId: stringEnum(resourceIds),
+      labTab: stringEnum(labTabIds),
+      developerSection: stringEnum(developerSectionIds),
+      focusKind: stringEnum(["field", "score", "evidence", "criterion", "principle", "assumption"]),
+      focusId: { type: "string", minLength: 1, maxLength: 80 },
+    },
+    ["view"],
+  ),
+  read_workspace: objectSchema(
+    { section: stringEnum(["active", "evidence", "scores", "contract", "roi", "review", "pilot"]) },
+    ["section"],
+  ),
+  propose_workspace_edit: objectSchema(
+    {
+      target: stringEnum(["contract", "pilot"]),
+      field: stringEnum(["primary_goal", "prompt", "domain", "criterion", "principle", "constraint", "outcome", "owner", "stakeholders", "criteria", "dependencies", "questions", "baseline"]),
+      value: { type: "string", minLength: 1, maxLength: 400 },
+    },
+    ["target", "field", "value"],
+  ),
   set_demo_mode: objectSchema({ mode: stringEnum(["guided", "lab"]) }, ["mode"]),
   select_guided_scenario: objectSchema({ scenarioId: stringEnum(scenarioIds) }, ["scenarioId"]),
   set_guided_stage: objectSchema(
@@ -174,6 +239,9 @@ export const frontendParameterSchemas: Record<FrontendToolName, Record<string, u
 export const frontendToolSchemas = {
   navigate_site: navigateSiteSchema,
   set_visitor_audience: setVisitorAudienceSchema,
+  show_workspace: showWorkspaceSchema,
+  read_workspace: readWorkspaceSchema,
+  propose_workspace_edit: proposeWorkspaceEditSchema,
   set_demo_mode: setDemoModeSchema,
   select_guided_scenario: selectGuidedScenarioSchema,
   set_guided_stage: setGuidedStageSchema,
@@ -190,25 +258,42 @@ export type AssistantSurface = {
   scenarioSelected?: boolean;
   discardAvailable?: boolean;
   roiAvailable?: boolean;
+  /** In-conversation view. Tools follow this capability, not a pretended route. */
+  workspaceView?: (typeof workspaceViewIds)[number] | null;
 };
+
+const TOOL_CAP = 7;
 
 /** Tools that should be visible together. Stays within the seven-tool gateway cap. */
 export function frontendToolsForSurface(surface: AssistantSurface): FrontendToolName[] {
-  const names: FrontendToolName[] = ["navigate_site", "set_visitor_audience"];
-  if (surface.pageId === "demos") {
-    names.push("set_demo_mode");
-    if (surface.demoMode === "lab") {
-      names.push("select_lab_tab");
-    } else {
-      names.push("select_guided_scenario");
-      if (surface.scenarioSelected) names.push("set_guided_stage");
-    }
+  const names: FrontendToolName[] = ["navigate_site", "set_visitor_audience", "show_workspace"];
+  const view = surface.workspaceView ?? null;
+  const readable = view != null || surface.pageId === "demos" || surface.pageId === "business-case";
+  const pageGuided = surface.pageId === "demos" && surface.demoMode !== "lab";
+  const pageLab = surface.pageId === "demos" && surface.demoMode === "lab";
+  const guidedCap =
+    view === "workflows" || view === "guided" || view === "results" || (view == null && pageGuided);
+  const labCap = view === "lab" || view === "developer" || (view == null && pageLab);
+  const faqCap = view === "faq" || (view == null && surface.pageId === "faq");
+  const roiCap = view === "value" || (view == null && surface.pageId === "business-case" && Boolean(surface.roiAvailable));
+  const add = (name: FrontendToolName) => {
+    if (names.length >= TOOL_CAP || names.includes(name)) return;
+    names.push(name);
+  };
+  if (readable) add("read_workspace");
+  if (view === "contract" || view === "pilot") add("propose_workspace_edit");
+  if (surface.discardAvailable) add("confirm_discard_guided_progress");
+  if (guidedCap) {
+    add("select_guided_scenario");
+    if (surface.scenarioSelected || view === "guided" || view === "results") add("set_guided_stage");
   }
-  if (surface.discardAvailable) names.push("confirm_discard_guided_progress");
-  if (surface.pageId === "faq") names.push("open_faq");
-  if (surface.pageId === "business-case" && surface.roiAvailable) {
-    names.push("set_roi_inputs", "confirm_reset_roi");
+  if (roiCap) {
+    add("set_roi_inputs");
+    add("confirm_reset_roi");
   }
+  if (faqCap) add("open_faq");
+  if (labCap) add("select_lab_tab");
+  if (surface.pageId === "demos") add("set_demo_mode");
   return names;
 }
 

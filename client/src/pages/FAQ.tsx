@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import {
   Accordion,
@@ -15,12 +15,20 @@ import {
   type FaqCategory,
 } from "@/data/siteResources";
 import { cn } from "@/lib/utils";
-import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
-import { faqItem } from "@shared/siteKnowledge";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 
 export default function FAQ() {
-  const [filter, setFilter] = useState<FaqCategory | "all">("all");
-  const [openId, setOpenId] = useState<string>("");
+  const workspace = useWorkspace();
+  const filter = workspace.faqCategory;
+  const openId = workspace.faqOpenId ?? "";
+  const setFilter = workspace.setFaqCategory;
+  const setOpenId = (id: string) => {
+    if (!id) {
+      workspace.setFaqCategory(filter);
+      return;
+    }
+    workspace.openFaq({ id });
+  };
 
   useSEO({
     title: "FAQ | ICDU",
@@ -31,41 +39,6 @@ export default function FAQ() {
   useEffect(() => {
     trackPageViewed("faq");
   }, []);
-
-  const filterRef = useRef({ setFilter, setOpenId });
-  filterRef.current = { setFilter, setOpenId };
-  useAssistantSlot("faq", { category: filter, openId: openId || null });
-  useAssistantHandlers(
-    (handlers) => {
-      handlers.faq = {
-        open: ({ id, category }) => {
-          const match = id ? faqItem(id) : undefined;
-          if (id && !match) return { ok: false, error: "That question is not on the FAQ." };
-          if (category && match && match.category !== category) {
-            return { ok: false, error: "That question is not in that category." };
-          }
-          const nextCategory = match?.category ?? category;
-          if (nextCategory && !faqCategories.some((item) => item.id === nextCategory)) {
-            return { ok: false, error: "That category is not on the FAQ." };
-          }
-          const target = match ?? categorizedFaqItems.find((item) => item.category === nextCategory);
-          if (!target) return { ok: false, error: "Name a published FAQ question." };
-          filterRef.current.setFilter(target.category);
-          filterRef.current.setOpenId(target.id);
-          return {
-            ok: true,
-            id: target.id,
-            category: target.category,
-            question: target.question,
-            answer: target.answer,
-          };
-        },
-      };
-    },
-    (handlers) => {
-      handlers.faq = undefined;
-    },
-  );
 
   const items = useMemo(
     () =>

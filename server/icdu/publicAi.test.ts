@@ -559,3 +559,135 @@ test("a frontend tool result continues the same turn without a second user-messa
     await harness.close();
   }
 });
+
+test("show_workspace continues through the gateway with the active workspace snapshot", async () => {
+  const harness = await start({
+    store: new MemoryAiStore(),
+    fetchImpl: async (input, init) => {
+      const headers = new Headers(init?.headers);
+      const body = typeof init?.body === "string" ? init.body : "";
+      harness.calls.push({
+        url: String(input),
+        authorization: headers.get("authorization") ?? "",
+        body,
+      });
+      const followUp = body.includes('"role":"tool"');
+      if (!followUp) {
+        return new Response(
+          new ReadableStream({
+            start(controller) {
+              const encoder = new TextEncoder();
+              const parts = [
+                chunk({ role: "assistant", content: null }, null),
+                chunk(
+                  {
+                    tool_calls: [{
+                      index: 0,
+                      id: "call_workspace",
+                      type: "function",
+                      function: { name: "show_workspace", arguments: "{\"view\":\"guided\",\"scenarioId\":\"healthcare-admin\"}" },
+                    }],
+                  },
+                  null,
+                ),
+                chunk({}, "tool_calls"),
+                "data: [DONE]\n\n",
+              ];
+              for (const part of parts) controller.enqueue(encoder.encode(part));
+              controller.close();
+            },
+          }),
+          { headers: { "content-type": "text/event-stream" } },
+        );
+      }
+      return textStream("The healthcare walkthrough is open at Define.");
+    },
+  });
+  try {
+    const threadId = randomUUID();
+    const first = await fetch(`${harness.base}/api/chat/status`);
+    const cookie = cookieFrom(first);
+    const opened = (await first.json()) as { remaining: number };
+    const snapshot = {
+      route: "/",
+      title: "Overview",
+      summary: "Homepage",
+      sectionIds: ["chooser"],
+      personaId: "executive",
+      industryId: "healthcare-admin",
+      actions: ["show_workspace", "set_guided_stage"],
+      workspace: { view: "guided", artifactId: "call-health" },
+      guided: {
+        scenarioId: "healthcare-admin",
+        title: "Healthcare administrative workflow",
+        step: "define",
+        ranAi: false,
+        evaluated: false,
+        simulated: true,
+      },
+    };
+    const run = await fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({
+        ...runBody(threadId, "Show the healthcare administrative walkthrough", [
+          {
+            name: "show_workspace",
+            description: "Open one in-conversation view",
+            parameters: frontendParameterSchemas.show_workspace,
+          },
+        ]),
+        context: [{ description: "Current page", value: JSON.stringify(snapshot) }],
+      }),
+    });
+    const streamed = await run.text();
+    assert.equal(run.status, 200, streamed.slice(0, 400));
+    assert.match(streamed, /show_workspace/);
+    assert.equal(streamed.includes(KEY), false);
+    assert.match(harness.calls[0]?.body ?? "", /healthcare-admin/);
+    assert.match(harness.calls[0]?.body ?? "", /guided/);
+    const continued = await fetch(`${harness.base}/api/copilotkit/agent/default/run`, {
+      method: "POST",
+      headers: { "content-type": "application/json", cookie },
+      body: JSON.stringify({
+        threadId,
+        runId: randomUUID(),
+        state: {},
+        messages: [
+          { id: randomUUID(), role: "user", content: "Show the healthcare administrative walkthrough" },
+          {
+            id: randomUUID(),
+            role: "assistant",
+            content: "",
+            toolCalls: [{
+              id: "call_workspace",
+              type: "function",
+              function: { name: "show_workspace", arguments: "{\"view\":\"guided\",\"scenarioId\":\"healthcare-admin\"}" },
+            }],
+          },
+          {
+            id: randomUUID(),
+            role: "tool",
+            content: "{\"ok\":true,\"view\":\"guided\",\"scenarioId\":\"healthcare-admin\",\"step\":\"define\",\"simulated\":true}",
+            toolCallId: "call_workspace",
+          },
+        ],
+        tools: [{
+          name: "show_workspace",
+          description: "Open one in-conversation view",
+          parameters: frontendParameterSchemas.show_workspace,
+        }],
+        context: [{ description: "Current page", value: JSON.stringify(snapshot) }],
+        forwardedProps: {},
+      }),
+    });
+    const answer = await continued.text();
+    assert.equal(continued.status, 200, answer.slice(0, 400));
+    assert.match(answer, /healthcare walkthrough is open/);
+    const status = await fetch(`${harness.base}/api/chat/status`, { headers: { cookie } });
+    const body = (await status.json()) as { remaining: number };
+    assert.equal(body.remaining, opened.remaining - 1);
+  } finally {
+    await harness.close();
+  }
+});

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -12,12 +12,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   businessCaseIntro,
   workComparison,
@@ -38,12 +32,7 @@ import {
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
 import {
   ArrowRight,
-  Calculator,
-  Check,
-  Copy,
-  HelpCircle,
   Mail,
-  RotateCcw,
 } from "lucide-react";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
@@ -60,8 +49,7 @@ import { RecommendedFlag } from "@/components/PathChrome";
 import { businessCaseLinkLabel, formatAudienceChip, stakeholderAnchor } from "@/data/audience";
 import { getGuidedScenario } from "@/data/guidedScenarios";
 import { pendingGuidedReturn } from "@/lib/guidedProgress";
-import { applyRoiInputs } from "@/lib/roiEdit";
-import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 
 const inputKeys = [
   "workflows",
@@ -92,6 +80,8 @@ function RoiSlider({
   max,
   step,
   display,
+  minLabel,
+  maxLabel,
   onChange,
 }: {
   label: string;
@@ -101,51 +91,38 @@ function RoiSlider({
   max: number;
   step: number;
   display: string;
+  minLabel: string;
+  maxLabel: string;
   onChange: (v: number) => void;
 }) {
+  const fieldId = `roi-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <label className="text-sm font-medium text-[color:var(--icdu-fg)] inline-flex items-center gap-1.5">
-          {label}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                className="text-[color:var(--icdu-fg-faint)] hover:text-[color:var(--icdu-fg-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--icdu-focus)] rounded-sm"
-                aria-label={`About ${label}`}
-              >
-                <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent className="max-w-xs text-sm leading-relaxed">
-              {help}
-            </TooltipContent>
-          </Tooltip>
-        </label>
-        <span
-          className="text-sm font-semibold tabular-nums"
-          style={{ color: "var(--icdu-accent)" }}
-        >
-          {display}
-        </span>
+    <div className="icdu-assumption">
+      <div className="icdu-assumption-top">
+        <label className="icdu-label" htmlFor={fieldId}>{label}</label>
+        <span className="icdu-assumption-value">{display}</span>
       </div>
       <Slider
+        id={fieldId}
         min={min}
         max={max}
         step={step}
         value={[value]}
+        aria-valuetext={display}
         onValueChange={([v]) => onChange(v)}
       />
-      <p className="text-sm text-[color:var(--icdu-fg-faint)] leading-snug sm:hidden m-0">
-        {help}
-      </p>
+      <div className="icdu-slider-ends">
+        <span>{minLabel}</span>
+        <span>{maxLabel}</span>
+      </div>
+      <p className="icdu-assumption-help">{help}</p>
     </div>
   );
 }
 
-function RoiCalculatorPanel() {
-  const [inputs, setInputs] = useState<RoiInputs>(roiCalculatorDefaults);
+export function RoiCalculatorPanel() {
+  const workspace = useWorkspace();
+  const inputs = workspace.roiInputs;
   const [copied, setCopied] = useState(false);
   const results = useMemo(() => calculateRoi(inputs), [inputs]);
   const summarySentence = useMemo(
@@ -155,12 +132,14 @@ function RoiCalculatorPanel() {
 
   const chartData = [
     {
-      name: "Modeled 3-yr savings",
+      name: "Savings",
+      fullName: "Modeled 3-year savings",
       amount: results.totalReturn,
       kind: "savings" as const,
     },
     {
-      name: "Modeled 3-yr cost",
+      name: "Cost",
+      fullName: "Modeled 3-year cost",
       amount: results.totalCost,
       kind: "costs" as const,
     },
@@ -168,39 +147,18 @@ function RoiCalculatorPanel() {
 
   const chartConfig = {
     amount: { label: "USD" },
-    savings: { label: "Savings", color: "var(--icdu-accent)" },
-    costs: { label: "Cost", color: "var(--icdu-fg-faint)" },
+    savings: { label: "Modeled 3-year savings", color: "var(--icdu-accent)" },
+    costs: { label: "Modeled 3-year cost", color: "var(--icdu-series-cost)" },
   };
 
-  const set = (key: keyof RoiInputs) => (value: number) =>
-    setInputs((prev) => ({ ...prev, [key]: value }));
+  const set = (key: keyof RoiInputs) => (value: number) => {
+    workspace.setRoiInputs({ [key]: value });
+  };
 
   const reset = () => {
-    setInputs({ ...roiCalculatorDefaults });
+    workspace.requestResetRoi("reset-roi");
     setCopied(false);
   };
-  const roiRef = useRef({ inputs, setInputs, reset });
-  roiRef.current = { inputs, setInputs, reset };
-  useAssistantSlot("roi", { inputs, summary: summarySentence });
-  useAssistantHandlers(
-    (handlers) => {
-      handlers.roi = {
-        setInputs: (patch) => {
-          const applied = applyRoiInputs(roiRef.current.inputs, patch);
-          if (!applied.ok) return applied;
-          roiRef.current.setInputs(applied.inputs);
-          return applied;
-        },
-        resetInputs: () => {
-          roiRef.current.reset();
-          return { ok: true, reset: true, modeledEstimate: true };
-        },
-      };
-    },
-    (handlers) => {
-      handlers.roi = undefined;
-    },
-  );
 
   const copySummary = async () => {
     const text = buildRoiSummary(inputs, results);
@@ -221,245 +179,147 @@ function RoiCalculatorPanel() {
     }
   };
 
+  const outcomes = [
+    { value: `${results.roi}%`, label: "Illustrative 3-year ROI" },
+    { value: results.payMonths >= 99 ? "—" : `${results.payMonths} mo`, label: "Illustrative payback" },
+    { value: formatBusinessCurrency(results.netBenefit), label: "3-year net benefit" },
+    { value: formatBusinessCurrency(results.totalReturn), label: "3-year modeled savings" },
+    { value: formatBusinessCurrency(results.totalCost), label: "3-year modeled cost" },
+    { value: formatBusinessCurrency(results.ravAnnual), label: "Risk avoidance / year" },
+    { value: formatBusinessCurrency(results.engSave), label: "Engineering savings / year" },
+    { value: formatBusinessCurrency(results.compSave), label: "Compliance labor saved / year" },
+  ];
+
   return (
-    <div className="space-y-6 sm:space-y-8" data-testid="roi-calculator">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--icdu-fg)] mb-2">
-            <Calculator
-              className="h-4 w-4"
-              style={{ color: "var(--icdu-accent)" }}
-              aria-hidden="true"
-            />
-            Interactive value model
-          </div>
-          <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0">
-            Adjust your organization&apos;s inputs. ICDU model assumptions stay
-            fixed and visible. All outputs are{" "}
-            <strong className="font-semibold text-[color:var(--icdu-fg)]">
-              illustrative estimates
-            </strong>{" "}
-            for planning conversations — not forecasts or guarantees.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2 shrink-0">
-          <SecondaryCTA
-            type="button"
-            onClick={reset}
-            data-testid="roi-reset"
-            className="!text-xs sm:!text-sm"
-          >
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-            Reset to Example
-          </SecondaryCTA>
-          <SecondaryCTA
-            type="button"
-            onClick={copySummary}
-            data-testid="roi-copy-summary"
-            className="!text-xs sm:!text-sm"
-          >
-            {copied ? (
-              <Check className="h-3.5 w-3.5" aria-hidden="true" />
-            ) : (
-              <Copy className="h-3.5 w-3.5" aria-hidden="true" />
-            )}
-            {copied ? "Copied" : "Copy Summary"}
-          </SecondaryCTA>
-        </div>
+    <div className="icdu-value" data-testid="roi-calculator">
+      <header className="icdu-work-head">
+        <h2 className="icdu-work-title">Interactive value model</h2>
+        <p className="icdu-work-lead">
+          Adjust the assumptions you control. ICDU model constants stay fixed and visible.
+          Every output is an illustrative estimate for planning — not a forecast, guarantee, or commercial quote.
+        </p>
+      </header>
+      <div className="icdu-actions">
+        <button type="button" className="icdu-quiet icdu-focus" onClick={reset} data-testid="roi-reset">
+          Reset to example
+        </button>
+        <button type="button" className="icdu-quiet icdu-focus" onClick={copySummary} data-testid="roi-copy-summary">
+          {copied ? "Copied" : "Copy summary"}
+        </button>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
-        <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-6 space-y-5">
-          <div>
-            <h3 className="text-sm font-semibold text-[color:var(--icdu-fg)] m-0 mb-1">
-              Your assumptions
-            </h3>
-            <p className="text-xs text-[color:var(--icdu-fg-faint)] m-0">
-              User-entered values — change these to match your environment.
-            </p>
+      <section className="icdu-group" aria-label="Modeled outcomes">
+        <h3>Modeled outcomes</h3>
+        <p className="icdu-work-meta">Illustrative estimate. Subscription and setup figures in the model are not a quote.</p>
+        <p className="icdu-value-summary" data-testid="roi-summary-sentence">{summarySentence}</p>
+        <dl className="icdu-metrics">
+          {outcomes.map((metric) => (
+            <div key={metric.label}>
+              <dt>{metric.label}</dt>
+              <dd>{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="icdu-chart-panel">
+          <div className="icdu-chart-head">
+            <h3>Savings versus cost</h3>
+            <p>Three-year modeled totals, in US dollars. Illustrative.</p>
           </div>
-          <TooltipProvider delayDuration={200}>
-            {inputKeys.map((key) => (
-              <RoiSlider
-                key={key}
-                label={roiCalculatorRanges[key].label}
-                help={roiCalculatorRanges[key].help}
-                value={inputs[key]}
-                min={roiCalculatorRanges[key].min}
-                max={roiCalculatorRanges[key].max}
-                step={roiCalculatorRanges[key].step}
-                display={displayFor(key, inputs[key])}
-                onChange={set(key)}
+          <ChartContainer config={chartConfig} className="icdu-chart-plot aspect-auto">
+            <BarChart data={chartData} margin={{ top: 12, right: 12, left: 4, bottom: 4 }}>
+              <CartesianGrid stroke="var(--icdu-border)" strokeDasharray="3 3" vertical={false} />
+              <XAxis
+                dataKey="name"
+                tickLine={false}
+                axisLine={false}
+                tick={{ fill: "var(--icdu-fg-muted)", fontSize: 13 }}
               />
-            ))}
-          </TooltipProvider>
-
-          <div className="pt-4 border-t border-[color:var(--icdu-border)] space-y-3">
-            <div>
-              <h3 className="text-sm font-semibold text-[color:var(--icdu-fg)] m-0 mb-1">
-                ICDU model assumptions
-              </h3>
-              <p className="text-sm text-[color:var(--icdu-fg-faint)] m-0 mb-3">
-                Fixed in this calculator — not slider inputs.
-              </p>
-            </div>
-            <ul className="space-y-2.5 m-0 p-0 list-none">
-              {roiModelAssumptionCopy.map((item) => (
-                <li key={item.label} className="text-sm leading-snug">
-                  <div className="font-medium text-[color:var(--icdu-fg)]">
-                    {item.label}
-                  </div>
-                  <div className="text-[color:var(--icdu-fg-faint)]">
-                    {item.detail}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-bg)]/40 p-3 sm:p-4">
-            <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-faint)] mb-1.5">
-              How the estimate is calculated
-            </div>
-            <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0">
-              Annual engineering savings = workflows × days saved × day rate.
-              Compliance labor saved = workflows × audit cycles × hours × hourly
-              rate. Risk avoidance = incident probability × incident cost ×
-              risk-capture factor. Three-year savings combine year-one returns
-              with two additional years of compliance and risk avoidance.
-              Three-year cost combines year-one subscription, setup, and the
-              engineering investment proxy with two more subscription years.
-              ROI = (savings − cost) ÷ cost.
-            </p>
-          </div>
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                width={64}
+                tick={{ fill: "var(--icdu-fg-muted)", fontSize: 13 }}
+                tickFormatter={(v) => formatBusinessCurrency(v as number)}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, _name, item) => (
+                      <span>
+                        {item?.payload?.fullName ?? "Amount"}: {formatBusinessCurrency(value as number)}
+                      </span>
+                    )}
+                  />
+                }
+              />
+              <Bar dataKey="amount" radius={[6, 6, 0, 0]} barSize={56} maxBarSize={72}>
+                {chartData.map((entry) => (
+                  <Cell
+                    key={entry.kind}
+                    fill={entry.kind === "savings" ? "var(--icdu-accent)" : "var(--icdu-series-cost)"}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+          <ul className="icdu-legend">
+            <li>
+              <span className="icdu-swatch" style={{ background: "var(--icdu-accent)" }} />
+              Modeled 3-year savings ({formatBusinessCurrency(results.totalReturn)})
+            </li>
+            <li>
+              <span className="icdu-swatch" style={{ background: "var(--icdu-series-cost)" }} />
+              Modeled 3-year cost ({formatBusinessCurrency(results.totalCost)})
+            </li>
+          </ul>
         </div>
+      </section>
 
-        <div className="space-y-4">
-          <p
-            className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 rounded-xl border border-[color:var(--icdu-accent)]/25 bg-[color:var(--icdu-accent)]/5 p-4"
-            data-testid="roi-summary-sentence"
-          >
-            {summarySentence}
+      <section className="icdu-group" aria-label="Your assumptions">
+        <h3>Your assumptions</h3>
+        <p className="icdu-work-meta">These are the values you can change. Units sit with the current value.</p>
+        <div className="icdu-assumptions">
+          {inputKeys.map((key) => (
+            <RoiSlider
+              key={key}
+              label={roiCalculatorRanges[key].label}
+              help={roiCalculatorRanges[key].help}
+              value={inputs[key]}
+              min={roiCalculatorRanges[key].min}
+              max={roiCalculatorRanges[key].max}
+              step={roiCalculatorRanges[key].step}
+              display={displayFor(key, inputs[key])}
+              minLabel={displayFor(key, roiCalculatorRanges[key].min)}
+              maxLabel={displayFor(key, roiCalculatorRanges[key].max)}
+              onChange={set(key)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="icdu-group" aria-label="ICDU model assumptions">
+        <h3>ICDU model assumptions</h3>
+        <p className="icdu-work-meta">Fixed in this calculator. They are not slider inputs and not a price list.</p>
+        <ul className="icdu-constant-list">
+          {roiModelAssumptionCopy.map((item) => (
+            <li key={item.label}>
+              <strong>{item.label}</strong>
+              <span>{item.detail}</span>
+            </li>
+          ))}
+        </ul>
+        <details className="icdu-formula">
+          <summary>How the estimate is calculated</summary>
+          <p>
+            Annual engineering savings = workflows × days saved × day rate.
+            Compliance labor saved = workflows × audit cycles × hours × hourly rate.
+            Risk avoidance = incident probability × incident cost × risk-capture factor.
+            Three-year savings combine year-one returns with two additional years of compliance and risk avoidance.
+            Three-year cost combines year-one subscription, setup, and the engineering investment proxy with two more subscription years.
+            ROI = (savings − cost) ÷ cost.
           </p>
-
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {[
-              {
-                value: `${results.roi}%`,
-                label: "Illustrative 3-year ROI",
-              },
-              {
-                value:
-                  results.payMonths >= 99 ? "—" : `${results.payMonths} mo`,
-                label: "Illustrative payback",
-              },
-              {
-                value: formatBusinessCurrency(results.ravAnnual),
-                label: "Risk avoidance / year",
-              },
-              {
-                value: formatBusinessCurrency(results.engSave),
-                label: "Engineering savings / year",
-              },
-              {
-                value: `${formatBusinessCurrency(results.compSave)}/yr`,
-                label: "Compliance labor saved",
-              },
-              {
-                value: formatBusinessCurrency(results.netBenefit),
-                label: "3-year net benefit",
-              },
-            ].map((metric) => (
-              <div
-                key={metric.label}
-                className="rounded-lg border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-3 sm:p-4 text-center"
-              >
-                <div
-                  className="text-base sm:text-xl font-semibold tabular-nums leading-tight"
-                  style={{ color: "var(--icdu-accent)" }}
-                >
-                  {metric.value}
-                </div>
-                <div className="text-sm text-[color:var(--icdu-fg-muted)] mt-1.5 leading-snug">
-                  {metric.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-6">
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <h3 className="text-sm font-semibold text-[color:var(--icdu-fg)] m-0">
-                Savings versus cost (3 years)
-              </h3>
-              <span className="text-xs text-[color:var(--icdu-fg-faint)] shrink-0">
-                Illustrative
-              </span>
-            </div>
-            <ChartContainer config={chartConfig} className="h-[220px] w-full">
-              <BarChart
-                data={chartData}
-                layout="vertical"
-                margin={{ top: 4, right: 12, left: 4, bottom: 4 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis
-                  type="number"
-                  tickLine={false}
-                  axisLine={false}
-                  fontSize={12}
-                  tickFormatter={(v) => formatBusinessCurrency(v as number)}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={128}
-                  tickLine={false}
-                  axisLine={false}
-                  fontSize={12}
-                />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      formatter={(value) =>
-                        formatBusinessCurrency(value as number)
-                      }
-                    />
-                  }
-                />
-                <Bar dataKey="amount" radius={[0, 4, 4, 0]} barSize={28}>
-                  {chartData.map((entry) => (
-                    <Cell
-                      key={entry.kind}
-                      fill={
-                        entry.kind === "savings"
-                          ? "var(--icdu-accent)"
-                          : "var(--icdu-fg-faint)"
-                      }
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ChartContainer>
-            <div className="flex flex-wrap gap-4 mt-3 text-xs sm:text-sm text-[color:var(--icdu-fg-muted)]">
-              <span className="flex items-center gap-1.5">
-                <span
-                  className="h-2.5 w-2.5 rounded-sm"
-                  style={{ background: "var(--icdu-accent)" }}
-                />
-                Savings ({formatBusinessCurrency(results.totalReturn)})
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span
-                  className="h-2.5 w-2.5 rounded-sm"
-                  style={{ background: "var(--icdu-fg-faint)" }}
-                />
-                Cost ({formatBusinessCurrency(results.totalCost)})
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+        </details>
+      </section>
     </div>
   );
 }

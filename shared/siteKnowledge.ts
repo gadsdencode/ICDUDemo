@@ -64,8 +64,28 @@ const journeyFile = journeys as JourneyFile;
 export const personaIds = personaAudiences.map((persona) => persona.id);
 export const scenarioIds = guidedScenarios.map((scenario) => scenario.id);
 export const faqIds = categorizedFaqItems.map((item) => item.id);
+export const resourceIds = [...staticDownloads, ...generatedTechnicalDocs].map((item) => item.id);
+export const developerSectionIds = ["hands-on", "schema-samples"] as const;
 export const labTabIds = ["icdu", "judge", "hitl", "stress"] as const;
 export const guidedStepIds = guidedSteps.map((step) => step.id);
+export const workspaceViewIds = [
+  "roles",
+  "workflows",
+  "guided",
+  "results",
+  "value",
+  "faq",
+  "resources",
+  "developer",
+  "lab",
+  "contract",
+  "evidence",
+  "readiness",
+  "review",
+  "compare",
+  "pilot",
+  "brief",
+] as const;
 
 const catalog: CatalogItem[] = [...staticDownloads, ...generatedTechnicalDocs];
 
@@ -105,8 +125,8 @@ const pages: SitePage[] = [
     path: "/",
     title: "Overview",
     summary:
-      "AI Guided by Intent. ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced. This helps teams get more consistent, reviewable, and accountable results from AI. Visitors choose a role and a workflow, then continue to a journey, demo, or business case.",
-    source: "client/src/components/AudienceFunnel.tsx",
+      "AI Guided by Intent. ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced. This helps teams get more consistent, reviewable, and accountable results from AI. The homepage composer sits with the role paths Executive, Administrator, Developer, and Manager. The choice is kept in the page address.",
+    source: "client/src/pages/Overview.tsx",
   },
   {
     id: "journey",
@@ -191,8 +211,8 @@ function buildSections(): SiteSection[] {
       "overview",
       "/",
       "chooser",
-      "Choose a role and workflow",
-      "The homepage chooser asks for a role and an industry workflow. The choice is kept in the page address so Back and Forward restore it.",
+      "Who are you?",
+      "The homepage chooser is open at #chooser and #funnel. Executive, Administrator, Developer, and Manager are the visible role paths, in that order. Choosing one keeps the selection in the page address so Back and Forward restore it, and opens workflow choices in the conversation. The conversation can open a guided walkthrough, simulated results, a visitor contract draft, example evidence, readiness exploration, a human review, a scenario comparison, the value model, a pilot draft, a takeaway brief, FAQ, resources, and the developer lab without leaving the homepage. Browse without choosing opens the journey index.",
       "client/src/components/AudienceFunnel.tsx",
     ),
   );
@@ -470,7 +490,7 @@ export const siteSections: readonly SiteSection[] = buildSections();
 
 export const driftAnchors: readonly { file: string; text: string }[] = [
   {
-    file: "client/src/components/AudienceFunnel.tsx",
+    file: "client/src/pages/Overview.tsx",
     text: "ICDU turns a work request into a clear, guided AI process:",
   },
   {

@@ -30,6 +30,7 @@ type ScenarioSelectorProps = {
   intro?: { label: string; title: string; description: string } | null;
   actionLabel?: string;
   showLabNote?: boolean;
+  recommendedIds?: string[];
 };
 
 export function ScenarioSelector({
@@ -38,6 +39,7 @@ export function ScenarioSelector({
   intro,
   actionLabel = "Start this path",
   showLabNote = true,
+  recommendedIds = [],
 }: ScenarioSelectorProps) {
   const introCopy =
     intro === null
@@ -86,6 +88,7 @@ export function ScenarioSelector({
               </div>
               <div className="text-xs font-semibold uppercase tracking-[0.1em] text-[color:var(--icdu-fg-faint)] mb-1.5">
                 {scenario.industry}
+                {recommendedIds.includes(scenario.id) ? " · Suggested" : ""}
               </div>
               <h3
                 className={cn(

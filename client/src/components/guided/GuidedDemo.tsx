@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "wouter";
 import {
   getGuidedScenario,
@@ -7,12 +7,7 @@ import {
   type GuidedJudgeResult,
   type GuidedStepId,
 } from "@/data/guidedScenarios";
-import {
-  clearGuidedProgress,
-  loadGuidedProgress,
-  writeGuidedProgress,
-  type GuidedProgress,
-} from "@/lib/guidedProgress";
+import { type GuidedProgress } from "@/lib/guidedProgress";
 import { GuidedStepper } from "./GuidedStepper";
 import { StageCoach } from "./StageCoach";
 import { ScenarioSelector } from "./ScenarioSelector";
@@ -32,8 +27,8 @@ import {
 } from "lucide-react";
 import { trackDemoInteraction } from "@/lib/analytics";
 import { formatGatePercent, pasGateExplanation } from "@/lib/gateDecision";
-import { advanceGuided, backGuided, discardsGuidedWork, revisitGuided } from "@/lib/guidedTransitions";
-import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
+import { advanceGuided, backGuided, revisitGuided } from "@/lib/guidedTransitions";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 
 const WALKTHROUGH_URL =
   "mailto:brian@osscontact.com?subject=ICDU%20Walkthrough";
@@ -44,6 +39,8 @@ type GuidedDemoProps = {
   onScenarioChange?: (id: string | null) => void;
   handoffHref?: string;
   handoffLabel?: string;
+  /** Keep the handoff inside the conversation instead of opening another page. */
+  onHandoffInPlace?: () => void;
 };
 
 const SCORE_EXPLANATIONS = [
@@ -74,18 +71,11 @@ export function GuidedDemo({
   onScenarioChange,
   handoffHref = "/business-case",
   handoffLabel = "Business case",
+  onHandoffInPlace,
 }: GuidedDemoProps) {
+  const workspace = useWorkspace();
   const scenario = scenarioId ? getGuidedScenario(scenarioId) ?? null : null;
-  const [trackedScenarioId, setTrackedScenarioId] = useState(scenarioId);
-  const [progress, setProgress] = useState<GuidedProgress | null>(() => loadGuidedProgress(scenarioId));
-
-  // Restore during render so a remount does not paint step 1 before the saved stage.
-  let activeProgress = progress;
-  if (scenarioId !== trackedScenarioId) {
-    activeProgress = loadGuidedProgress(scenarioId);
-    setTrackedScenarioId(scenarioId);
-    setProgress(activeProgress);
-  }
+  const activeProgress = workspace.guided?.scenarioId === scenarioId ? workspace.guided : null;
 
   const step = activeProgress?.step ?? "define";
   const furthest = activeProgress?.furthest ?? 0;
@@ -93,12 +83,7 @@ export function GuidedDemo({
   const evaluated = activeProgress?.evaluated ?? false;
 
   const commitProgress = (patch: (current: GuidedProgress) => GuidedProgress) => {
-    setProgress((current) => {
-      if (!current) return current;
-      const next = patch(current);
-      writeGuidedProgress(next);
-      return next;
-    });
+    workspace.patchGuided(patch);
   };
 
   const progressPct = useMemo(() => {
@@ -107,18 +92,10 @@ export function GuidedDemo({
   }, [scenario, step]);
 
   const selectScenario = (s: GuidedScenario) => {
+    const result = workspace.selectScenario(s.id, false, `scenario:${s.id}`);
+    if (!result.ok) return;
     onScenarioChange?.(s.id);
     trackDemoInteraction("guided_demo", `select_${s.id}`);
-  };
-
-  const selectScenarioFromAssistant = (scenarioId: string, confirmed: boolean) => {
-    const match = getGuidedScenario(scenarioId);
-    if (!match) return { ok: false as const, error: "That scenario is not on the site." };
-    if (!confirmed && discardsGuidedWork(activeProgress, scenarioId)) {
-      return { ok: false as const, needsConfirmation: true, scenarioId };
-    }
-    selectScenario(match);
-    return { ok: true as const, scenarioId, title: match.title, simulated: true };
   };
 
   const goTo = (next: GuidedStepId) => {
@@ -160,46 +137,17 @@ export function GuidedDemo({
   };
 
   const resetToScenarios = () => {
-    clearGuidedProgress();
-    onScenarioChange?.(null);
-    trackDemoInteraction("guided_demo", "try_another");
+    const result = workspace.clearProgress("clear-guided-progress");
+    if (result.ok) {
+      onScenarioChange?.(null);
+      trackDemoInteraction("guided_demo", "try_another");
+    }
   };
 
-  const actionsRef = useRef({ continueNext, goTo, backStage, selectScenarioFromAssistant, resetToScenarios });
-  actionsRef.current = { continueNext, goTo, backStage, selectScenarioFromAssistant, resetToScenarios };
-  useAssistantHandlers(
-    (handlers) => {
-      handlers.guided = {
-        selectScenario: (id, confirmed) => actionsRef.current.selectScenarioFromAssistant(id, confirmed),
-        setStage: (action, stepId) => {
-          if (action === "continue") return actionsRef.current.continueNext();
-          if (action === "back") return actionsRef.current.backStage();
-          const step = guidedSteps.find((item) => item.id === stepId);
-          if (!step) return { ok: false, error: "Name an available stage." };
-          return actionsRef.current.goTo(step.id);
-        },
-        resetProgress: () => {
-          actionsRef.current.resetToScenarios();
-          return { ok: true, cleared: true };
-        },
-      };
-    },
-    (handlers) => {
-      handlers.guided = undefined;
-    },
-  );
-  useAssistantSlot("guided", {
-    scenarioId: scenario?.id ?? null,
-    title: scenario?.title ?? null,
-    step,
-    ranAi,
-    evaluated,
-    scores: evaluated && scenario ? { ...scenario.judge.scores, decision: scenario.judge.decision } : undefined,
-  });
-
   const markBusinessCaseReturn = () => {
-    if (!handoffHref.startsWith("/business-case")) return;
+    if (!onHandoffInPlace && !handoffHref.startsWith("/business-case")) return;
     commitProgress((current) => ({ ...current, returnPending: true }));
+    onHandoffInPlace?.();
   };
 
   if (!scenario) {
@@ -280,6 +228,7 @@ export function GuidedDemo({
               handoffHref={handoffHref}
               handoffLabel={handoffLabel}
               onHandoff={markBusinessCaseReturn}
+              onHandoffInPlace={Boolean(onHandoffInPlace)}
             />
           )}
 
@@ -585,6 +534,7 @@ function EvidenceStep({
   handoffHref,
   handoffLabel,
   onHandoff,
+  onHandoffInPlace,
 }: {
   scenario: GuidedScenario;
   onTryAnother: () => void;
@@ -592,6 +542,7 @@ function EvidenceStep({
   handoffHref: string;
   handoffLabel: string;
   onHandoff: () => void;
+  onHandoffInPlace?: boolean;
 }) {
   const evidencePack = {
     scenario_id: scenario.id,
@@ -675,11 +626,17 @@ function EvidenceStep({
           Take {scenario.title} into {handoffLabel}.
         </p>
         <div className="mt-4 flex flex-col sm:flex-row flex-wrap gap-3">
-          <PrimaryCTA asChild>
-            <Link href={handoffHref} onClick={onHandoff}>
+          {onHandoffInPlace ? (
+            <PrimaryCTA type="button" onClick={onHandoff}>
               {handoffLabel}
-            </Link>
-          </PrimaryCTA>
+            </PrimaryCTA>
+          ) : (
+            <PrimaryCTA asChild>
+              <Link href={handoffHref} onClick={onHandoff}>
+                {handoffLabel}
+              </Link>
+            </PrimaryCTA>
+          )}
           <SecondaryCTA onClick={onTryAnother} data-testid="guided-try-another">
             Try Another Scenario
           </SecondaryCTA>
@@ -770,6 +727,38 @@ function MiniCard({
         {title}
       </div>
       <p className="text-sm font-medium text-[color:var(--icdu-fg)] m-0 leading-snug">{body}</p>
+    </div>
+  );
+}
+
+/** Result review uses the same scripted outputs, scores, and technical record as the walkthrough. */
+export function GuidedReview({ scenarioId }: { scenarioId: string | null }) {
+  const workspace = useWorkspace();
+  const scenario = scenarioId ? getGuidedScenario(scenarioId) ?? null : null;
+  const progress = workspace.guided?.scenarioId === scenarioId ? workspace.guided : null;
+  if (!scenario || !progress) {
+    return <p className="m-0 text-sm text-[color:var(--icdu-fg-muted)]">Choose a workflow to review its simulated results.</p>;
+  }
+  const evidencePack = {
+    scenario_id: scenario.id,
+    icdu_id: scenario.icdu.icdu_id,
+    decision: scenario.judge.decision,
+    scores: scenario.judge.scores,
+    evidence: scenario.evidenceSummary,
+    generated_at: scenario.icdu.created_at,
+    simulated: true,
+  };
+  return (
+    <div className="space-y-6" data-testid="workspace-results">
+      <RunStep scenario={scenario} revealed={progress.ranAi} />
+      <EvaluateStep scenario={scenario} revealed={progress.evaluated} />
+      {progress.evaluated ? (
+        <TechnicalRecord title="View Technical Record — Evidence Pack" data={evidencePack} />
+      ) : (
+        <p className="m-0 text-sm text-[color:var(--icdu-fg-muted)]">
+          Scores and the readiness decision appear after Check readiness. They stay simulated examples.
+        </p>
+      )}
     </div>
   );
 }

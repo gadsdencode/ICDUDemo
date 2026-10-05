@@ -14,6 +14,7 @@ import {
 import { guidedScenarios } from "@/data/guidedScenarios";
 import personasData from "@/data/personas.json";
 import { cn } from "@/lib/utils";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 
 const personas = homepageRoleIds.flatMap((id) => {
   const persona = (personasData as Persona[]).find((item) => item.id === id);
@@ -29,9 +30,16 @@ function stageFromChoice(personaId: string | null, industryId: string | null): S
 }
 
 export function AudienceFunnel() {
-  const { personaId, industryId, route, scenario, resetKey, setPersonaId, setIndustryId } = useAudience();
+  const { personaId, industryId, route, scenario, resetKey, setPersonaId } = useAudience();
+  const workspace = useWorkspace();
   const [stage, setStage] = useState<Stage>(() => stageFromChoice(personaId, industryId));
   const [announcement, setAnnouncement] = useState("");
+  const [seenReset, setSeenReset] = useState(resetKey);
+  if (resetKey !== seenReset) {
+    setSeenReset(resetKey);
+    setStage("role");
+    setAnnouncement("Choose your role.");
+  }
   const chooserRef = useRef<HTMLElement>(null);
   const focusNext = useRef(false);
 
@@ -86,6 +94,7 @@ export function AudienceFunnel() {
   const chooseRole = (id: string) => {
     const staying = id === personaId;
     if (!staying) setPersonaId(id);
+    workspace.openView("workflows", "manual:workflows");
     const message = industryId
       ? `Path ready: ${getPersonaAudience(id)?.chipLabel ?? id}, ${scenario?.industryShort ?? "workflow"}.`
       : "Choose your industry.";
@@ -99,7 +108,11 @@ export function AudienceFunnel() {
   const chooseIndustry = (id: string) => {
     const staying = id === industryId;
     const next = guidedScenarios.find((item) => item.id === id);
-    if (!staying) setIndustryId(id);
+    const selected = workspace.selectScenario(id, false, `scenario:${id}`);
+    if (!selected.ok) {
+      setAnnouncement("Confirm before replacing the current walkthrough.");
+      return;
+    }
     const message = personaId
       ? `Path ready: ${role?.chipLabel ?? personaId}, ${next?.industryShort ?? "workflow"}.`
       : "Choose your role.";
@@ -114,21 +127,7 @@ export function AudienceFunnel() {
   const showChooserMeta = Boolean(stepLabel) || (stage === "role" && Boolean(scenario));
 
   return (
-    <div className="icdu-home" data-assistant-page="overview">
-      <a className="icdu-focus sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:bg-[color:var(--icdu-fg)] focus:px-4 focus:py-3 focus:text-[color:var(--icdu-bg)]" href="#chooser">
-        Skip to the chooser
-      </a>
-      <section className="icdu-hero" aria-labelledby="home-title">
-        <h1 id="home-title">
-          AI Guided by Intent
-        </h1>
-        <p data-testid="funnel-sentence">
-          ICDU turns a work request into a clear, guided AI process: it captures what the user intends, applies the relevant expertise and rules, checks the result against those requirements, and keeps a record of how the outcome was produced.
-          <span className="icdu-hero-prompt">Get consistent, reviewable, and accountable results from AI.</span>
-        </p>
-      </section>
-
-      <div className="icdu-chooser-wrap">
+    <div className="icdu-chooser-wrap">
         <section
           ref={chooserRef}
           id="chooser"
@@ -192,7 +191,8 @@ export function AudienceFunnel() {
                         data-testid={`persona-card-${persona.id}`}
                         onClick={() => chooseRole(persona.id)}
                       >
-                        {label}
+                        <span>{label}</span>
+                        <small>{description}</small>
                       </button>
                     );
                   })}
@@ -254,9 +254,14 @@ export function AudienceFunnel() {
                       Open your journey now ↗
                     </Link>
                   ) : (
-                    <Link href="/demos" className="icdu-subtle icdu-focus" data-testid="funnel-link-demos">
+                    <button
+                      type="button"
+                      className="icdu-subtle icdu-focus"
+                      data-testid="funnel-link-demos"
+                      onClick={() => workspace.openView("workflows", "manual:workflows")}
+                    >
                       Explore every workflow ↗
-                    </Link>
+                    </button>
                   )}
                 </div>
               </>
@@ -273,21 +278,26 @@ export function AudienceFunnel() {
                 </h2>
                 <p className="icdu-path-description">{view.detail}</p>
                 <div className="icdu-path-actions" data-testid="funnel-actions">
-                  <Link href={demosHref} className="icdu-path-primary icdu-focus" data-testid="funnel-link-demos">
+                  <button
+                    type="button"
+                    className="icdu-path-primary icdu-focus"
+                    data-testid="funnel-link-demos"
+                    onClick={() => workspace.openView("guided", "manual:guided")}
+                  >
                     See this workflow <span aria-hidden="true">→</span>
-                  </Link>
+                  </button>
                   <Link href={journeyHref} className="icdu-path-secondary icdu-focus" data-testid="funnel-link-journey">
                     Your journey <span aria-hidden="true">↗</span>
                   </Link>
                 </div>
                 <div className="icdu-path-additional">
-                  <Link href={businessHref} data-testid="funnel-link-business">
+                  <button type="button" data-testid="funnel-link-business" onClick={() => workspace.openView("value", "manual:value")}>
                     {businessLabel} ↗
-                  </Link>
+                  </button>
                   {role.id === "developer" ? (
-                    <Link href="/demos?mode=lab" data-testid="funnel-link-lab">
+                    <button type="button" data-testid="funnel-link-lab" onClick={() => workspace.openView("lab", "manual:lab")}>
                       Advanced Lab ↗
-                    </Link>
+                    </button>
                   ) : null}
                 </div>
                 <div className="icdu-path-edit">
@@ -317,6 +327,5 @@ export function AudienceFunnel() {
           </Link>
         </p>
       </div>
-    </div>
   );
 }

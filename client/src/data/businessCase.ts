@@ -457,10 +457,52 @@ export function formatBusinessCurrency(value: number): string {
   if (abs >= 1_000_000) {
     return `${sign}$${(abs / 1_000_000).toFixed(1)}M`;
   }
-  if (abs >= 1_000) {
+  if (abs >= 10_000) {
     return `${sign}$${Math.round(abs / 1_000)}K`;
   }
-  return `${sign}$${Math.round(abs)}`;
+  return `${sign}$${Math.round(abs).toLocaleString("en-US")}`;
+}
+
+const ROI_ASSUMPTION_KEYS = ["workflows", "dayRate", "incidentProb", "incidentCost", "auditCycles"] as const;
+export type RoiAssumptionKey = (typeof ROI_ASSUMPTION_KEYS)[number];
+
+/** Compare the open calculator with the example start. Does not change calculateRoi. */
+export function roiAssumptionDelta(
+  current: RoiInputs,
+  example: RoiInputs = roiCalculatorDefaults,
+): { example: RoiInputs; edited: RoiAssumptionKey[]; unchanged: RoiAssumptionKey[] } {
+  const edited: RoiAssumptionKey[] = [];
+  const unchanged: RoiAssumptionKey[] = [];
+  for (const key of ROI_ASSUMPTION_KEYS) {
+    if (current[key] === example[key]) unchanged.push(key);
+    else edited.push(key);
+  }
+  return { example, edited, unchanged };
+}
+
+const ROI_EFFECT_KEYS = ["engineeringSavings", "complianceLabor", "riskAvoidance", "modeledCost"] as const;
+export type RoiEffectKey = (typeof ROI_EFFECT_KEYS)[number];
+
+/** Which formula outputs moved. Risk avoidance ignores workflow count and day rate. */
+export function roiEffectDelta(
+  current: RoiInputs,
+  example: RoiInputs = roiCalculatorDefaults,
+): { changed: RoiEffectKey[]; unchanged: RoiEffectKey[] } {
+  const now = calculateRoi(current);
+  const base = calculateRoi(example);
+  const pairs: Array<[RoiEffectKey, number, number]> = [
+    ["engineeringSavings", now.engSave, base.engSave],
+    ["complianceLabor", now.compSave, base.compSave],
+    ["riskAvoidance", now.ravAnnual, base.ravAnnual],
+    ["modeledCost", now.totalCost, base.totalCost],
+  ];
+  const changed: RoiEffectKey[] = [];
+  const unchanged: RoiEffectKey[] = [];
+  for (const [key, currentValue, exampleValue] of pairs) {
+    if (currentValue === exampleValue) unchanged.push(key);
+    else changed.push(key);
+  }
+  return { changed, unchanged };
 }
 
 export function calculateRoi(inputs: RoiInputs): RoiResults {

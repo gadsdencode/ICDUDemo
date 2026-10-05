@@ -7,8 +7,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navigation } from "@/components/Navigation";
 import { AudienceProvider } from "@/components/AudienceProvider";
-import { AssistantHost } from "@/components/AssistantHost";
 import { AssistantProvider } from "@/components/assistant/AssistantProvider";
+import { WorkspaceProvider } from "@/components/workspace/WorkspaceProvider";
+import { AssistantWorkspace } from "@/components/assistant/AssistantWorkspace";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -51,6 +52,19 @@ function Router() {
   );
 }
 
+function AppShell() {
+  const [location] = useLocation();
+  const privateRoute = (location.split("?")[0] || "/") === "/fine-tune";
+  return (
+    <div className="icdu-shell">
+      <Navigation />
+      <AssistantWorkspace privateRoute={privateRoute}>
+        <Router />
+      </AssistantWorkspace>
+    </div>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -58,14 +72,10 @@ function App() {
         <TooltipProvider>
           <AudienceProvider>
             <AssistantProvider>
-              <div className="min-h-screen bg-background text-foreground font-sans">
-                <Navigation />
-                <main>
-                  <Router />
-                </main>
-              </div>
-              <AssistantHost />
-              <Toaster />
+              <WorkspaceProvider>
+                <AppShell />
+                <Toaster />
+              </WorkspaceProvider>
             </AssistantProvider>
           </AudienceProvider>
         </TooltipProvider>

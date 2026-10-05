@@ -1,14 +1,11 @@
-import { useRef, useState } from "react";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ICDUBuilder } from "@/components/ICDUBuilder";
 import { JudgePanel } from "@/components/JudgePanel";
 import { RubricPanel } from "@/components/RubricPanel";
 import { StressPanel } from "@/components/StressPanel";
-import { KeyTakeaways } from "@/components/KeyTakeaways";
-import { FileText, Scale, Users, FlaskConical, FlaskRound } from "lucide-react";
+import { FileText, Scale, Users, FlaskConical } from "lucide-react";
 import { componentReplacements } from "@/data/businessCase";
-import { cn } from "@/lib/utils";
-import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
 
 const labTabs = [
   { id: "icdu", label: "ICDU Builder", shortLabel: "Builder", icon: FileText },
@@ -81,124 +78,72 @@ const labTakeaways: Record<
   },
 };
 
+export function labSummaryFor(tab: string): string {
+  const takeaways = labTakeaways[tab];
+  if (!takeaways) return "Deterministic mock lab, not a live model run.";
+  return `${takeaways.title}. ${takeaways.points.join(" ")} Deterministic mock lab, not a live model run.`;
+}
+
 export function AdvancedLab() {
-  const [activeTab, setActiveTab] = useState("icdu");
+  const workspace = useWorkspace();
+  const activeTab = workspace.labTab;
+  const setActiveTab = (tab: string) => {
+    if (tab === "icdu" || tab === "judge" || tab === "hitl" || tab === "stress") workspace.selectLab(tab);
+  };
   const currentTakeaways = labTakeaways[activeTab];
-  const tabsRef = useRef({ activeTab, setActiveTab });
-  tabsRef.current = { activeTab, setActiveTab };
-  useAssistantSlot("lab", {
-    tab: activeTab as "icdu" | "judge" | "hitl" | "stress",
-    summary: `${currentTakeaways.title}. ${currentTakeaways.points.join(" ")} Deterministic mock lab, not a live model run.`,
-  });
-  useAssistantHandlers(
-    (handlers) => {
-      handlers.lab = {
-        selectTab: (tab) => {
-          const takeaways = labTakeaways[tab];
-          if (!takeaways) return { ok: false, error: "That lab tab is not available." };
-          tabsRef.current.setActiveTab(tab);
-          return {
-            ok: true,
-            tab,
-            label: takeaways.title,
-            simulated: true,
-            summary: takeaways.points.join(" "),
-          };
-        },
-      };
-    },
-    (handlers) => {
-      handlers.lab = undefined;
-    },
-  );
 
   return (
-    <div data-testid="advanced-lab">
-      <div className="mb-6 sm:mb-8 rounded-xl border border-[color:var(--icdu-border)] bg-[color:var(--icdu-surface)] p-4 sm:p-5">
-        <div className="flex items-start gap-3">
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-white"
-            style={{ background: "var(--icdu-blue)" }}
-          >
-            <FlaskRound className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--icdu-accent)] mb-1">
-              Advanced Lab
-            </div>
-            <h2 className="text-base sm:text-lg font-semibold tracking-tight mb-1">
-              Technical exploration area
-            </h2>
-            <p className="text-sm text-[color:var(--icdu-fg-muted)] leading-relaxed m-0 max-w-3xl">
-              Full Builder, Judge, HITL, and Stress controls with the same
-              deterministic mock behavior as before. Use this when you want to
-              inspect fields, thresholds, and JSON directly.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid lg:grid-cols-[1fr,280px] gap-4 sm:gap-6">
-        <div>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="icdu-tab-strip w-full justify-start h-auto bg-transparent p-0 mb-4 sm:mb-6">
-              {labTabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    className={cn(
-                      "shrink-0 gap-1.5 sm:gap-2 text-sm px-3 py-2 rounded-full border border-transparent",
-                      "data-[state=active]:bg-[color:var(--icdu-blue)] data-[state=active]:text-white data-[state=active]:border-[color:var(--icdu-blue)]",
-                      "data-[state=inactive]:bg-[color:var(--icdu-surface)] data-[state=inactive]:border-[color:var(--icdu-border)] data-[state=inactive]:text-[color:var(--icdu-fg-muted)]",
-                    )}
-                    data-testid={`tab-${tab.id}`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="hidden sm:inline">{tab.label}</span>
-                    <span className="sm:hidden">{tab.shortLabel}</span>
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-
-            <TabsContent value="icdu" className="mt-0">
-              <ICDUBuilder />
-            </TabsContent>
-            <TabsContent value="judge" className="mt-0">
-              <JudgePanel />
-            </TabsContent>
-            <TabsContent value="hitl" className="mt-0">
-              <RubricPanel />
-            </TabsContent>
-            <TabsContent value="stress" className="mt-0">
-              <StressPanel />
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        <div className="hidden lg:block">
-          <KeyTakeaways
-            title={currentTakeaways.title}
-            takeaways={currentTakeaways.points}
-            pipelineLocation={currentTakeaways.pipelineLocation}
-            nextAction={currentTakeaways.nextAction}
-            replaces={currentTakeaways.replaces}
-          />
-        </div>
-      </div>
-
-      <div className="lg:hidden mt-4 sm:mt-6">
-        <KeyTakeaways
-          title={currentTakeaways.title}
-          takeaways={currentTakeaways.points}
-          pipelineLocation={currentTakeaways.pipelineLocation}
-          nextAction={currentTakeaways.nextAction}
-          replaces={currentTakeaways.replaces}
-          compact
-        />
-      </div>
-    </div>
+    <section className="icdu-work icdu-lab" data-testid="advanced-lab" aria-label="Advanced Lab">
+      <header className="icdu-work-head">
+        <p className="icdu-work-meta">Illustrative lab. Deterministic mock behavior, not a live model run.</p>
+        <h2 className="icdu-work-title">Advanced Lab</h2>
+        <p className="icdu-work-lead">
+          Builder, Judge, human review, and Stress keep the same drafts and results when you change tabs.
+          Scores and stress rows here are simulated.
+        </p>
+      </header>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="icdu-tab-strip icdu-lab-tabs">
+          {labTabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="icdu-lab-tab"
+                data-testid={`tab-${tab.id}`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span className="icdu-lab-tab-full">{tab.label}</span>
+                <span className="icdu-lab-tab-short">{tab.shortLabel}</span>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+        <TabsContent value="icdu" className="icdu-lab-pane">
+          <ICDUBuilder />
+        </TabsContent>
+        <TabsContent value="judge" className="icdu-lab-pane">
+          <JudgePanel />
+        </TabsContent>
+        <TabsContent value="hitl" className="icdu-lab-pane">
+          <RubricPanel />
+        </TabsContent>
+        <TabsContent value="stress" className="icdu-lab-pane">
+          <StressPanel />
+        </TabsContent>
+      </Tabs>
+      <aside className="icdu-lab-aside" aria-label={`${currentTakeaways.title} notes`}>
+        <h3>{currentTakeaways.title}</h3>
+        <ul>
+          {currentTakeaways.points.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
+        <p>Pipeline stage: {currentTakeaways.pipelineLocation}</p>
+        <p>{currentTakeaways.nextAction}</p>
+        {currentTakeaways.replaces ? <p>Replaces {currentTakeaways.replaces}</p> : null}
+      </aside>
+    </section>
   );
 }

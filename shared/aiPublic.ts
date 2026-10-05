@@ -1,6 +1,9 @@
 /** Visitor-facing copy. No hosts, keys, or infrastructure. */
 export const USER_MESSAGES_PER_HOUR = 25;
 
+/** Matches the server clip limit for a visitor or assistant message. */
+export const MAX_VISITOR_MESSAGE_CHARS = 4_000;
+
 export const USAGE_LIMIT_LABEL =
   `${USER_MESSAGES_PER_HOUR} messages per hour. No account required.`;
 

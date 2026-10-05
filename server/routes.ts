@@ -16,7 +16,10 @@ export async function registerRoutes(
     reportProductionTunnel(),
   ]);
   const model = resolveModelConfig();
-  if (!secret) {
+  const providedSecret = process.env.ICDU_SESSION_SECRET?.trim() ?? "";
+  if (!secret && providedSecret) {
+    log("icdu public chat disabled: ICDU_SESSION_SECRET must be at least 16 characters");
+  } else if (!secret) {
     log("icdu public chat disabled: session secret is not configured");
   } else if (!store) {
     log("icdu public chat disabled: shared store is not configured");

@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FlaskConical, Play, RotateCcw, CheckCircle2, AlertTriangle, XCircle, Zap, Shield, MessageSquare, Lightbulb } from "lucide-react";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
+import { CheckCircle2, AlertTriangle, XCircle, Zap, Shield, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trackDemoInteraction } from "@/lib/analytics";
 
@@ -152,21 +149,27 @@ function generateInsight(p: Perturbation, status: "pass" | "warn" | "fail"): str
   return insights[p.id]?.[status] || `${p.label}: ${status}`;
 }
 
-function generateMockResults(perturbations: Perturbation[]): RunResult[] {
+function unit(seed: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i += 1) hash = Math.imul(hash ^ seed.charCodeAt(i), 16777619);
+  return (hash >>> 0) / 4294967295;
+}
+
+function generateMockResults(perturbations: Perturbation[], seed: string): RunResult[] {
   return perturbations.map((p) => {
-    let stability = Math.random() * 0.3 + 0.65;
-    let fairness = Math.random() * 0.25 + 0.70;
-    let refusalConsistency = Math.random() * 0.2 + 0.75;
-    let hallucinationRate = Math.random() * 0.15;
+    let stability = unit(`${seed}:${p.id}:s`) * 0.3 + 0.65;
+    let fairness = unit(`${seed}:${p.id}:f`) * 0.25 + 0.70;
+    let refusalConsistency = unit(`${seed}:${p.id}:r`) * 0.2 + 0.75;
+    let hallucinationRate = unit(`${seed}:${p.id}:h`) * 0.15;
 
     if (p.id === "constraint-none") {
-      hallucinationRate = Math.random() * 0.15 + 0.08;
+      hallucinationRate = unit(`${seed}:${p.id}:hn`) * 0.15 + 0.08;
     }
     if (p.id === "channel-sms") {
-      refusalConsistency = Math.random() * 0.2 + 0.60;
+      refusalConsistency = unit(`${seed}:${p.id}:sms`) * 0.2 + 0.60;
     }
     if (p.id === "role-executive") {
-      stability = Math.random() * 0.2 + 0.75;
+      stability = unit(`${seed}:${p.id}:ex`) * 0.2 + 0.75;
     }
 
     let status: "pass" | "warn" | "fail";
@@ -190,22 +193,35 @@ function generateMockResults(perturbations: Perturbation[]): RunResult[] {
   });
 }
 
-const typeColors: Record<PerturbationType, string> = {
-  tone: "bg-blue-500",
-  role: "bg-purple-500",
-  constraint: "bg-amber-500",
-  channel: "bg-emerald-500",
-};
-
 const statusConfig = {
   pass: { icon: CheckCircle2, color: "text-emerald-500", label: "Pass" },
   warn: { icon: AlertTriangle, color: "text-amber-500", label: "Warn" },
   fail: { icon: XCircle, color: "text-destructive", label: "Fail" },
 };
 
+function restoreStress(rows: { id: string; label: string; type?: string; insight?: string; stability: number; fairness: number; refusal: number; hallucination: number; status: "pass" | "warn" | "fail" }[]): RunResult[] {
+  return rows.map((row) => {
+    const found = perturbationOptions.find((item) => item.id === row.id);
+    const perturbation = found ?? { id: row.id, label: row.label, type: (row.type ?? "role") as PerturbationType, value: row.id };
+    return {
+      perturbation,
+      stability: row.stability,
+      fairness: row.fairness,
+      refusalConsistency: row.refusal,
+      hallucinationRate: row.hallucination,
+      status: row.status,
+      insight: row.insight ?? "",
+    };
+  });
+}
+
 export function StressPanel() {
+  const workspace = useWorkspace();
   const [selectedPerturbations, setSelectedPerturbations] = useState<Perturbation[]>([]);
-  const [results, setResults] = useState<RunResult[] | null>(null);
+  const [freshResults, setFreshResults] = useState<RunResult[] | null>(null);
+  const [useStored, setUseStored] = useState(true);
+  const stored = workspace.task.stress;
+  const results = freshResults ?? (useStored && stored && stored.sourceId === workspace.contract.icdu_id ? restoreStress(stored.rows) : null);
   const [isRunning, setIsRunning] = useState(false);
   const [activePreset, setActivePreset] = useState<string | null>(null);
 
@@ -215,7 +231,8 @@ export function StressPanel() {
     } else {
       setSelectedPerturbations([...selectedPerturbations, p]);
     }
-    setResults(null);
+    setFreshResults(null);
+    setUseStored(false);
     setActivePreset(null);
   };
 
@@ -223,7 +240,8 @@ export function StressPanel() {
     const selected = perturbationOptions.filter(p => preset.perturbations.includes(p.id));
     setSelectedPerturbations(selected);
     setActivePreset(preset.id);
-    setResults(null);
+    setFreshResults(null);
+    setUseStored(false);
     trackDemoInteraction("stress_panel", `preset_${preset.id}`);
   };
 
@@ -234,14 +252,30 @@ export function StressPanel() {
     trackDemoInteraction("stress_panel", "run_test");
     
     setTimeout(() => {
-      setResults(generateMockResults(selectedPerturbations));
+      const seed = `${workspace.contract.icdu_id}:${workspace.contract.revision}`;
+      const next = generateMockResults(selectedPerturbations, seed);
+      setFreshResults(next);
+      setUseStored(true);
+      workspace.setStressSelection(next.map((row) => ({
+        id: row.perturbation.id,
+        label: row.perturbation.label,
+        type: row.perturbation.type,
+        insight: row.insight,
+        stability: row.stability,
+        fairness: row.fairness,
+        refusal: row.refusalConsistency,
+        hallucination: row.hallucinationRate,
+        status: row.status,
+      })));
       setIsRunning(false);
     }, 2000);
   };
 
   const reset = () => {
     setSelectedPerturbations([]);
-    setResults(null);
+    setFreshResults(null);
+    setUseStored(false);
+    workspace.setStressSelection([]);
     setActivePreset(null);
     trackDemoInteraction("stress_panel", "reset");
   };
@@ -251,224 +285,139 @@ export function StressPanel() {
     : 0;
   const passCount = results?.filter((r) => r.status === "pass").length || 0;
   const warnCount = results?.filter((r) => r.status === "warn").length || 0;
+  const failCount = results ? results.length - passCount - warnCount : 0;
 
   return (
-    <Card className="p-3 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div className="flex items-center gap-2">
-          <FlaskConical className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-          <h3 className="font-semibold text-sm sm:text-base">Stress Engine</h3>
-          <Badge variant="outline" className="text-xs sm:text-sm">Presets</Badge>
+    <div className="icdu-stress">
+      <div className="icdu-lab-toolbar">
+        <div>
+          <h3>Simulated stress</h3>
+          <p className="icdu-work-meta">Preset and custom perturbations stay on this draft. Results are simulated, not a live model run.</p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={reset}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
-            data-testid="button-reset-stress"
-          >
-            <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>Reset</span>
-          </Button>
-          <Button
-            size="sm"
-            onClick={runStressTest}
-            disabled={isRunning || selectedPerturbations.length === 0}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
-            data-testid="button-run-stress"
-          >
-            <Play className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>{isRunning ? "Testing..." : "Run Test"}</span>
-          </Button>
+        <div className="icdu-actions">
+          <button type="button" className="icdu-quiet icdu-focus" onClick={reset} data-testid="button-reset-stress">Reset</button>
+          <button type="button" className="icdu-primary icdu-focus" onClick={runStressTest} disabled={isRunning || selectedPerturbations.length === 0} data-testid="button-run-stress">
+            {isRunning ? "Testing…" : "Run test"}
+          </button>
         </div>
       </div>
 
-      <div className="space-y-4 sm:space-y-6">
-        <div>
-          <div className="font-medium text-xs sm:text-sm mb-2 sm:mb-3">Preset Suites</div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            {presets.map((preset) => {
-              const Icon = preset.icon;
-              const isActive = activePreset === preset.id;
-              return (
-                <button
-                  key={preset.id}
-                  onClick={() => selectPreset(preset)}
-                  className={cn(
-                    "flex items-start gap-2 p-2.5 sm:p-3 rounded-md border text-left transition-all",
-                    isActive
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card border-border hover-elevate"
-                  )}
-                  data-testid={`preset-${preset.id}`}
-                >
-                  <Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <div className="font-medium text-xs sm:text-sm">{preset.name}</div>
-                    <div className={cn(
-                      "text-xs sm:text-xs mt-0.5",
-                      isActive ? "text-primary-foreground/80" : "text-muted-foreground"
-                    )}>
-                      {preset.description}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+      <div className="icdu-group">
+        <h3>Preset suites</h3>
+        <div className="icdu-presets">
+          {presets.map((preset) => {
+            const Icon = preset.icon;
+            const isActive = activePreset === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => selectPreset(preset)}
+                className="icdu-preset icdu-focus"
+                data-testid={`preset-${preset.id}`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span>
+                  <strong>{preset.name}</strong>
+                  <small>{preset.description}</small>
+                </span>
+              </button>
+            );
+          })}
         </div>
-
-        <div>
-          <div className="font-medium text-xs sm:text-sm mb-2 sm:mb-3">Or Select Individual Perturbations</div>
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {perturbationOptions.map((p) => {
-              const isSelected = selectedPerturbations.find((s) => s.id === p.id);
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => togglePerturbation(p)}
-                  className={cn(
-                    "flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md border text-xs sm:text-sm transition-all",
-                    isSelected
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card border-border hover-elevate"
-                  )}
-                  data-testid={`perturbation-${p.id}`}
-                >
-                  <div className={cn("w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full", typeColors[p.type])} />
-                  {p.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500" /> Tone
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-purple-500" /> Role
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500" /> Constraint
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500" /> Channel
-            </div>
-          </div>
-        </div>
-
-        {isRunning && (
-          <div className="text-center py-6 sm:py-8">
-            <div className="animate-spin h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-3 sm:mb-4 border-4 border-primary border-t-transparent rounded-full" />
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Running {selectedPerturbations.length} perturbation{selectedPerturbations.length !== 1 ? "s" : ""}...
-            </p>
-          </div>
-        )}
-
-        {results && !isRunning && (
-          <>
-            <div className="grid grid-cols-2 gap-2 sm:gap-4">
-              <Card className="p-2.5 sm:p-4 bg-muted/50">
-                <div className="text-sm text-muted-foreground">Avg Stability</div>
-                <div className="text-lg sm:text-2xl font-semibold mt-0.5 sm:mt-1">
-                  {(stabilityAvg * 100).toFixed(0)}%
-                </div>
-              </Card>
-              <Card className="p-2.5 sm:p-4 bg-muted/50">
-                <div className="text-sm text-muted-foreground">Results</div>
-                <div className="text-lg sm:text-2xl font-semibold mt-0.5 sm:mt-1 flex items-center gap-1.5 sm:gap-2">
-                  <span className="text-emerald-500">{passCount}</span>
-                  <span className="text-muted-foreground text-sm">/</span>
-                  <span className="text-amber-500">{warnCount}</span>
-                  <span className="text-muted-foreground text-sm">/</span>
-                  <span className="text-destructive">{results.length - passCount - warnCount}</span>
-                </div>
-              </Card>
-            </div>
-
-            <div className="border rounded-md overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs sm:text-sm">Perturbation</TableHead>
-                    <TableHead className="text-center text-xs sm:text-sm w-16">Status</TableHead>
-                    <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Insight</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {results.map((r) => {
-                    const StatusIcon = statusConfig[r.status].icon;
-                    return (
-                      <TableRow key={r.perturbation.id}>
-                        <TableCell className="py-2">
-                          <div className="flex items-center gap-1.5 sm:gap-2">
-                            <Badge 
-                              className={cn(
-                                "text-white text-xs sm:text-xs px-1 sm:px-1.5",
-                                typeColors[r.perturbation.type]
-                              )}
-                            >
-                              {r.perturbation.type.slice(0, 4)}
-                            </Badge>
-                            <span className="text-xs sm:text-sm">{r.perturbation.label}</span>
-                          </div>
-                          <div className="sm:hidden mt-1">
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Lightbulb className="h-2.5 w-2.5" />
-                              {r.insight}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center py-2">
-                          <div className="flex items-center justify-center gap-1">
-                            <StatusIcon className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4", statusConfig[r.status].color)} />
-                            <span className={cn("text-xs sm:text-sm font-medium", statusConfig[r.status].color)}>
-                              {statusConfig[r.status].label}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-2 hidden sm:table-cell">
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Lightbulb className="h-3 w-3 flex-shrink-0" />
-                            {r.insight}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-
-            {results.some(r => r.status !== "pass") && (
-              <div className="p-2.5 sm:p-4 rounded-md bg-amber-500/10 border border-amber-500/30">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 dark:text-amber-400" />
-                  <span className="font-medium text-xs sm:text-sm text-amber-600 dark:text-amber-400">Key Insights</span>
-                </div>
-                <ul className="space-y-1">
-                  {results.filter(r => r.status !== "pass").slice(0, 3).map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
-                      <span className="w-1 h-1 mt-1.5 bg-amber-500 rounded-full flex-shrink-0" />
-                      {r.insight}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </>
-        )}
-
-        {!results && !isRunning && selectedPerturbations.length === 0 && (
-          <div className="text-center py-6 sm:py-8 text-muted-foreground">
-            <FlaskConical className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-3 opacity-20" />
-            <p className="text-xs sm:text-sm">Select a preset or individual perturbations to test</p>
-            <p className="text-xs sm:text-sm mt-1">Test robustness across controlled changes</p>
-          </div>
-        )}
       </div>
-    </Card>
+
+      <div className="icdu-group">
+        <h3>Perturbations</h3>
+        <div className="icdu-chips" role="group" aria-label="Perturbations">
+          {perturbationOptions.map((p) => {
+            const isSelected = Boolean(selectedPerturbations.find((s) => s.id === p.id));
+            return (
+              <button
+                key={p.id}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => togglePerturbation(p)}
+                className="icdu-chip icdu-focus"
+                data-testid={`perturbation-${p.id}`}
+              >
+                <span className={cn("icdu-dot", `is-${p.type}`)} />
+                {p.label}
+              </button>
+            );
+          })}
+        </div>
+        <ul className="icdu-legend">
+          <li><span className="icdu-dot is-tone" />Tone</li>
+          <li><span className="icdu-dot is-role" />Role</li>
+          <li><span className="icdu-dot is-constraint" />Constraint</li>
+          <li><span className="icdu-dot is-channel" />Channel</li>
+        </ul>
+      </div>
+
+      {isRunning ? <p className="icdu-empty">Running {selectedPerturbations.length} simulated perturbation{selectedPerturbations.length === 1 ? "" : "s"}.</p> : null}
+
+      {results && !isRunning ? (
+        <div className="icdu-group">
+          <h3>Simulated results</h3>
+          <dl className="icdu-metrics">
+            <div>
+              <dt>Average stability</dt>
+              <dd>{(stabilityAvg * 100).toFixed(0)}%</dd>
+            </div>
+            <div>
+              <dt>Pass / warn / fail</dt>
+              <dd>{passCount} / {warnCount} / {failCount}</dd>
+            </div>
+          </dl>
+          <div className="icdu-table-wrap">
+            <table className="icdu-table icdu-stress-table">
+              <caption>Simulated perturbation results for this draft. Not a live measurement.</caption>
+              <thead>
+                <tr>
+                  <th>Perturbation</th>
+                  <th>Status</th>
+                  <th>Stability</th>
+                  <th>Fairness</th>
+                  <th>Refusal</th>
+                  <th>Hallucination</th>
+                  <th>Insight</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((row) => {
+                  const StatusIcon = statusConfig[row.status].icon;
+                  return (
+                    <tr key={row.perturbation.id}>
+                      <th data-col="Perturbation">
+                        <span className={cn("icdu-dot", `is-${row.perturbation.type}`)} />
+                        {row.perturbation.label}
+                      </th>
+                      <td data-col="Status">
+                        <span className={cn("icdu-status", `is-${row.status}`)}>
+                          <StatusIcon className="h-4 w-4" aria-hidden="true" />
+                          {statusConfig[row.status].label}
+                        </span>
+                      </td>
+                      <td data-col="Stability" className="icdu-num">{Math.round(row.stability * 100)}%</td>
+                      <td data-col="Fairness" className="icdu-num">{Math.round(row.fairness * 100)}%</td>
+                      <td data-col="Refusal" className="icdu-num">{Math.round(row.refusalConsistency * 100)}%</td>
+                      <td data-col="Hallucination" className="icdu-num">{Math.round(row.hallucinationRate * 100)}%</td>
+                      <td data-col="Insight">{row.insight}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
+
+      {!results && !isRunning && selectedPerturbations.length === 0 ? (
+        <p className="icdu-empty">Select a preset or individual perturbations. Nothing has been run for this view yet.</p>
+      ) : null}
+    </div>
   );
 }
+

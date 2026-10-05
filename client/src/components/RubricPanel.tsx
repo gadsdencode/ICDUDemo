@@ -1,12 +1,6 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 import { Slider } from "@/components/ui/slider";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Users, RotateCcw, Save, CheckCircle2 } from "lucide-react";
 import { hitlRubricDimensions } from "@/data/examples";
-import { cn } from "@/lib/utils";
 import { trackDemoInteraction } from "@/lib/analytics";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,36 +16,28 @@ const defaultScores: RubricScores = {
 
 const scoreLabels = ["Poor", "Fair", "Good", "Very Good", "Excellent"];
 
-function getScoreColor(score: number): string {
-  if (score <= 1) return "bg-destructive";
-  if (score <= 2) return "bg-amber-500";
-  if (score <= 3) return "bg-yellow-500";
-  if (score <= 4) return "bg-emerald-400";
-  return "bg-emerald-500";
-}
-
-export function RubricPanel() {
-  const [scores, setScores] = useState<RubricScores>(defaultScores);
-  const [notes, setNotes] = useState("");
-  const [saved, setSaved] = useState(false);
+export function RubricPanel({ embedded = false }: { embedded?: boolean }) {
+  const workspace = useWorkspace();
+  const scores = workspace.task.review.scores;
+  const notes = workspace.task.review.notes;
+  const saved = workspace.task.review.saved;
+  const setScores = (next: RubricScores) => workspace.setReview({ ...workspace.task.review, scores: next, notes });
+  const setNotes = (value: string) => workspace.setReview({ ...workspace.task.review, scores, notes: value });
   const { toast } = useToast();
 
   const averageScore = Object.values(scores).reduce((a, b) => a + b, 0) / Object.values(scores).length;
 
   const handleScoreChange = (dimension: string, value: number[]) => {
     setScores({ ...scores, [dimension]: value[0] });
-    setSaved(false);
   };
 
   const reset = () => {
-    setScores(defaultScores);
-    setNotes("");
-    setSaved(false);
+    workspace.setReview({ ...workspace.task.review, scores: defaultScores, notes: "" });
     trackDemoInteraction("rubric_panel", "reset");
   };
 
   const save = () => {
-    setSaved(true);
+    workspace.saveReview(workspace.contract.icdu_id, workspace.contract.revision);
     trackDemoInteraction("rubric_panel", "save_assessment");
     toast({
       title: "Assessment Saved",
@@ -59,128 +45,71 @@ export function RubricPanel() {
     });
   };
 
+  const stale = saved && workspace.task.review.sourceRevision !== workspace.contract.revision;
+  const status = !saved
+    ? "Ratings are unsaved until you save the assessment."
+    : stale
+      ? `Saved for ${workspace.task.review.sourceId} revision ${workspace.task.review.sourceRevision}. The draft has changed since this review.`
+      : `Saved for ${workspace.task.review.sourceId} revision ${workspace.task.review.sourceRevision}.`;
+
   return (
-    <Card className="p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold text-sm sm:text-base">HITL Nuance Grader</h3>
+    <div className="icdu-rubric">
+      <div className="icdu-lab-toolbar">
+        {embedded ? <p className="icdu-work-meta" data-testid="rubric-status">{status}</p> : (
+        <div>
+          <h3>Human ratings</h3>
+          <p className="icdu-work-meta">Published 1 to 5 rubric. These ratings are not averaged with scripted 0 to 1 Judge scores.</p>
+          <p className="icdu-work-meta" data-testid="rubric-status">{status}</p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={reset}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
-            data-testid="button-reset-rubric"
-          >
-            <RotateCcw className="h-4 w-4" />
-            <span>Reset</span>
-          </Button>
-          <Button
-            size="sm"
-            onClick={save}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none"
-            disabled={saved}
-            data-testid="button-save-rubric"
-          >
-            {saved ? (
-              <>
-                <CheckCircle2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Saved</span>
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4" />
-                <span>Save</span>
-              </>
-            )}
-          </Button>
+        )}
+        <div className="icdu-actions">
+          <button type="button" className="icdu-quiet icdu-focus" onClick={reset} data-testid="button-reset-rubric">Reset</button>
+          <button type="button" className="icdu-primary icdu-focus" onClick={save} disabled={saved} data-testid="button-save-rubric">
+            {saved ? "Saved" : "Save assessment"}
+          </button>
         </div>
       </div>
-
-      <div className="space-y-4 sm:space-y-6">
-        {hitlRubricDimensions.map((dimension) => (
-          <div key={dimension.id} className="space-y-2 sm:space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
-              <div className="min-w-0">
-                <span className="font-medium text-xs sm:text-sm">{dimension.label}</span>
-                <p className="text-xs sm:text-sm text-muted-foreground truncate sm:whitespace-normal">{dimension.description}</p>
-              </div>
-              <Badge 
-                className={cn(
-                  "text-white min-w-[70px] sm:min-w-[90px] justify-center text-xs sm:text-sm flex-shrink-0 self-start sm:self-center",
-                  getScoreColor(scores[dimension.id])
-                )}
-              >
-                {scores[dimension.id]}/5 - {scoreLabels[scores[dimension.id] - 1]}
-              </Badge>
+      {hitlRubricDimensions.map((dimension) => (
+        <div key={dimension.id} className="icdu-rubric-row">
+          <div className="icdu-assumption-top">
+            <div>
+              <p className="icdu-label" id={`rubric-label-${dimension.id}`}>{dimension.label}</p>
+              <p className="icdu-assumption-help">{dimension.description}</p>
             </div>
-            <div className="px-1">
-              <Slider
-                value={[scores[dimension.id]]}
-                onValueChange={(value) => handleScoreChange(dimension.id, value)}
-                min={1}
-                max={5}
-                step={1}
-                className="cursor-pointer"
-                data-testid={`slider-${dimension.id}`}
-              />
-              <div className="flex justify-between mt-1">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <span 
-                    key={n} 
-                    className={cn(
-                      "text-xs sm:text-sm",
-                      scores[dimension.id] === n 
-                        ? "text-foreground font-medium" 
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    {n}
-                  </span>
-                ))}
-              </div>
-            </div>
+            <p className="icdu-assumption-value">{scores[dimension.id]}/5 · {scoreLabels[scores[dimension.id] - 1]}</p>
           </div>
-        ))}
-
-        <div className="pt-3 sm:pt-4 border-t space-y-2 sm:space-y-3">
-          <label className="font-medium text-xs sm:text-sm">Reviewer Notes</label>
-          <Textarea
-            placeholder="Add specific, behavior-based comments..."
-            value={notes}
-            onChange={(e) => {
-              setNotes(e.target.value);
-              setSaved(false);
-            }}
-            rows={3}
-            className="text-sm"
-            data-testid="input-reviewer-notes"
+          <Slider
+            value={[scores[dimension.id]]}
+            onValueChange={(value) => handleScoreChange(dimension.id, value)}
+            min={1}
+            max={5}
+            step={1}
+            aria-labelledby={`rubric-label-${dimension.id}`}
+            data-testid={`slider-${dimension.id}`}
           />
-        </div>
-
-        <div className="p-3 sm:p-4 bg-muted/50 rounded-md">
-          <div className="flex items-center justify-between">
-            <span className="font-medium text-xs sm:text-sm">Overall Score</span>
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <div className={cn(
-                "h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full",
-                getScoreColor(Math.round(averageScore))
-              )} />
-              <span className="font-mono font-semibold text-base sm:text-lg">{averageScore.toFixed(1)}</span>
-              <span className="text-muted-foreground text-xs sm:text-sm">/ 5</span>
-            </div>
+          <div className="icdu-slider-ends" aria-hidden="true">
+            {scoreLabels.map((label, index) => (
+              <span key={label} className={scores[dimension.id] === index + 1 ? "is-current" : undefined}>{index + 1}</span>
+            ))}
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Average across all {hitlRubricDimensions.length} dimensions
-          </p>
         </div>
-
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Escalate if content appears unsafe or misleading. Keep comments specific and behavior-based.
-        </p>
-      </div>
-    </Card>
+      ))}
+      <label className="icdu-field" htmlFor="input-reviewer-notes">
+        <span className="icdu-label">Reviewer notes</span>
+        <textarea
+          id="input-reviewer-notes"
+          className="icdu-control"
+          placeholder="Unset"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          data-testid="input-reviewer-notes"
+        />
+      </label>
+      <p className="icdu-scoreline">
+        Average across {hitlRubricDimensions.length} dimensions
+        <strong className="icdu-num">{averageScore.toFixed(1)} / 5</strong>
+      </p>
+      <p className="icdu-work-meta">Escalate if content appears unsafe or misleading. Keep comments specific and behavior-based.</p>
+    </div>
   );
 }

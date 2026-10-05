@@ -1,7 +1,8 @@
 import { Component, lazy, Suspense, type ReactNode } from "react";
-import { useLocation } from "wouter";
 
-const AssistantLive = lazy(() => import("@/components/assistant/AssistantSurface").then((mod) => ({ default: mod.AssistantLive })));
+const AssistantLive = lazy(() =>
+  import("@/components/assistant/AssistantSurface").then((mod) => ({ default: mod.AssistantLive })),
+);
 
 class AssistantBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -11,18 +12,32 @@ class AssistantBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 
   render() {
-    if (this.state.failed) return null;
+    if (this.state.failed) {
+      return (
+        <div className="icdu-assistant-fallback" role="alert" data-testid="assistant-fallback">
+          <p>The assistant couldn&apos;t load. You can keep browsing the site.</p>
+          <button type="button" onClick={() => this.setState({ failed: false })}>
+            Try again
+          </button>
+        </div>
+      );
+    }
     return this.props.children;
   }
 }
 
-export function AssistantHost() {
-  const [location] = useLocation();
-  if (location.split("?")[0] === "/fine-tune") return null;
+function AssistantSkeleton() {
+  return (
+    <div className="icdu-assistant-fallback" role="status" data-testid="assistant-loading">
+      <p>Checking whether ICDU can answer.</p>
+    </div>
+  );
+}
 
+export function AssistantHost() {
   return (
     <AssistantBoundary>
-      <Suspense fallback={null}>
+      <Suspense fallback={<AssistantSkeleton />}>
         <AssistantLive />
       </Suspense>
     </AssistantBoundary>

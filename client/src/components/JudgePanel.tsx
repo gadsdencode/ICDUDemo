@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Scale, Play, CheckCircle2, AlertTriangle, XCircle, RotateCcw, ChevronDown, FileText, Lightbulb, ArrowUp } from "lucide-react";
+import { CheckCircle2, AlertTriangle, XCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { trackDemoInteraction } from "@/lib/analytics";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 import {
   defaultGateThresholds,
   evaluateGate,
@@ -46,10 +44,16 @@ type JudgeResult = {
 
 const thresholds = defaultGateThresholds;
 
-function generateMockScores(): JudgeResult {
-  const IAS = Math.random() * 0.35 + 0.60;
-  const PAS = Math.random() * 0.35 + 0.60;
-  const AS = Math.random() * 0.40 + 0.55;
+function unit(seed: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i += 1) hash = Math.imul(hash ^ seed.charCodeAt(i), 16777619);
+  return (hash >>> 0) / 4294967295;
+}
+
+function generateMockScores(seed: string): JudgeResult {
+  const IAS = unit(`${seed}:ias`) * 0.35 + 0.60;
+  const PAS = unit(`${seed}:pas`) * 0.35 + 0.60;
+  const AS = unit(`${seed}:as`) * 0.40 + 0.55;
 
   const passIAS = IAS >= thresholds.IAS_min;
   const passAS = AS >= thresholds.AS_min;
@@ -197,7 +201,12 @@ const decisionConfig = {
 };
 
 export function JudgePanel() {
-  const [result, setResult] = useState<JudgeResult | null>(null);
+  const workspace = useWorkspace();
+  const stored = workspace.task.judge;
+  const current = Boolean(
+    stored && stored.sourceId === workspace.contract.icdu_id && stored.sourceRevision === workspace.contract.revision,
+  );
+  const result = (stored?.result as JudgeResult | undefined) ?? null;
   const [isRunning, setIsRunning] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [showJson, setShowJson] = useState(false);
@@ -207,266 +216,159 @@ export function JudgePanel() {
     trackDemoInteraction("judge_panel", "run_evaluation");
     
     setTimeout(() => {
-      setResult(generateMockScores());
+      const seed = `${workspace.contract.icdu_id}:${workspace.contract.revision}`;
+      workspace.saveJudge(generateMockScores(seed));
       setIsRunning(false);
       setShowExplanation(false);
     }, 1500);
   };
 
   const reset = () => {
-    setResult(null);
+    workspace.clearJudge();
     setShowExplanation(false);
     setShowJson(false);
     trackDemoInteraction("judge_panel", "reset");
   };
 
-  const ScoreBar = ({ 
-    label, 
-    score, 
+  const ScoreBar = ({
+    label,
+    score,
     threshold,
-    description
-  }: { 
-    label: string; 
-    score: number; 
+    description,
+  }: {
+    label: string;
+    score: number;
     threshold: number;
     description: string;
   }) => {
     const passed = score >= threshold;
     const percentage = score * 100;
     const thresholdPercentage = threshold * 100;
-
     return (
-      <div className="space-y-1.5 sm:space-y-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+      <div className="icdu-score-block">
+        <div className="icdu-score-head">
           <div>
-            <span className="font-medium text-xs sm:text-sm">{label}</span>
-            <span className="text-xs sm:text-sm text-muted-foreground ml-1 sm:ml-2">{description}</span>
+            <span className="icdu-label">{label}</span>
+            <span className="icdu-score-name">{description}</span>
           </div>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className={cn(
-              "font-mono text-xs sm:text-sm font-semibold",
-              passed ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
-            )}>
-              {percentage.toFixed(0)}%
-            </span>
-            {passed ? (
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-500" />
-            ) : (
-              <XCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
-            )}
-          </div>
+          <span className={cn("icdu-num", passed ? "is-pass" : "is-fail")}>
+            {percentage.toFixed(1)}%
+            <span>{passed ? "Meets threshold" : "Below threshold"}</span>
+          </span>
         </div>
-        <div className="relative">
-          <Progress value={percentage} className={cn(
-            "h-2.5 sm:h-3",
-            passed ? "[&>div]:bg-emerald-500" : "[&>div]:bg-destructive"
-          )} />
-          <div 
-            className="absolute top-0 h-2.5 sm:h-3 w-0.5 bg-foreground/50"
-            style={{ left: `${thresholdPercentage}%` }}
-          />
+        <div className="icdu-score-track">
+          <Progress value={percentage} className={cn("h-2.5", passed ? "[&>div]:bg-[color:var(--icdu-green)]" : "[&>div]:bg-[color:var(--icdu-red)]")} />
+          <div className="icdu-score-mark" style={{ left: `${thresholdPercentage}%` }} />
         </div>
-        <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
+        <div className="icdu-slider-ends">
           <span>0%</span>
-          <span className="font-medium">Threshold: {thresholdPercentage}%</span>
+          <span>Threshold {thresholdPercentage}%</span>
           <span>100%</span>
         </div>
       </div>
     );
   };
 
+  const config = result ? decisionConfig[result.decision] : null;
+  const DecisionIcon = config?.icon;
+
   return (
-    <Card className="p-3 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div className="flex items-center gap-2">
-          <Scale className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-          <h3 className="font-semibold text-sm sm:text-base">AI Judge</h3>
-          <Badge variant="outline" className="text-xs sm:text-sm">Explainable</Badge>
+    <div className="icdu-judge">
+      <div className="icdu-lab-toolbar">
+        <div>
+          <h3>Simulated Judge</h3>
+          <p className="icdu-work-meta">Illustrative scoring from the open draft. Not a measurement of a live model.</p>
         </div>
-        <div className="flex gap-2">
-          {result && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={reset}
-              className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
-              data-testid="button-reset-judge"
-            >
-              <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span>Reset</span>
-            </Button>
-          )}
-          <Button
-            size="sm"
-            onClick={runJudge}
-            disabled={isRunning}
-            className="gap-1 sm:gap-2 flex-1 sm:flex-none h-7 sm:h-8 text-xs sm:text-sm"
-            data-testid="button-run-judge"
-          >
-            <Play className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>{isRunning ? "Evaluating..." : "Run Evaluation"}</span>
-          </Button>
+        <div className="icdu-actions">
+          {result ? (
+            <button type="button" className="icdu-quiet icdu-focus" onClick={reset} data-testid="button-reset-judge">
+              Reset
+            </button>
+          ) : null}
+          <button type="button" className="icdu-primary icdu-focus" onClick={runJudge} disabled={isRunning} data-testid="button-run-judge">
+            {isRunning ? "Evaluating…" : "Run evaluation"}
+          </button>
         </div>
       </div>
-
-      <div className="p-2.5 sm:p-4 rounded-md bg-muted/50 border mb-4 sm:mb-6">
-        <div className="text-xs sm:text-sm font-medium mb-2">Gate Thresholds</div>
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          <Badge variant="outline" className="text-xs sm:text-sm">IAS ≥ {formatGatePercent(thresholds.IAS_min)}</Badge>
-          <Badge variant="outline" className="text-xs sm:text-sm">PAS ≥ {formatGatePercent(thresholds.PAS_min)}</Badge>
-          <Badge variant="outline" className="text-xs sm:text-sm">AS ≥ {formatGatePercent(thresholds.AS_min)}</Badge>
-        </div>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-2" data-testid="judge-pas-rule">
-          {pasGateExplanation(thresholds)}
+      {result && !current ? (
+        <p className="icdu-empty">This illustrative demo was saved for an earlier draft revision. Run it again to attach a new demo. It is not a measurement.</p>
+      ) : null}
+      <div className="icdu-threshold-row">
+        <p className="icdu-label">Configured thresholds</p>
+        <p className="icdu-scoreline">
+          Intent-Alignment Score ≥ {formatGatePercent(thresholds.IAS_min)}
+          <span>Principle-Adherence Score ≥ {formatGatePercent(thresholds.PAS_min)}</span>
+          <span>Application Score ≥ {formatGatePercent(thresholds.AS_min)}</span>
         </p>
+        <p className="icdu-work-meta" data-testid="judge-pas-rule">{pasGateExplanation(thresholds)}</p>
       </div>
-
-      {!result ? (
-        <div className="text-center py-8 sm:py-12 text-muted-foreground">
-          <Scale className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-20" />
-          <p className="text-xs sm:text-sm">Click "Run Evaluation" to simulate AI Judge scoring</p>
-          <p className="text-xs sm:text-sm mt-1">Scores are deterministic based on ICDU field heuristics</p>
-        </div>
+      {!result || !config || !DecisionIcon ? (
+        <p className="icdu-empty">Run evaluation to simulate IAS, PAS, and AS for this draft. The result stays with this revision until you reset it.</p>
       ) : (
-        <div className="space-y-4 sm:space-y-6">
-          <div className={cn(
-            "p-3 sm:p-4 rounded-md border-2",
-            decisionConfig[result.decision].borderColor,
-            decisionConfig[result.decision].bgColor
-          )}>
-            <div className="flex items-center gap-2 sm:gap-3">
-              {(() => {
-                const config = decisionConfig[result.decision];
-                const Icon = config.icon;
-                return (
-                  <>
-                    <div className={cn("p-1.5 sm:p-2 rounded-md", config.color)}>
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-sm sm:text-base">{config.label}</div>
-                      <div className="text-xs sm:text-sm text-muted-foreground">{config.description}</div>
-                    </div>
-                  </>
-                );
-              })()}
+        <div className="icdu-judge-result">
+          <div className={`icdu-decision-block is-${result.decision.toLowerCase()}`}>
+            <DecisionIcon aria-hidden="true" className="h-5 w-5" />
+            <div>
+              <p className="icdu-decision-label">{config.label}</p>
+              <p>{config.description}</p>
             </div>
           </div>
-
-          <div className="space-y-3 sm:space-y-4">
-            <ScoreBar
-              label="IAS"
-              description="Intent-Alignment"
-              score={result.scores.IAS}
-              threshold={result.thresholds.IAS_min}
-            />
-            <ScoreBar
-              label="PAS"
-              description="Principle-Adherence"
-              score={result.scores.PAS}
-              threshold={result.thresholds.PAS_min}
-            />
-            <ScoreBar
-              label="AS"
-              description="Application"
-              score={result.scores.AS}
-              threshold={result.thresholds.AS_min}
-            />
+          <div className="icdu-score-list">
+            <ScoreBar label="IAS" description="Intent-Alignment Score" score={result.scores.IAS} threshold={result.thresholds.IAS_min} />
+            <ScoreBar label="PAS" description="Principle-Adherence Score" score={result.scores.PAS} threshold={result.thresholds.PAS_min} />
+            <ScoreBar label="AS" description="Application Score" score={result.scores.AS} threshold={result.thresholds.AS_min} />
           </div>
-
           <Collapsible open={showExplanation} onOpenChange={setShowExplanation}>
             <CollapsibleTrigger asChild>
-              <Button variant="outline" className="w-full gap-2 h-8 sm:h-9 text-xs sm:text-sm" data-testid="button-explain">
-                <Lightbulb className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span>Explain this decision</span>
-                <ChevronDown className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4 ml-auto transition-transform", showExplanation && "rotate-180")} />
-              </Button>
+              <button type="button" className="icdu-quiet icdu-focus" data-testid="button-explain">
+                Explain this decision
+                <ChevronDown className={cn("h-4 w-4", showExplanation && "rotate-180")} aria-hidden="true" />
+              </button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
-              <div className="p-2.5 sm:p-4 rounded-md bg-muted/50 border">
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                  <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                  <span className="font-medium text-xs sm:text-sm">Rationale</span>
-                </div>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  {result.rationale.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
-                      <span className="w-1 h-1 mt-1.5 bg-primary rounded-full flex-shrink-0" />
-                      {r}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {result.drivers.length > 0 && (
-                <div className="p-2.5 sm:p-4 rounded-md bg-muted/50 border">
-                  <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                    <ArrowUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                    <span className="font-medium text-xs sm:text-sm">Score Drivers</span>
-                  </div>
-                  <div className="space-y-2">
-                    {result.drivers.map((d, i) => (
-                      <div key={i} className="flex items-start gap-2 p-2 rounded bg-background border">
-                        <Badge variant={d.impact > 0 ? "default" : "destructive"} className="text-xs sm:text-sm px-1.5 flex-shrink-0">
-                          {d.metric} {d.impact > 0 ? '+' : ''}{d.impact}
-                        </Badge>
-                        <div className="min-w-0">
-                          <p className="text-xs sm:text-sm">{d.reason}</p>
-                          <p className="text-xs sm:text-xs text-muted-foreground mt-0.5">Field: {d.icduField}</p>
-                        </div>
-                      </div>
+            <CollapsibleContent className="icdu-rationale">
+              <h3>Rationale</h3>
+              <ul>
+                {result.rationale.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+              {result.drivers.length > 0 ? (
+                <>
+                  <h3>Score drivers</h3>
+                  <ul className="icdu-driver-list">
+                    {result.drivers.map((driver, i) => (
+                      <li key={i}>
+                        <span className="icdu-num">{driver.metric} {driver.impact > 0 ? "+" : ""}{driver.impact}</span>
+                        <p>{driver.reason}</p>
+                        <p className="icdu-work-meta">Field {driver.icduField}</p>
+                      </li>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {result.toPromote.length > 0 && (
-                <div className="p-2.5 sm:p-4 rounded-md bg-emerald-500/10 border border-emerald-500/30">
-                  <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span className="font-medium text-xs sm:text-sm text-emerald-600 dark:text-emerald-400">To Promote</span>
-                  </div>
-                  <div className="space-y-2">
+                  </ul>
+                </>
+              ) : null}
+              {result.toPromote.length > 0 ? (
+                <>
+                  <h3>What would need to change</h3>
+                  <ul className="icdu-driver-list">
                     {result.toPromote.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <Badge 
-                          variant="outline" 
-                          className={cn(
-                            "text-xs sm:text-sm px-1.5 flex-shrink-0",
-                            item.priority === "high" && "border-destructive text-destructive",
-                            item.priority === "medium" && "border-amber-500 text-amber-600 dark:text-amber-400"
-                          )}
-                        >
-                          {item.priority}
-                        </Badge>
-                        <div className="min-w-0">
-                          <p className="text-xs sm:text-sm">{item.action}</p>
-                          <p className="text-xs sm:text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Expected: {item.impact}</p>
-                        </div>
-                      </div>
+                      <li key={i}>
+                        <span className="icdu-num">{item.priority}</span>
+                        <p>{item.action}</p>
+                        <p className="icdu-work-meta">Illustrative expected change: {item.impact}</p>
+                      </li>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowJson(!showJson)}
-                className="w-full text-xs sm:text-sm h-7 sm:h-8"
-              >
-                {showJson ? "Hide" : "View as"} Report JSON
-              </Button>
-              
-              {showJson && (
-                <pre className="icdu-code-panel p-2.5 sm:p-3 rounded-md bg-background border font-mono">
-                  {JSON.stringify(result, null, 2)}
-                </pre>
-              )}
+                  </ul>
+                </>
+              ) : null}
+              <button type="button" className="icdu-quiet icdu-focus" onClick={() => setShowJson(!showJson)}>
+                {showJson ? "Hide report JSON" : "View report JSON"}
+              </button>
+              {showJson ? <pre className="icdu-code-panel">{JSON.stringify(result, null, 2)}</pre> : null}
             </CollapsibleContent>
           </Collapsible>
         </div>
       )}
-    </Card>
+    </div>
   );
 }
+

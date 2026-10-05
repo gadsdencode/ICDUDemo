@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { useAssistantSession } from "@/components/assistant/session";
 
 type CardProps = {
   title: string;
@@ -53,6 +54,8 @@ export function ConfirmActions({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const { retainApproval } = useAssistantSession();
+  useEffect(() => retainApproval(), [retainApproval]);
   return (
     <ToolResultCard title="Confirm before discarding work" status="working">
       <p className="m-0">{body}</p>

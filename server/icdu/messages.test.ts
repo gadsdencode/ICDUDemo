@@ -10,6 +10,8 @@ import {
 import { composeInstructions } from "./agent.ts";
 import { filterFrontendTools, instructionContext, modelMessagesFromInput, reviewFrontendTools } from "./messages.ts";
 import { lookupPublishedTerm } from "./glossaryTool.ts";
+import { fitPageSnapshot, SCORE_DEFINITIONS } from "../../shared/pageSnapshot.ts";
+import { MAX_CONTEXT_CHARS } from "./limits.ts";
 import type { RunAgentInput } from "@ag-ui/core";
 
 function publishedTool(name: FrontendToolName) {
@@ -49,6 +51,9 @@ test("published page tool sets stay inside the seven-tool cap", () => {
     { pageId: "faq", discardAvailable: true },
     { pageId: "business-case", roiAvailable: true, discardAvailable: true },
     { pageId: "research" },
+    { pageId: "overview", workspaceView: "guided" as const, scenarioSelected: true, discardAvailable: true, roiAvailable: true },
+    { pageId: "overview", workspaceView: "value" as const, roiAvailable: true, discardAvailable: true },
+    { pageId: "overview", workspaceView: "developer" as const, demoMode: "lab" as const },
   ];
   for (const surface of surfaces) {
     const names = frontendToolsForSurface(surface);
@@ -129,6 +134,137 @@ test("current-page context stays valid JSON and untrusted text cannot replace in
   const instructions = composeInstructions(`${block}${"x".repeat(20_000)}`);
   assert.match(instructions, /public ICDU website assistant/);
   assert.doesNotMatch(instructions, /xxxxxxxx/);
+});
+
+test("an active workspace snapshot stays in the instruction context", () => {
+  const block = instructionContext(
+    {
+      context: [{
+        description: "Current page",
+        value: JSON.stringify({
+          route: "/",
+          title: "Overview",
+          summary: "Homepage",
+          sectionIds: ["chooser"],
+          personaId: "executive",
+          industryId: "healthcare-admin",
+          actions: ["show_workspace", "set_guided_stage"],
+          workspace: { view: "guided", artifactId: "call-health" },
+          guided: {
+            scenarioId: "healthcare-admin",
+            title: "Healthcare administrative workflow",
+            step: "define",
+            ranAi: false,
+            evaluated: false,
+            simulated: true,
+          },
+          privateFineTune: "do-not-forward",
+        }),
+      }],
+      state: {},
+    },
+    "test-key-not-real-icdu",
+  );
+  assert.match(block, /"view":"guided"/);
+  assert.match(block, /healthcare-admin/);
+  assert.match(block, /call-health/);
+  assert.doesNotMatch(block, /do-not-forward/);
+});
+
+test("active scores survive the context budget", () => {
+  const packed = fitPageSnapshot({
+    route: "/",
+    title: "Overview",
+    summary: "x".repeat(4000),
+    sectionIds: ["a", "b", "c", "d", "e", "f", "g", "h"],
+    personaId: "executive",
+    industryId: "healthcare-admin",
+    actions: ["show_workspace", "read_workspace", "set_guided_stage", "select_guided_scenario"],
+    workspace: { view: "evidence", artifactId: "call-health" },
+    guided: {
+      scenarioId: "healthcare-admin",
+      title: "Healthcare administrative workflow with a very long title that should be shortened before scores disappear",
+      step: "evidence",
+      ranAi: true,
+      evaluated: true,
+      simulated: true,
+      scores: { IAS: 0.92, PAS: 0.97, AS: 0.86, decision: "PROMOTE" },
+    },
+    active: {
+      kind: "evidence",
+      artifactId: "call-health",
+      revision: 1,
+      sourceId: "icdu-guided-healthadmin-003",
+      stage: "evidence",
+      simulated: true,
+      evaluated: true,
+      scores: { IAS: 0.92, PAS: 0.97, AS: 0.86, decision: "PROMOTE" },
+      definitions: SCORE_DEFINITIONS,
+      rationale: "PAS: The response stays within the authored administrative principles.",
+      detail: "complete",
+    },
+  }, MAX_CONTEXT_CHARS);
+  assert.ok(packed);
+  assert.match(packed, /0\.92/);
+  assert.match(packed, /Intent-Alignment Score/);
+  const block = instructionContext({
+    threadId: "t",
+    runId: "r",
+    messages: [],
+    tools: [],
+    context: [{ description: "Current page", value: JSON.parse(packed!) }],
+    state: {},
+  }, "");
+  assert.match(block, /VISIBLE WORKSPACE RESULT/);
+  assert.match(block, /scripted example/);
+  assert.match(block, /0\.92/);
+  assert.match(block, /Intent-Alignment Score/);
+});
+
+test("score provenance and calculator edits survive the context budget", () => {
+  const packed = fitPageSnapshot({
+    route: "/",
+    title: "Value",
+    summary: "x".repeat(4000),
+    sectionIds: ["a", "b", "c", "d"],
+    personaId: "executive",
+    industryId: "healthcare-admin",
+    actions: ["show_workspace"],
+    workspace: { view: "value", artifactId: null },
+    active: {
+      kind: "value",
+      artifactId: null,
+      revision: 1,
+      sourceId: "icdu-draft",
+      stage: null,
+      simulated: true,
+      provenance: "scripted-example",
+      detail: "complete",
+      roi: {
+        workflows: 11,
+        dayRate: 1350,
+        incidentProb: 15,
+        incidentCost: 2_000_000,
+        auditCycles: 4,
+        roi: 434,
+        netBenefit: 1_100_000,
+        modeledEstimate: true,
+        example: { workflows: 10, dayRate: 800, incidentProb: 15, incidentCost: 2_000_000, auditCycles: 4 },
+        edited: ["workflows", "dayRate"],
+        unchanged: ["incidentProb", "incidentCost", "auditCycles"],
+        effects: {
+          changed: ["engineeringSavings", "complianceLabor", "modeledCost"],
+          unchanged: ["riskAvoidance"],
+        },
+      },
+    },
+  }, 900);
+  assert.ok(packed);
+  assert.match(packed!, /scripted-example/);
+  assert.match(packed!, /"edited":\["workflows","dayRate"\]/);
+  assert.match(packed!, /"unchanged":\["incidentProb","incidentCost","auditCycles"\]/);
+  assert.match(packed!, /"complianceLabor"/);
+  assert.match(packed!, /"unchanged":\["riskAvoidance"\]/);
 });
 
 test("glossary lookup validates arguments before returning a definition", () => {

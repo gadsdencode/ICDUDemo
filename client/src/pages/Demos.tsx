@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { trackPageViewed } from "@/lib/analytics";
 import { useSEO } from "@/lib/seo";
@@ -9,7 +9,7 @@ import { PathEntrance } from "@/components/PathChrome";
 import { businessCaseLinkLabel } from "@/data/audience";
 import { cn } from "@/lib/utils";
 import { Compass, FlaskConical } from "lucide-react";
-import { useAssistantHandlers, useAssistantSlot } from "@/components/assistant/bridge";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 
 type DemoMode = "guided" | "lab";
 
@@ -20,7 +20,8 @@ function modeFromSearch(): DemoMode {
 }
 
 export default function Demos() {
-  const [mode, setMode] = useState<DemoMode>(modeFromSearch);
+  const workspace = useWorkspace();
+  const mode = workspace.demoMode;
   const { personaId, industryId, route, setIndustryId } = useAudience();
   const scenarioId = industryId;
   const handoff =
@@ -41,41 +42,21 @@ export default function Demos() {
   }, []);
 
   useEffect(() => {
-    const onPop = () => setMode(modeFromSearch());
+    const onPop = () => workspace.setDemoMode(modeFromSearch());
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  }, [workspace]);
+
+  useEffect(() => {
+    const fromUrl = modeFromSearch();
+    if (fromUrl !== workspace.demoMode && new URLSearchParams(window.location.search).get("mode") === "lab") {
+      workspace.setDemoMode("lab");
+    }
+  }, [workspace]);
 
   const selectMode = (next: DemoMode) => {
-    setMode(next);
-    const url = new URL(window.location.href);
-    if (next === "lab") {
-      url.searchParams.set("mode", "lab");
-    } else {
-      url.searchParams.delete("mode");
-    }
-    const nextHref = `${url.pathname}${url.search}${url.hash}`;
-    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    if (nextHref !== current) {
-      window.history.pushState(window.history.state, "", nextHref);
-    }
+    workspace.setDemoMode(next);
   };
-  const selectModeRef = useRef(selectMode);
-  selectModeRef.current = selectMode;
-  useAssistantSlot("demo", { mode });
-  useAssistantHandlers(
-    (handlers) => {
-      handlers.demo = {
-        setMode: (next) => {
-          selectModeRef.current(next);
-          return { ok: true, mode: next };
-        },
-      };
-    },
-    (handlers) => {
-      handlers.demo = undefined;
-    },
-  );
 
   return (
     <BrandPage data-assistant-page="demos">

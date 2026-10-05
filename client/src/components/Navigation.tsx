@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import { useAudience } from "@/components/AudienceProvider";
+import { useWorkspace } from "@/components/workspace/WorkspaceProvider";
 import { formatAudienceChip } from "@/data/audience";
 import { PathChip } from "@/components/PathChrome";
 
@@ -35,10 +36,11 @@ const resourceLinks = [
 ];
 
 export function Navigation() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { personaId, industryId, resetAudience } = useAudience();
+  const workspace = useWorkspace();
   const audienceChip = formatAudienceChip(personaId, industryId);
   const items = navItems.map((item) =>
     item.path === "/journey" && personaId
@@ -79,8 +81,12 @@ export function Navigation() {
           className="icdu-wordmark shrink-0"
           data-testid="link-home"
           aria-label="ICDU homepage"
-          onClick={() => {
+          onClick={(event) => {
+            event.preventDefault();
             resetAudience();
+            window.history.replaceState(window.history.state, "", "/");
+            navigate("/");
+            workspace.returnHome();
             window.scrollTo(0, 0);
           }}
         >

@@ -8,7 +8,7 @@
     "build": "tsx script/build.ts",
     "start": "cross-env NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
-    "test": "tsx --test client/src/lib/guidedProgress.test.ts client/src/lib/gateDecision.test.ts client/src/lib/assistantNavigation.test.ts client/src/lib/guidedTransitions.test.ts client/src/lib/roiEdit.test.ts shared/siteKnowledge.test.ts server/icdu/session.test.ts server/icdu/clientIp.test.ts server/icdu/messages.test.ts server/icdu/continuations.test.ts server/icdu/publicAi.test.ts",
+    "test": "tsx --test client/src/lib/guidedProgress.test.ts client/src/lib/gateDecision.test.ts client/src/lib/assistantNavigation.test.ts client/src/lib/assistantComposer.test.ts client/src/lib/activityPhase.test.ts client/src/lib/guidedTransitions.test.ts client/src/lib/roiEdit.test.ts client/src/lib/workspaceActions.test.ts client/src/lib/taskState.test.ts shared/siteKnowledge.test.ts server/icdu/session.test.ts server/icdu/clientIp.test.ts server/icdu/messages.test.ts server/icdu/continuations.test.ts server/icdu/publicAi.test.ts",
     "db:push": "drizzle-kit push",
     "knowledge:index": "tsx script/index-knowledge.ts",
     "test:knowledge": "tsx --test server/icdu/knowledge/knowledge.test.ts"

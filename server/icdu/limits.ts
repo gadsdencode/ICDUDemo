@@ -1,4 +1,4 @@
-import { USER_MESSAGES_PER_HOUR } from "../../shared/aiPublic.ts";
+import { MAX_VISITOR_MESSAGE_CHARS, USER_MESSAGES_PER_HOUR } from "../../shared/aiPublic.ts";
 
 export type AiLimits = {
   sessionMessages: number;
@@ -24,7 +24,7 @@ export const MAX_OUTPUT_TOKENS = 1024;
 export const MAX_MESSAGES = 40;
 export const MAX_FRONTEND_TOOLS = 7;
 export const MAX_BODY_BYTES = 80 * 1024;
-export const MAX_MESSAGE_CHARS = 4_000;
+export const MAX_MESSAGE_CHARS = MAX_VISITOR_MESSAGE_CHARS;
 export const MAX_TOOL_RESULT_CHARS = 1_500;
 export const MAX_CONTEXT_CHARS = 1_500;
 export const MAX_INSTRUCTION_CHARS = 8_000;
