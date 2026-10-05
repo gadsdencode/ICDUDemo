@@ -3,10 +3,10 @@ import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL } from "./corpus.ts";
 
 export async function embedTexts(config: ModelConfig, texts: string[], fetchImpl = fetch,
   signal?: AbortSignal): Promise<number[][]> {
-  const timeout = AbortSignal.timeout(15_000);
+  const timeout = AbortSignal.timeout(50_000);
   const response = await fetchImpl(`${config.baseURL.replace(/\/$/, "")}/embeddings`, {
     method: "POST", signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
-    headers: {"Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}`},
+    headers: {"Content-Type": "application/json", "X-ICDU-Site": "icdu", Authorization: `Bearer ${config.apiKey}`},
     body: JSON.stringify({model: EMBEDDING_MODEL, input: texts, encoding_format: "float"}),
   });
   if (!response.ok) throw new Error("Knowledge embeddings unavailable");

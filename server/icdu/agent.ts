@@ -1,4 +1,5 @@
 import { BuiltInAgent } from "@copilotkit/runtime/v2";
+import { randomUUID } from "node:crypto";
 import { ToolLoopAgent, stepCountIs, type ToolSet } from "ai";
 import type { RunAgentInput } from "@ag-ui/core";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
@@ -70,6 +71,7 @@ export function composeInstructions(untrusted: string, references = ""): string 
 export function createModel(config: ModelConfig, fetchImpl: typeof fetch) {
   const provider = createOpenAICompatible({
     name: "icdu",
+    headers: {"X-ICDU-Site":"icdu"},
     baseURL: config.baseURL,
     apiKey: config.apiKey,
     fetch: async (input, init) => {
@@ -103,7 +105,16 @@ async function* sanitizeStream(
   stream: AsyncIterable<unknown>,
   secret: string,
 ): AsyncGenerator<unknown> {
-  for await (const part of stream) {
+  const contentIds = new Map<string, string>();
+  for await (let part of stream) {
+    if (part && typeof part === "object" && "type" in part && "id" in part &&
+      typeof part.type === "string" && typeof part.id === "string" &&
+      /^(text|reasoning)-(start|delta|end)$/.test(part.type)) {
+      // Provider IDs such as txt-0 repeat on every call; AG-UI IDs span the conversation.
+      const key = `${part.type.split("-")[0]}:${part.id}`;
+      if (part.type.endsWith("-start") || !contentIds.has(key)) contentIds.set(key, randomUUID());
+      part = { ...part, id: contentIds.get(key)! };
+    }
     if (
       part &&
       typeof part === "object" &&

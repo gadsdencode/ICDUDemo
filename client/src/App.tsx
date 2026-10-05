@@ -10,6 +10,7 @@ import { AudienceProvider } from "@/components/AudienceProvider";
 import { AssistantProvider } from "@/components/assistant/AssistantProvider";
 import { WorkspaceProvider } from "@/components/workspace/WorkspaceProvider";
 import { AssistantWorkspace } from "@/components/assistant/AssistantWorkspace";
+import KnowledgeDocument from "@/pages/KnowledgeDocument";
 import NotFound from "@/pages/not-found";
 import Overview from "@/pages/Overview";
 import Journey from "@/pages/Journey";
@@ -47,6 +48,7 @@ function Router() {
       <Route path="/licensing" component={Licensing} />
       <Route path="/investor" component={Investor} />
       <Route path="/developers" component={Developers} />
+      <Route path="/knowledge/:id" component={KnowledgeDocument} />
       <Route component={NotFound} />
     </Switch>
   );
